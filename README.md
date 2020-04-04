@@ -4,7 +4,8 @@ Nombre del Proyecto:
 
 Integrantes:
 - Arce, Gerardo Gabriel
-- Filgueras, Rocio
+- Filgueira, Rocío Micol
 - Luque, Lilian
+- Merlis, Nicolás Rodrigo
 - Rodriguez Arias, Mariano
 
