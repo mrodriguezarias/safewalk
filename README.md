@@ -1,6 +1,6 @@
 # ProyectoFinal
 
-Nombre del Proyecto:
+Nombre del Proyecto: SafeWalk
 
 Integrantes:
 
