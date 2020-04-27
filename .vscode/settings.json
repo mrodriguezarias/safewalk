@@ -1,0 +1,9 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true,
+  "prettier.semi": false,
+  "prettier.trailingComma": "all",
+  "editor.suggestSelection": "first"
+}
