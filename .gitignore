@@ -9,7 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-*requests.http
-
-# macOS
+requests.http
+local.env
 .DS_Store
