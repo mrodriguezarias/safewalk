@@ -7,9 +7,9 @@ import commonColor from "./theme/variables/commonColor"
 
 const Setup: React.FC = () => (
   <StyleProvider style={getTheme(commonColor)}>
-    {/* <Root> */}
-    <App />
-    {/* </Root> */}
+    <Root>
+      <App />
+    </Root>
   </StyleProvider>
 )
 
