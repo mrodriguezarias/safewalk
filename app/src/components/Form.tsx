@@ -1,20 +1,32 @@
 import React from "react"
-import { StyleSheet, View, Button, TextInput, Text } from "react-native"
+import {
+  StyleSheet,
+  View,
+  Button,
+  TextInput,
+  Text,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
+} from "react-native"
 
-const Form = () => {
+interface Props {
+  title: string
+  onSubmit?: (event: NativeSyntheticEvent<NativeTouchEvent>) => void
+  onCancel?: (event: NativeSyntheticEvent<NativeTouchEvent>) => void
+}
+
+const Form: React.FC<Props> = ({ title, onSubmit, onCancel }) => {
   return (
     <View style={styles.square}>
-      <Text>Lorem ipsum</Text>
+      <Text>{title}</Text>
       <TextInput style={styles.input} />
       <View style={styles.buttonsContainer}>
-        <Button title="Cancel" onPress={() => console.log("cancelled")} />
-        <Button title="Submit" onPress={() => console.log("submitted")} />
+        <Button title="Cancel" onPress={onCancel} />
+        <Button title="Submit" onPress={onSubmit} />
       </View>
     </View>
   )
 }
-
-export default Form
 
 const styles = StyleSheet.create({
   square: {
@@ -37,3 +49,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 })
+
+export default Form
