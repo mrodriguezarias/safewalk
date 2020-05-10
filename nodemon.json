@@ -1,6 +1,0 @@
-{
-  "watch": ["api/src"],
-  "ext": "ts",
-  "ignore": ["api/src/public"],
-  "exec": "ts-node ./api/src/server.ts --env=local"
-}

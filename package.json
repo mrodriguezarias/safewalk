@@ -9,9 +9,10 @@
     "app:ios": "expo start --ios",
     "app:web": "expo start --web",
     "app:eject": "expo eject",
-    "api:start": "nodemon --config nodemon.json",
+    "api:start": "nodemon --watch api/src -e ts --exec 'ts-node' ./api/src/server.ts --env=local",
     "api:start:dev": "ts-node --transpile-only ./api/src/server.ts --env=development",
-    "api:start:prod": "ts-node --transpile-only ./api/src/server.ts --env=production"
+    "api:start:prod": "ts-node --transpile-only ./api/src/server.ts --env=production",
+    "sandbox": "nodemon --watch . -e ts --exec 'ts-node' ./sandbox.ts"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.6",

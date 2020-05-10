@@ -9,17 +9,17 @@ import path from "path"
 
 import Routes from "./interfaces/routes.interface"
 import errorMiddleware from "./middlewares/error.middleware"
-import env from "./utils/env.util"
+import env, { Env, NodeEnv } from "./utils/env.util"
 
 class App {
   public app: express.Application
   public port: number
-  public env: string
+  public env: NodeEnv
 
   constructor(routes: Routes[]) {
     this.app = express()
-    this.port = env.getNumber("SERVER_PORT")
-    this.env = env.getString("NODE_ENV")
+    this.port = env.get(Env.ServerPort)
+    this.env = env.get(Env.NodeEnv)
 
     this.connectToDatabase()
     this.initializeMiddlewares()
@@ -38,11 +38,11 @@ class App {
   }
 
   private initializeMiddlewares() {
-    if (this.env) {
+    if (this.env === NodeEnv.Production) {
       this.app.use(hpp())
       this.app.use(helmet())
       this.app.use(logger("combined"))
-      this.app.use(cors({ origin: "your.domain.com", credentials: true }))
+      this.app.use(cors({ origin: env.get(Env.ServerHost), credentials: true }))
     } else {
       this.app.use(logger("dev"))
       this.app.use(cors({ origin: true, credentials: true }))
@@ -66,11 +66,11 @@ class App {
 
   private connectToDatabase() {
     const {
-      MONGO_HOST,
-      MONGO_PORT,
-      MONGO_USER,
-      MONGO_PASSWORD,
-      MONGO_DATABASE,
+      MongoHost,
+      MongoPort,
+      MongoUser,
+      MongoPassword,
+      MongoDatabase,
     } = env.getAll()
     const options = {
       useCreateIndex: true,
@@ -80,7 +80,7 @@ class App {
     }
 
     mongoose.connect(
-      `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?authSource=admin`,
+      `mongodb://${MongoUser}:${MongoPassword}@${MongoHost}:${MongoPort}/${MongoDatabase}?authSource=admin`,
       { ...options },
     )
   }

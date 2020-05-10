@@ -18,7 +18,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "esnext",
+    "strictNullChecks": true,
+    "target": "ES2017",
     "typeRoots": ["./node_modules/@types"],
     "types": ["node"]
   },

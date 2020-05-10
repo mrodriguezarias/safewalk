@@ -6,6 +6,7 @@ import { DataStoredInToken, TokenData } from "../interfaces/auth.interface"
 import { User } from "../interfaces/users.interface"
 import userModel from "../models/users.model"
 import _ from "lodash"
+import env, { Env } from "../utils/env.util"
 
 class AuthService {
   public users = userModel
@@ -13,7 +14,7 @@ class AuthService {
   public async signup(userData: CreateUserDto): Promise<User> {
     if (_.isEmpty(userData)) throw new HttpException(400, "You're not userData")
 
-    const findUser: User = await this.users.findOne({ email: userData.email })
+    const findUser = await this.users.findOne({ email: userData.email })
     if (findUser)
       throw new HttpException(
         409,
@@ -34,7 +35,7 @@ class AuthService {
   ): Promise<{ cookie: string; findUser: User }> {
     if (_.isEmpty(userData)) throw new HttpException(400, "You're not userData")
 
-    const findUser: User = await this.users.findOne({ email: userData.email })
+    const findUser = await this.users.findOne({ email: userData.email })
     if (!findUser)
       throw new HttpException(409, `You're email ${userData.email} not found`)
 
@@ -54,7 +55,7 @@ class AuthService {
   public async logout(userData: User): Promise<User> {
     if (_.isEmpty(userData)) throw new HttpException(400, "You're not userData")
 
-    const findUser: User = await this.users.findOne({
+    const findUser = await this.users.findOne({
       password: userData.password,
     })
     if (!findUser) throw new HttpException(409, "You're not user")
@@ -64,7 +65,7 @@ class AuthService {
 
   public createToken(user: User): TokenData {
     const dataStoredInToken: DataStoredInToken = { _id: user._id }
-    const secret: string = process.env.JWT_SECRET
+    const secret: string = env.get(Env.JwtSecret)
     const expiresIn: number = 60 * 60
 
     return {

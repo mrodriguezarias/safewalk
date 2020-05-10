@@ -12,7 +12,9 @@ function validationMiddleware(
       (errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors
-            .map((error: ValidationError) => Object.values(error.constraints))
+            .map((error: ValidationError) =>
+              Object.values(error.constraints ?? {}),
+            )
             .join(", ")
           next(new HttpException(400, message))
         } else {

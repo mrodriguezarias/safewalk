@@ -14,7 +14,7 @@ class UserService {
   }
 
   public async findUserById(userId: string): Promise<User> {
-    const findUser: User = await this.users.findById(userId)
+    const findUser = await this.users.findById(userId)
     if (!findUser) throw new HttpException(409, "You're not user")
 
     return findUser
@@ -23,7 +23,7 @@ class UserService {
   public async createUser(userData: CreateUserDto): Promise<User> {
     if (_.isEmpty(userData)) throw new HttpException(400, "You're not userData")
 
-    const findUser: User = await this.users.findOne({ email: userData.email })
+    const findUser = await this.users.findOne({ email: userData.email })
     if (findUser)
       throw new HttpException(
         409,
@@ -42,7 +42,7 @@ class UserService {
     if (_.isEmpty(userData)) throw new HttpException(400, "You're not userData")
 
     const hashedPassword = await bcrypt.hash(userData.password, 10)
-    const updateUserById: User = await this.users.findByIdAndUpdate(userId, {
+    const updateUserById = await this.users.findByIdAndUpdate(userId, {
       ...userData,
       password: hashedPassword,
     })
@@ -52,7 +52,7 @@ class UserService {
   }
 
   public async deleteUserData(userId: string): Promise<User> {
-    const deleteUserById: User = await this.users.findByIdAndDelete(userId)
+    const deleteUserById = await this.users.findByIdAndDelete(userId)
     if (!deleteUserById) throw new HttpException(409, "You're not user")
 
     return deleteUserById

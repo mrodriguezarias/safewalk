@@ -6,7 +6,7 @@ import {
   RequestWithUser,
 } from "../interfaces/auth.interface"
 import userModel from "../models/users.model"
-import env from "../utils/env.util"
+import env, { Env } from "../utils/env.util"
 
 async function authMiddleware(
   req: RequestWithUser,
@@ -16,7 +16,7 @@ async function authMiddleware(
   const cookies = req.cookies
 
   if (cookies && cookies.Authorization) {
-    const secret = env.getString("JWT_SECRET")
+    const secret = env.get(Env.JwtSecret)
 
     try {
       const verificationResponse = jwt.verify(

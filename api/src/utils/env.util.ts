@@ -1,96 +1,150 @@
 import dotenv from "dotenv"
 import commandLineArgs from "command-line-args"
 import _ from "lodash"
+import { enumToString, stringToEnum } from "./enum.util"
 
 class EnvironmentError extends Error {}
 
-type Value = string | number | boolean
+enum Env {
+  NodeEnv,
+  ServerHost,
+  ServerPort,
+  MongoHost,
+  MongoPort,
+  MongoUser,
+  MongoPassword,
+  MongoDatabase,
+  CookieDomain,
+  CookiePath,
+  SecureCookie,
+  JwtSecret,
+  CookieSecret,
+  CookieExp,
+}
+
+enum NodeEnv {
+  Local,
+  Development,
+  Production,
+}
+
+type Value<T> = T extends Env.NodeEnv
+  ? NodeEnv
+  : T extends Env.ServerHost
+  ? string
+  : T extends Env.ServerPort
+  ? number
+  : T extends Env.MongoHost
+  ? string
+  : T extends Env.MongoPort
+  ? number
+  : T extends Env.MongoUser
+  ? string
+  : T extends Env.MongoPassword
+  ? string
+  : T extends Env.MongoDatabase
+  ? string
+  : T extends Env.CookieDomain
+  ? string
+  : T extends Env.CookiePath
+  ? string
+  : T extends Env.SecureCookie
+  ? boolean
+  : T extends Env.JwtSecret
+  ? string
+  : T extends Env.CookieSecret
+  ? string
+  : T extends Env.CookieExp
+  ? number
+  : never
+
 enum Type {
   String,
   Number,
   Boolean,
+  NodeEnv,
 }
 
 interface Option {
-  name: string
+  name: Env
   required: boolean
   type: Type
-  default?: Value
+  default?: Value<Env>
 }
 
 const options: Option[] = [
   {
-    name: "NODE_ENV",
+    name: Env.NodeEnv,
+    required: true,
+    type: Type.NodeEnv,
+  },
+  {
+    name: Env.ServerHost,
     required: true,
     type: Type.String,
   },
   {
-    name: "SERVER_HOST",
-    required: true,
-    type: Type.String,
-  },
-  {
-    name: "SERVER_PORT",
+    name: Env.ServerPort,
     required: false,
     type: Type.Number,
     default: 4000,
   },
   {
-    name: "MONGO_HOST",
+    name: Env.MongoHost,
     required: true,
     type: Type.String,
   },
   {
-    name: "MONGO_PORT",
+    name: Env.MongoPort,
     required: false,
     type: Type.Number,
     default: 27017,
   },
   {
-    name: "MONGO_USER",
+    name: Env.MongoUser,
     required: false,
     type: Type.String,
     default: "root",
   },
   {
-    name: "MONGO_PASSWORD",
+    name: Env.MongoPassword,
     required: true,
     type: Type.String,
   },
   {
-    name: "MONGO_DATABASE",
+    name: Env.MongoDatabase,
     required: false,
     type: Type.String,
     default: "safewalk",
   },
   {
-    name: "COOKIE_DOMAIN",
+    name: Env.CookieDomain,
     required: true,
     type: Type.String,
   },
   {
-    name: "COOKIE_PATH",
+    name: Env.CookiePath,
     required: true,
     type: Type.String,
   },
   {
-    name: "SECURE_COOKIE",
+    name: Env.SecureCookie,
     required: false,
     type: Type.Boolean,
     default: false,
   },
   {
-    name: "JWT_SECRET",
+    name: Env.JwtSecret,
     required: true,
     type: Type.String,
   },
   {
-    name: "COOKIE_SECRET",
+    name: Env.CookieSecret,
     required: true,
     type: Type.String,
   },
   {
-    name: "COOKIE_EXP",
+    name: Env.CookieExp,
     required: true,
     type: Type.Number,
   },
@@ -100,7 +154,7 @@ const typesMap: Map<
   Type,
   {
     validate: (value: string) => boolean
-    cast: (value: string) => Value
+    cast: (value: string) => Value<Env>
   }
 > = new Map([
   [
@@ -124,30 +178,57 @@ const typesMap: Map<
       cast: (value) => value === "true",
     },
   ],
+  [
+    Type.NodeEnv,
+    {
+      validate: (value) => stringToEnum(value, NodeEnv) !== undefined,
+      cast: (value) => stringToEnum(value, NodeEnv),
+    },
+  ],
 ])
 
-const validate = (name: string, value: string): boolean => {
+const valueInEnv = (name: Env | string): boolean => {
+  const key = _.flow(
+    (name) => (_.isString(name) ? name : enumToString(name, Env)),
+    _.snakeCase,
+    _.toUpper,
+  )(name)
+  return key in process.env
+}
+
+const getRawValue = (name: Env | string): string | undefined => {
+  const key = _.flow(
+    (name) => (_.isString(name) ? name : enumToString(name, Env)),
+    _.snakeCase,
+    _.toUpper,
+  )(name)
+  return process.env[key]
+}
+
+const getValue = (name: Env, type: Type): Value<Env> | undefined => {
+  const rawValue = getRawValue(name)
+  return rawValue ? typesMap.get(type)?.cast(rawValue) : undefined
+}
+
+const validate = (name: Env, value: string | undefined): boolean => {
   const option = options.find((option) => option.name === name)
-  return !!(
-    option &&
+  return (option &&
     (!option.required || value) &&
-    typesMap.get(option.type).validate(value)
-  )
+    (!value || typesMap.get(option.type)?.validate(value))) as boolean
 }
 
 const validateAll = () => {
   for (const option of options) {
-    if (option.required && !process.env[option.name]) {
+    const nameAsString = enumToString(option.name, Env)
+    const value = getRawValue(nameAsString)
+    if (option.required && !value) {
       throw new EnvironmentError(
-        `Environment variable '${option.name}' is required but wasn't provided`,
+        `Environment variable '${nameAsString}' is required but wasn't provided`,
       )
     }
-    if (
-      option.name in process.env &&
-      !validate(option.name, process.env[option.name])
-    ) {
+    if (valueInEnv(option.name) && !validate(option.name, value)) {
       throw new EnvironmentError(
-        `Environment variable '${option.name}' is invalid - type should be ${option.type}`,
+        `Environment variable '${nameAsString}' is invalid - type should be ${option.type}`,
       )
     }
   }
@@ -174,18 +255,14 @@ const load = () => {
   validateAll()
 }
 
-const getValue = (name: string, type: Type): Value => {
-  return typesMap.get(type).cast(process.env[name])
-}
-
 const getAll = (): NodeJS.ProcessEnv => {
   return _.reduce(
     options,
     (accum, cur) => {
-      if (cur.name in process.env) {
+      if (valueInEnv(cur.name)) {
         return {
           ...accum,
-          [cur.name]: getValue(cur.name, cur.type),
+          [enumToString(cur.name, Env)]: getValue(cur.name, cur.type),
         }
       }
       return accum
@@ -194,25 +271,22 @@ const getAll = (): NodeJS.ProcessEnv => {
   )
 }
 
-const get = (name: string): Value => {
+const get = <T extends Env>(name: T): Value<T> => {
   const option = _.find(options, ["name", name])
-  if (!option) {
-    throw new EnvironmentError(`Environment variable '${name}' does not exist`)
+  const value = option ? getValue(name, option.type) : undefined
+  if (value === undefined) {
+    throw new EnvironmentError(
+      `Environment variable '${enumToString(name, Env)}' does not exist`,
+    )
   }
-  return getValue(name, option.type)
+  return value as Value<T>
 }
-
-const getString = (name: string): string => get(name) as string
-const getNumber = (name: string): number => get(name) as number
-const getBoolean = (name: string): boolean => get(name) as boolean
 
 const env = {
   load,
   getAll,
   get,
-  getString,
-  getNumber,
-  getBoolean,
 }
 
 export default env
+export { Env, NodeEnv }
