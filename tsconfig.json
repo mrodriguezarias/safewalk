@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
     "baseUrl": "./",
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
@@ -10,22 +12,16 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,
-    "outDir": "api/dist",
-    "paths": {
-      "@daos/*": ["api/src/daos/*"],
-      "@entities/*": ["api/src/entities/*"],
-      "@shared/*": ["api/src/shared/*"],
-      "@server": ["api/src/Server"]
-    },
+    "noImplicitAny": true,
+    "outDir": "./api/dist",
     "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true,
     "target": "esnext",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["./node_modules/@types"],
     "types": ["node"]
   },
-  "exclude": ["api/src/public/"],
+  "exclude": ["node_modules", "api/src/public"],
   "include": ["api/src/**/*.ts"]
 }

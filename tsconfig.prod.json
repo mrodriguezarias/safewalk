@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": false
-  },
-  "exclude": ["app/spec", "app/src/**/*.mock.ts", "app/src/public/"]
-}

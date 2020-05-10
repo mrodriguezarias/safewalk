@@ -2,5 +2,5 @@
   "watch": ["api/src"],
   "ext": "ts",
   "ignore": ["api/src/public"],
-  "exec": "ts-node -r tsconfig-paths/register ./api/src --env=development"
+  "exec": "ts-node ./api/src/server.ts --env=local"
 }
