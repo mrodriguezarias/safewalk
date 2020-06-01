@@ -17,7 +17,7 @@
     "sandbox": "nodemon --watch . --exec babel-node ./sandbox.js"
   },
   "repository": {
-    "url": "https://github.com/gabriel-arce/ProyectoFinal"
+    "url": "https://github.com/mrodriguezarias/safewalk"
   },
   "husky": {
     "hooks": {
