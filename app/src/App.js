@@ -14,7 +14,7 @@ import {
   FooterTab,
 } from "native-base"
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <Container>
       <Header>

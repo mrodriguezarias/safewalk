@@ -11,5 +11,6 @@ web-build/
 web-report/
 requests.http
 local.env
-sandbox.ts
+sandbox.js
 .DS_Store
+build/

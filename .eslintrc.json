@@ -1,10 +1,20 @@
 {
   "parser": "babel-eslint",
-  "extends": ["standard", "standard-react"],
+  "extends": [
+    "standard",
+    "standard-react",
+    "prettier",
+    "prettier/standard",
+    "prettier/react"
+  ],
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
     "jsx-quotes": ["error", "prefer-double"],
     "quotes": ["error", "double"],
-    "space-before-function-paren": ["error", "never"]
+    "semi": ["error", "never"],
+    "space-before-function-paren": "off"
+  },
+  "parserOptions": {
+    "sourceType": "module"
   }
 }

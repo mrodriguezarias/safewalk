@@ -1,21 +1,8 @@
 import React from "react"
-import {
-  StyleSheet,
-  View,
-  Button,
-  TextInput,
-  Text,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
-} from "react-native"
+import PropTypes from "prop-types"
+import { StyleSheet, View, Button, TextInput, Text } from "react-native"
 
-interface Props {
-  title: string
-  onSubmit?: (event: NativeSyntheticEvent<NativeTouchEvent>) => void
-  onCancel?: (event: NativeSyntheticEvent<NativeTouchEvent>) => void
-}
-
-const Form: React.FC<Props> = ({ title, onSubmit, onCancel }) => {
+const Form = ({ title, onSubmit, onCancel }) => {
   return (
     <View style={styles.square}>
       <Text>{title}</Text>
@@ -26,6 +13,12 @@ const Form: React.FC<Props> = ({ title, onSubmit, onCancel }) => {
       </View>
     </View>
   )
+}
+
+Form.propTypes = {
+  title: PropTypes.string,
+  onSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

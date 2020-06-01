@@ -7,7 +7,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rDcof4i1tmIrUhk2CtUPpNEIAST1T6WW
       MONGO_INITDB_DATABASE: safewalk
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - data:/data/db
 volumes:

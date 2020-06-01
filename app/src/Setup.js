@@ -5,7 +5,7 @@ import App from "./App"
 import getTheme from "./theme/components"
 import commonColor from "./theme/variables/commonColor"
 
-const Setup: React.FC = () => (
+const Setup = () => (
   <StyleProvider style={getTheme(commonColor)}>
     <Root>
       <App />
