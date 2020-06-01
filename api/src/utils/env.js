@@ -13,6 +13,7 @@ const env = {
   MongoUser: "MONGO_USER",
   MongoPassword: "MONGO_PASSWORD",
   MongoDatabase: "MONGO_DATABASE",
+  MongoCluster: "MONGO_CLUSTER",
   CookieDomain: "COOKIE_DOMAIN",
   CookiePath: "COOKIE_PATH",
   SecureCookie: "SECURE_COOKIE",
@@ -78,6 +79,12 @@ const options = [
     required: false,
     type: types.String,
     default: "safewalk",
+  },
+  {
+    name: env.MongoCluster,
+    required: false,
+    type: types.Boolean,
+    default: false,
   },
   {
     name: env.CookieDomain,

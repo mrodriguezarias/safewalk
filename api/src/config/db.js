@@ -15,8 +15,12 @@ const dbConfig = {
       MongoDatabase,
       MongoUser,
       MongoPassword,
+      MongoCluster,
     } = envUtils.getAll()
-    const url = `mongodb://${MongoUser}:${MongoPassword}@${MongoHost}:${MongoPort}/${MongoDatabase}?authSource=admin`
+    const [schema, params, port] = MongoCluster
+      ? ["mongodb+srv", "retryWrites=true&w=majority", `:${MongoPort}`]
+      : ["mongodb", "authSource=admin", ""]
+    const url = `${schema}://${MongoUser}:${MongoPassword}@${MongoHost}${port}/${MongoDatabase}?${params}`
     mongoose.connect(url, dbConfig.options)
     const connection = mongoose.connection
     connection.once("open", () => {
