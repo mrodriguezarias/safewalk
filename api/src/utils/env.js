@@ -6,8 +6,8 @@ import EnvironmentError from "../errors/EnvironmentError"
 
 const env = {
   NodeEnv: "NODE_ENV",
-  ServerHost: "SERVER_HOST",
-  ServerPort: "SERVER_PORT",
+  Host: "HOST",
+  Port: "PORT",
   MongoHost: "MONGO_HOST",
   MongoPort: "MONGO_PORT",
   MongoUser: "MONGO_USER",
@@ -42,15 +42,14 @@ const options = [
     type: types.NodeEnv,
   },
   {
-    name: env.ServerHost,
+    name: env.Host,
     required: true,
     type: types.String,
   },
   {
-    name: env.ServerPort,
-    required: false,
+    name: env.Port,
+    required: true,
     type: types.Number,
-    default: 4000,
   },
   {
     name: env.MongoHost,

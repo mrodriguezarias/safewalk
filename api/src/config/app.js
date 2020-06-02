@@ -11,10 +11,10 @@ import envUtils, { env, nodeEnv } from "../utils/env"
 
 const appConfig = {
   get host() {
-    return envUtils.get(env.ServerHost)
+    return envUtils.get(env.Host)
   },
   get port() {
-    return envUtils.get(env.ServerPort)
+    return envUtils.get(env.Port)
   },
   configure: (app) => {
     app.set("host", appConfig.host)
