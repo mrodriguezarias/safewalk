@@ -26,7 +26,7 @@ const appConfig = {
     // gzip compression
     app.use(compression())
 
-    if (envUtils.get(env.NodeEnv) === nodeEnv.Production) {
+    if (envUtils.get(env.NodeEnv) === nodeEnv.Prod) {
       app.use(hpp())
       app.use(helmet())
       app.use(morgan("combined"))

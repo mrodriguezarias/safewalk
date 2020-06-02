@@ -24,8 +24,9 @@ const env = {
 
 const nodeEnv = {
   Local: "local",
-  Development: "development",
-  Production: "production",
+  Dev: "dev",
+  Test: "test",
+  Prod: "prod",
 }
 
 const types = {

@@ -10,10 +10,9 @@
     "app:web": "expo start --web",
     "app:eject": "expo eject",
     "api:start": "nodemon --watch api/src --exec babel-node ./api/src/index.js --env=local",
-    "api:start:dev": "babel-node ./api/src/index.js --env=development",
-    "api:start:prod": "babel-node ./api/src/index.js --env=production",
+    "api:start:prod": "babel-node ./api/src/index.js --env=$NODE_ENV",
     "backend:start": "NODE_ENV=local webpack-dev-server --mode development --hot",
-    "backend:build": "NODE_ENV=production webpack -p",
+    "backend:build": "webpack -p",
     "sandbox": "nodemon --watch . --exec babel-node ./sandbox.js"
   },
   "repository": {

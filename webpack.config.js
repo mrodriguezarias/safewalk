@@ -86,7 +86,7 @@ const prodConfig = {
 
 const webpackConfig = {
   ...commonConfig,
-  ...(process.env.NODE_ENV === "production" ? prodConfig : devConfig),
+  ...(["test", "prod"].includes(process.env.NODE_ENV) ? prodConfig : devConfig),
 }
 
 module.exports = webpackConfig
