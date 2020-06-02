@@ -14,12 +14,7 @@ const env = {
   MongoPassword: "MONGO_PASSWORD",
   MongoDatabase: "MONGO_DATABASE",
   MongoCluster: "MONGO_CLUSTER",
-  CookieDomain: "COOKIE_DOMAIN",
-  CookiePath: "COOKIE_PATH",
-  SecureCookie: "SECURE_COOKIE",
   JwtSecret: "JWT_SECRET",
-  CookieSecret: "COOKIE_SECRET",
-  CookieExp: "COOKIE_EXP",
 }
 
 const nodeEnv = {
@@ -87,35 +82,9 @@ const options = [
     default: false,
   },
   {
-    name: env.CookieDomain,
-    required: true,
-    type: types.String,
-  },
-  {
-    name: env.CookiePath,
-    required: true,
-    type: types.String,
-  },
-  {
-    name: env.SecureCookie,
-    required: false,
-    type: types.Boolean,
-    default: false,
-  },
-  {
     name: env.JwtSecret,
     required: true,
     type: types.String,
-  },
-  {
-    name: env.CookieSecret,
-    required: true,
-    type: types.String,
-  },
-  {
-    name: env.CookieExp,
-    required: true,
-    type: types.Number,
   },
 ]
 
