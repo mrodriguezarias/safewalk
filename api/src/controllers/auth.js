@@ -5,10 +5,8 @@ const authController = {
   signUp: async (req, res, next) => {
     const userData = req.body
     try {
-      const signUpUserData = await authService.signUp(userData)
-      res
-        .status(HttpStatus.CREATED)
-        .json({ data: signUpUserData, message: "signup" })
+      const response = await authService.signUp(userData)
+      res.status(HttpStatus.CREATED).json(response)
     } catch (error) {
       next(error)
     }
@@ -16,19 +14,8 @@ const authController = {
   logIn: async (req, res, next) => {
     const userData = req.body
     try {
-      const { user, token } = await authService.logIn(userData)
-      res.cookie("auth", token)
-      res.status(HttpStatus.OK).json({ data: user, message: "login" })
-    } catch (error) {
-      next(error)
-    }
-  },
-  logOut: async (req, res, next) => {
-    const userData = req.user
-    try {
-      const user = await authService.logOut(userData)
-      res.clearCookie("auth")
-      res.status(HttpStatus.OK).json({ data: user, message: "logout" })
+      const response = await authService.logIn(userData)
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }

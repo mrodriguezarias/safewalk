@@ -1,13 +1,11 @@
-import dotenv from "dotenv"
-import commandLineArgs from "command-line-args"
 import _ from "lodash"
-
-import EnvironmentError from "../errors/EnvironmentError"
+import EnvironmentError from "../errors/environment"
 
 const env = {
   NodeEnv: "NODE_ENV",
   Host: "HOST",
   Port: "PORT",
+  Url: "URL",
   MongoHost: "MONGO_HOST",
   MongoPort: "MONGO_PORT",
   MongoUser: "MONGO_USER",
@@ -46,6 +44,11 @@ const options = [
     name: env.Port,
     required: true,
     type: types.Number,
+  },
+  {
+    name: env.Url,
+    required: true,
+    type: types.String,
   },
   {
     name: env.MongoHost,
@@ -165,27 +168,6 @@ const validateAll = () => {
   }
 }
 
-const load = () => {
-  const options = commandLineArgs([
-    {
-      name: "env",
-      alias: "e",
-      defaultValue: "production",
-      type: String,
-    },
-  ])
-
-  const result = dotenv.config({
-    path: `./env/${options.env}.env`,
-  })
-
-  if (result.error) {
-    throw result.error
-  }
-
-  validateAll()
-}
-
 const getAll = () => {
   return _.reduce(
     options,
@@ -212,7 +194,7 @@ const get = (name) => {
 }
 
 const envUtils = {
-  load,
+  validateAll,
   getAll,
   get,
 }

@@ -1,9 +1,10 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "editor.suggestSelection": "first",
   "editor.tabSize": 2,
   "files.insertFinalNewline": true,
+  "javascript.suggestionActions.enabled": false,
   "prettier.semi": false,
-  "prettier.trailingComma": "all",
-  "editor.suggestSelection": "first"
+  "prettier.trailingComma": "all"
 }

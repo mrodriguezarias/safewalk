@@ -5,9 +5,8 @@ import cors from "cors"
 import hpp from "hpp"
 import morgan from "morgan"
 import path from "path"
-import cookieParser from "cookie-parser"
 
-import envUtils, { env, nodeEnv } from "../utils/env"
+import envUtils, { env, nodeEnv } from "../../../shared/utils/env"
 
 const appConfig = {
   get host() {
@@ -41,9 +40,6 @@ const appConfig = {
 
     // Parse URL-encoded data
     app.use(express.urlencoded({ extended: true }))
-
-    // Parse cookies
-    app.use(cookieParser())
 
     // Serve static assets
     app.use("/assets", express.static(path.join(__dirname, "../../assets")))

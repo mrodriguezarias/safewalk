@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
-import HttpError from "../errors/HttpError"
+import HttpError from "../../../shared/errors/http"
 import HttpStatus from "http-status-codes"
 import userModel from "../models/user"
-import envUtils, { env } from "../utils/env"
+import envUtils, { env } from "../../../shared/utils/env"
 
 const authService = {
   signUp: async (userData) => {
@@ -24,21 +24,19 @@ const authService = {
 
     return newUser
   },
-  logIn: async (userData) => {
-    const user = await userModel.findOne({ name: userData.name })
+  logIn: async ({ name, password, shouldBeAdmin }) => {
+    const user = await userModel.findOne({ name })
     if (!user) {
-      throw new HttpError(
-        HttpStatus.CONFLICT,
-        `Name ${userData.name} not found`,
-      )
+      throw new HttpError(HttpStatus.CONFLICT, `Name ${name} not found`)
     }
 
-    const passwordMatches = await bcrypt.compare(
-      userData.password,
-      user.password,
-    )
+    const passwordMatches = await bcrypt.compare(password, user.password)
     if (!passwordMatches) {
-      throw new HttpError(409, "Incorrect password")
+      throw new HttpError(HttpStatus.CONFLICT, "Incorrect password")
+    }
+
+    if (shouldBeAdmin && !user.admin) {
+      throw new HttpError(HttpStatus.FORBIDDEN, "User is not admin")
     }
 
     const payload = { _id: user._id }
@@ -46,13 +44,6 @@ const authService = {
     const token = jwt.sign(payload, secret)
 
     return { user, token }
-  },
-  logOut: async (userData) => {
-    const user = await userModel.findById(userData._id)
-    if (!user) {
-      throw new HttpError(HttpStatus.NOT_FOUND, "User not found")
-    }
-    return user
   },
 }
 

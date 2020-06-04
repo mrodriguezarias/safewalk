@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import HttpStatus from "http-status-codes"
 import userModel from "../models/user"
-import HttpError from "../errors/HttpError"
+import HttpError from "../../../shared/errors/http"
 import _ from "lodash"
 
 const userService = {

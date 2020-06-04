@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import envUtils from "../utils/env"
+import envUtils from "../../../shared/utils/env"
 
 const dbConfig = {
   options: {

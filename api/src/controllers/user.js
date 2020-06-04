@@ -4,8 +4,8 @@ import userService from "../services/user"
 const userController = {
   getUsers: async (req, res, next) => {
     try {
-      const users = await userService.getUsers()
-      res.status(HttpStatus.OK).json({ data: users, message: "findAll" })
+      const response = await userService.getUsers()
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }
@@ -13,8 +13,8 @@ const userController = {
   getUserById: async (req, res, next) => {
     const userId = req.params.id
     try {
-      const user = await userService.getUserById(userId)
-      res.status(HttpStatus.OK).json({ data: user, message: "findOne" })
+      const response = await userService.getUserById(userId)
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }
@@ -22,8 +22,8 @@ const userController = {
   createUser: async (req, res, next) => {
     const userData = req.body
     try {
-      const user = await userService.createUser(userData)
-      res.status(HttpStatus.CREATED).json({ data: user, message: "created" })
+      const response = await userService.createUser(userData)
+      res.status(HttpStatus.CREATED).json(response)
     } catch (error) {
       next(error)
     }
@@ -32,8 +32,8 @@ const userController = {
     const userId = req.params.id
     const userData = req.body
     try {
-      const user = await userService.updateUser(userId, userData)
-      res.status(HttpStatus.OK).json({ data: user, message: "updated" })
+      const response = await userService.updateUser(userId, userData)
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }
@@ -41,8 +41,8 @@ const userController = {
   deleteUser: async (req, res, next) => {
     const userId = req.params.id
     try {
-      const userData = await userService.deleteUser(userId)
-      res.status(200).json({ data: userData, message: "deleted" })
+      const response = await userService.deleteUser(userId)
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }

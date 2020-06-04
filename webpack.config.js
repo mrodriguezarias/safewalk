@@ -1,8 +1,12 @@
 const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
-const Dotenv = require("dotenv-webpack")
+const webpack = require("webpack")
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin")
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+
+const dotenv = require("dotenv").config({
+  path: path.resolve(process.cwd(), `env/${process.env.NODE_ENV}.env`),
+})
 
 const commonConfig = {
   entry: path.join(process.cwd(), "./backend/src/index.js"),
@@ -28,8 +32,8 @@ const commonConfig = {
       template: path.join(process.cwd(), "./backend/assets/index.html"),
       filename: path.join(process.cwd(), "./backend/build/index.html"),
     }),
-    new Dotenv({
-      path: path.resolve(process.cwd(), `env/${process.env.NODE_ENV}.env`),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(dotenv.parsed),
     }),
   ],
   stats: {
@@ -42,6 +46,10 @@ const commonConfig = {
     modules: true,
     children: true,
   },
+  target: "web",
+  node: {
+    fs: "empty",
+  },
 }
 
 const devConfig = {
@@ -49,7 +57,9 @@ const devConfig = {
   mode: "development",
   devServer: {
     contentBase: path.join(process.cwd(), "./backend/build"),
+    disableHostCheck: true,
     hot: true,
+    host: "0.0.0.0",
     port: 3500,
   },
 }

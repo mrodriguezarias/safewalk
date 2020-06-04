@@ -1,4 +1,4 @@
-import envUtils from "./utils/env"
+import envUtils from "../../shared/utils/env"
 import express from "express"
 import http from "http"
 
@@ -6,8 +6,10 @@ import appConfig from "./config/app"
 import routeConfig from "./config/route"
 import dbConfig from "./config/db"
 import errorConfig from "./config/error"
+import envLoadUtils from "./utils/envLoad"
 
-envUtils.load()
+envLoadUtils.load()
+envUtils.validateAll()
 
 const app = express()
 const server = http.createServer(app)

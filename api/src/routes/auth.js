@@ -1,24 +1,22 @@
 import { Router } from "express"
 import { validate } from "express-validation"
 
-import authMiddleware from "../middlewares/auth"
 import authController from "../controllers/auth"
-import userValidation from "../validations/user"
+import authValidation from "../validations/auth"
 
 const authRoute = (() => {
   const path = "/auth"
   const router = Router()
   router.post(
     `${path}/signup`,
-    validate(userValidation.createUser),
+    validate(authValidation.signUp),
     authController.signUp,
   )
   router.post(
     `${path}/login`,
-    validate(userValidation.createUser),
+    validate(authValidation.logIn),
     authController.logIn,
   )
-  router.post(`${path}/logout`, authMiddleware(), authController.logOut)
   return router
 })()
 
