@@ -1,7 +1,7 @@
 const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin")
+const TerserPlugin = require("terser-webpack-plugin")
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 
 const dotenv = require("dotenv").config({
@@ -69,12 +69,10 @@ const prodConfig = {
   mode: "production",
   optimization: {
     minimizer: [
-      new UglifyJSPlugin({
-        sourceMap: true,
-        uglifyOptions: {
-          compress: {
-            inline: false,
-          },
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          ecma: 6,
         },
       }),
       new OptimizeCSSAssetsPlugin({}),
