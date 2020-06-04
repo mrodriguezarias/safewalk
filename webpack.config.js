@@ -8,6 +8,11 @@ const dotenv = require("dotenv").config({
   path: path.resolve(process.cwd(), `env/${process.env.NODE_ENV}.env`),
 })
 
+const envVars = {
+  ...dotenv.parsed,
+  PORT: process.env.PORT,
+}
+
 const commonConfig = {
   entry: path.join(process.cwd(), "./backend/src/index.js"),
   output: {
@@ -33,7 +38,7 @@ const commonConfig = {
       filename: path.join(process.cwd(), "./backend/build/index.html"),
     }),
     new webpack.DefinePlugin({
-      "process.env": JSON.stringify(dotenv.parsed),
+      "process.env": JSON.stringify(envVars),
     }),
   ],
   stats: {
