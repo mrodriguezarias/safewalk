@@ -3,8 +3,8 @@ import validationUtils from "../../utils/validation"
 
 const userSchema = {
   id: Joi.string().custom(validationUtils.objectId),
-  name: Joi.string().min(3),
-  password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/),
+  name: Joi.string().min(4).max(16),
+  password: Joi.string().min(8).max(32),
   admin: Joi.boolean().default(false),
 }
 

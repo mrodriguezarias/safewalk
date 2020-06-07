@@ -7,6 +7,7 @@ import morgan from "morgan"
 import path from "path"
 
 import envUtils, { env, nodeEnv } from "../../../shared/utils/env"
+import parseQueryMiddleware from "../middlewares/parseQuery"
 
 const appConfig = {
   get host() {
@@ -25,14 +26,20 @@ const appConfig = {
     // gzip compression
     app.use(compression())
 
+    const corsConfig = {
+      origin: true,
+      credentials: true,
+      exposedHeaders: ["Content-Range"],
+    }
+
     if (envUtils.get(env.NodeEnv) === nodeEnv.Prod) {
       app.use(hpp())
       app.use(helmet())
       app.use(morgan("combined"))
-      app.use(cors({ origin: appConfig.host, credentials: true }))
+      app.use(cors({ ...corsConfig, origin: appConfig.host }))
     } else {
       app.use(morgan("dev"))
-      app.use(cors({ origin: true, credentials: true }))
+      app.use(cors({ ...corsConfig }))
     }
 
     // Parse JSON
@@ -50,6 +57,8 @@ const appConfig = {
         index: false,
       }),
     )
+
+    app.use(parseQueryMiddleware)
   },
 }
 

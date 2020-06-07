@@ -12,7 +12,8 @@
     "jsx-quotes": ["error", "prefer-double"],
     "quotes": ["error", "double"],
     "semi": ["error", "never"],
-    "space-before-function-paren": "off"
+    "space-before-function-paren": "off",
+    "react/prop-types": "off"
   },
   "parserOptions": {
     "sourceType": "module"

@@ -7,8 +7,10 @@ const routeConfig = {
   routes: [authRoute, userRoute],
   configure: (app) => {
     const apiRouter = new Router()
-    for (const route of routeConfig.routes) {
-      apiRouter.use("/", route)
+    for (const { path, configureRouter } of routeConfig.routes) {
+      const router = new Router()
+      configureRouter(router)
+      apiRouter.use(path, router)
     }
     app.use("/api", apiRouter)
     const staticRouter = new Router()

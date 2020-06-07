@@ -11,6 +11,7 @@ const userValidation = {
     body: Joi.object({
       name: userSchema.name.required(),
       password: userSchema.password.required(),
+      admin: userSchema.admin,
     }),
   },
   updateUser: {
@@ -18,6 +19,7 @@ const userValidation = {
       id: userSchema.id.required(),
     }),
     body: Joi.object({
+      id: userSchema.id,
       name: userSchema.name,
       password: userSchema.password,
       admin: userSchema.admin,

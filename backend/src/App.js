@@ -1,36 +1,30 @@
-import React, { useMemo } from "react"
-import useMediaQuery from "@material-ui/core/useMediaQuery"
-import { createMuiTheme } from "@material-ui/core/styles"
+import React from "react"
 import { Admin, Resource, Login } from "react-admin"
+import UserIcon from "@material-ui/icons/Group"
 
 import authProvider from "./providers/auth"
 import dataProvider from "./providers/data"
-import Dashboard from "./dashboard"
+import userResource from "./resources/user"
 
 const LoginPage = () => (
   <Login backgroundImage="https://source.unsplash.com/1600x900/?kitten" />
 )
 
 const App = () => {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
-  const theme = useMemo(
-    () =>
-      createMuiTheme({
-        palette: {
-          type: prefersDarkMode ? "dark" : "light",
-        },
-      }),
-    [prefersDarkMode],
-  )
   return (
     <Admin
+      title="Safewalk Backend"
       loginPage={LoginPage}
-      theme={theme}
       authProvider={authProvider}
       dataProvider={dataProvider}
-      dashboard={Dashboard}
     >
-      <Resource />
+      <Resource
+        name="users"
+        icon={UserIcon}
+        list={userResource.list}
+        edit={userResource.edit}
+        create={userResource.create}
+      />
     </Admin>
   )
 }

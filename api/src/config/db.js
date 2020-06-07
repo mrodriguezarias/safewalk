@@ -24,7 +24,7 @@ const dbConfig = {
     mongoose.connect(url, dbConfig.options)
     const connection = mongoose.connection
     connection.once("open", () => {
-      console.log("Connected to database")
+      console.info("Connected to database")
     })
   },
 }

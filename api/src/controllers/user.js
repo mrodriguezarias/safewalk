@@ -4,8 +4,14 @@ import userService from "../services/user"
 const userController = {
   getUsers: async (req, res, next) => {
     try {
-      const response = await userService.getUsers()
-      res.status(HttpStatus.OK).json(response)
+      const { filter, range, sort } = req.query
+      const { users, contentRangeHeader } = await userService.getUsers(
+        filter,
+        range,
+        sort,
+      )
+      res.header("Content-Range", contentRangeHeader)
+      res.status(HttpStatus.OK).json(users)
     } catch (error) {
       next(error)
     }
@@ -13,8 +19,8 @@ const userController = {
   getUserById: async (req, res, next) => {
     const userId = req.params.id
     try {
-      const response = await userService.getUserById(userId)
-      res.status(HttpStatus.OK).json(response)
+      const user = await userService.getUserById(userId)
+      res.status(HttpStatus.OK).json(user)
     } catch (error) {
       next(error)
     }

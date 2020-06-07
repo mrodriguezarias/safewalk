@@ -21,8 +21,8 @@ dbConfig.configure()
 
 server.listen(appConfig.port, appConfig.host, (error) => {
   if (error) {
-    console.log("Server error:", error)
+    console.error("Server error:", error)
   } else {
-    console.log(`Server listening @ ${appConfig.host}:${appConfig.port}`)
+    console.info(`Server listening @ ${appConfig.host}:${appConfig.port}`)
   }
 })
