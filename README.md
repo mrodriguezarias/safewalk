@@ -7,7 +7,9 @@
 * Luque, Lilian
 * Rodríguez Arias, Mariano
 
-## Preparación del entorno de desarrollo
+## Entorno local
+
+### Preparación
 
 1. Instalar la última versión de [Node.js](https://nodejs.org/)
 2. Instalar Expo: `npm install expo-cli --global`
@@ -16,22 +18,11 @@
 5. Instalar las dependencias: `npm install`
 6. Crear un archivo de configuración del entorno: `cp env/development.env env/local.env`
 
-## Ejecución del entorno local
+### Ejecución
 
-### Frontend (cliente)
-`npm run app:start`
-
-### Backend (servidor)
-`npm run api:start`
-
-### Panel de control
-
-`npm run backend:start`
-
-### Base de datos
-
-* Con Docker: `docker-compose up -d`
-* Sin Docker: `mongod --fork`
+| Frontend            | Backend             | Panel de control | Base de datos |
+| ------------------- | ------------------- | ----------------------- | -------------------------- |
+| `npm run app:start` | `npm run api:start` | `npm run backend:start` | Con Docker: `docker-compose up -d`<br>Sin Docker: `mongod --fork`                  |
 
 ## Entornos de desarrollo, pruebas y producción
 
