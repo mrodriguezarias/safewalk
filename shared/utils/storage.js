@@ -1,39 +1,32 @@
-const getValue = (key) => {
-  let value = localStorage.getItem(key)
-  try {
-    value = JSON.parse(value)
-  } catch (err) {}
-  return value
-}
+import AsyncStorage from "@react-native-community/async-storage"
+const APP_PREFIX = "@safewalk_"
 
 const storageUtils = {
-  isset: (key) => {
-    return localStorage.getItem(key) !== null
-  },
-  load: (key, defaultValue = undefined) => {
+  get: async (key, defaultValue = null) => {
+    let value = null
     try {
-      return storageUtils.isset(key) ? getValue(key) : defaultValue
-    } catch (err) {
-      console.error(err)
-      return defaultValue
-    }
-  },
-  save: (key, value = undefined) => {
-    try {
-      if (value === undefined) {
-        localStorage.removeItem(key)
-      } else {
-        localStorage.setItem(key, JSON.stringify(value))
+      value = await AsyncStorage.getItem(`${APP_PREFIX}${key}`)
+      if (value !== null) {
+        value = JSON.parse(value)
       }
     } catch (err) {
       console.error(err)
     }
+    if (value === null) {
+      value = defaultValue
+    }
+    return value
   },
-  clear: (key = undefined) => {
-    if (key === undefined) {
-      localStorage.clear()
-    } else {
-      localStorage.removeItem(key)
+  set: async (key, value = null) => {
+    try {
+      if (value === null) {
+        await AsyncStorage.removeItem(`${APP_PREFIX}${key}`)
+      } else {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem(`${APP_PREFIX}${key}`, jsonValue)
+      }
+    } catch (err) {
+      console.error(err)
     }
   },
 }

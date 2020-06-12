@@ -1,5 +1,6 @@
 import dotenv from "dotenv"
 import commandLineArgs from "command-line-args"
+import envUtils from "../../../shared/utils/env"
 
 const envLoadUtils = {
   load: () => {
@@ -17,6 +18,7 @@ const envLoadUtils = {
     if (result.error) {
       throw result.error
     }
+    envUtils.load()
   },
 }
 

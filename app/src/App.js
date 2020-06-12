@@ -1,45 +1,21 @@
 import React from "react"
-import {
-  Container,
-  Header,
-  Left,
-  Button,
-  Icon,
-  Body,
-  Title,
-  Content,
-  Text,
-  Footer,
-  Right,
-  FooterTab,
-} from "native-base"
+import { useSelector } from "react-redux"
+
+import LoadingScreen from "./screens/loading"
+import AuthScreen from "./screens/auth"
+import MainScreen from "./screens/main"
 
 const App = () => {
-  return (
-    <Container>
-      <Header>
-        <Left>
-          <Button transparent>
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Header</Title>
-        </Body>
-        <Right />
-      </Header>
-      <Content padder>
-        <Text>This is Content Section</Text>
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
-    </Container>
-  )
+  const loading = useSelector((state) => state.app.loading)
+  const loggedIn = useSelector((state) => state.auth.logged)
+
+  if (loading) {
+    return <LoadingScreen />
+  }
+  if (!loggedIn) {
+    return <AuthScreen />
+  }
+  return <MainScreen />
 }
 
 export default App

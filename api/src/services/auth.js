@@ -12,7 +12,7 @@ const authService = {
     if (preexistingUser) {
       throw new HttpError(
         HttpStatus.CONFLICT,
-        `User ${userData.name} already exists`,
+        `El usuario ${userData.name} ya existe`,
       )
     }
 
@@ -22,17 +22,17 @@ const authService = {
       password: hashedPassword,
     })
 
-    return newUser
+    return { user: newUser }
   },
   logIn: async ({ name, password, shouldBeAdmin }) => {
     const user = await userModel.findOne({ name })
     if (!user) {
-      throw new HttpError(HttpStatus.CONFLICT, `Name ${name} not found`)
+      throw new HttpError(HttpStatus.CONFLICT, `Nombre ${name} no encontrado`)
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password)
     if (!passwordMatches) {
-      throw new HttpError(HttpStatus.CONFLICT, "Incorrect password")
+      throw new HttpError(HttpStatus.CONFLICT, "Contraseña incorrecta")
     }
 
     if (shouldBeAdmin && !user.admin) {

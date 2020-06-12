@@ -6,10 +6,8 @@ import appConfig from "./config/app"
 import routeConfig from "./config/route"
 import dbConfig from "./config/db"
 import errorConfig from "./config/error"
-import envLoadUtils from "./utils/envLoad"
 
-envLoadUtils.load()
-envUtils.validateAll()
+envUtils.load("api", require("dotenv"))
 
 const app = express()
 const server = http.createServer(app)

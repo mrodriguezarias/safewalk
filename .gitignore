@@ -14,3 +14,4 @@ local.env
 sandbox.js
 .DS_Store
 build/
+app.json

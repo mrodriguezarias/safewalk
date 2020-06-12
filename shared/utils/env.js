@@ -29,6 +29,8 @@ const types = {
   Boolean: "Boolean",
 }
 
+let repo = {}
+
 const options = [
   {
     name: env.NodeEnv,
@@ -131,11 +133,11 @@ const getEnvKey = (name) => {
 }
 
 const valueInEnv = (name) => {
-  return name in process.env
+  return name in repo
 }
 
 const getRawValue = (name) => {
-  return process.env[name]
+  return repo[name]
 }
 
 const getValue = (name, type) => {
@@ -168,6 +170,34 @@ const validateAll = () => {
   }
 }
 
+const load = (platform, dotenv) => {
+  if (platform === "api") {
+    const commandLineArgs = require("command-line-args")
+    const options = commandLineArgs([
+      {
+        name: "env",
+        alias: "e",
+        defaultValue: "production",
+        type: String,
+      },
+    ])
+    const result = dotenv.config({
+      path: `./env/${options.env}.env`,
+    })
+    if (result.error) {
+      throw result.error
+    }
+    repo = { ...process.env }
+  } else if (platform === "app") {
+    const constants = require("expo-constants")
+    console.log("constants", constants)
+    repo = { ...constants.default.manifest.extra.env }
+  } else {
+    repo = { ...process.env }
+  }
+  validateAll()
+}
+
 const getAll = () => {
   return _.reduce(
     options,
@@ -194,7 +224,7 @@ const get = (name) => {
 }
 
 const envUtils = {
-  validateAll,
+  load,
   getAll,
   get,
 }

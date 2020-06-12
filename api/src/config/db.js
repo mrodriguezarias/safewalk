@@ -7,6 +7,8 @@ const dbConfig = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    serverSelectionTimeoutMS: 3000,
+    family: 4,
   },
   configure: () => {
     const {
@@ -22,8 +24,10 @@ const dbConfig = {
       : ["mongodb", "authSource=admin", `:${MongoPort}`]
     const url = `${schema}://${MongoUser}:${MongoPassword}@${MongoHost}${port}/${MongoDatabase}?${params}`
     mongoose.connect(url, dbConfig.options)
-    const connection = mongoose.connection
-    connection.once("open", () => {
+    mongoose.connection.on("error", function (error) {
+      console.error(error)
+    })
+    mongoose.connection.once("open", () => {
       console.info("Connected to database")
     })
   },

@@ -12,9 +12,11 @@ const authProvider = {
     return Promise.reject(new HttpError(status, message))
   },
   checkAuth: () => {
-    return authController.isLoggedIn()
-      ? Promise.resolve()
-      : Promise.reject(new Error())
+    return authController
+      .isLoggedIn()
+      .then((loggedIn) =>
+        loggedIn ? Promise.resolve() : Promise.reject(new Error()),
+      )
   },
   getPermissions: () => {
     return Promise.resolve()

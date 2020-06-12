@@ -4,15 +4,15 @@
   "private": true,
   "main": "app/src/index.js",
   "scripts": {
-    "app:start": "expo start",
-    "app:android": "expo start --android",
-    "app:ios": "expo start --ios",
-    "app:web": "expo start --web",
+    "app:start": "NODE_ENV=local npm run _gec && expo start",
+    "app:android": "NODE_ENV=local npm run _gec && expo start --android",
+    "app:ios": "NODE_ENV=local npm run _gec && expo start --ios",
     "api:start": "nodemon --watch api/src --exec babel-node ./api/src/index.js --env=local",
     "api:start:prod": "babel-node ./api/src/index.js --env=$NODE_ENV",
     "backend:start": "NODE_ENV=local PORT=3500 webpack-dev-server --mode development --hot",
     "backend:build": "webpack -p",
-    "sandbox": "nodemon --watch . --exec babel-node ./sandbox.js"
+    "sandbox": "nodemon --watch . --exec babel-node ./sandbox.js",
+    "_gec": "babel-node ./generateExpoConfig.js"
   },
   "repository": {
     "url": "https://github.com/mrodriguezarias/safewalk"
@@ -29,8 +29,10 @@
     ]
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/native": "^5.2.3",
+    "@react-navigation/stack": "^5.5.1",
     "@use-expo/font": "^2.0.0",
     "bcrypt": "^4.0.1",
     "color": "^3.1.2",
@@ -62,6 +64,10 @@
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "~2.2.0",
     "react-native-web": "^0.11.7",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-form": "^8.3.6",
+    "redux-thunk": "^2.3.0",
     "store": "^2.0.12"
   },
   "devDependencies": {

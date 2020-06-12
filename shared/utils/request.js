@@ -11,7 +11,7 @@ const doRequest = async ({ method, uri, params, data }) => {
   if (params !== undefined) {
     url += `?${qs.stringify(params)}`
   }
-  const auth = storageUtils.load("auth")
+  const auth = await storageUtils.get("auth")
   const response = await fetch(url, {
     method: (method ?? "get").toUpperCase(),
     mode: "cors",

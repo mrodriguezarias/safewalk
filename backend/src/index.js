@@ -5,6 +5,6 @@ import "./index.css"
 import App from "./App"
 import envUtils from "../../shared/utils/env"
 
-envUtils.validateAll()
+envUtils.load()
 
 ReactDOM.render(<App />, document.getElementById("root"))
