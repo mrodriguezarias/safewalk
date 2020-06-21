@@ -27,7 +27,7 @@ const authService = {
   logIn: async ({ name, password, shouldBeAdmin }) => {
     const user = await userModel.findOne({ name })
     if (!user) {
-      throw new HttpError(HttpStatus.CONFLICT, `Nombre ${name} no encontrado`)
+      throw new HttpError(HttpStatus.CONFLICT, "Usuario inexistente")
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password)

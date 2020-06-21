@@ -1,22 +1,33 @@
 import React from "react"
-import { Button, View, Text } from "react-native"
-import { useSelector, useDispatch } from "react-redux"
-import authActions from "../store/actions/auth"
+import { useTheme } from "react-native-paper"
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
+
+import MapScreen from "./map"
+import UserScreen from "./user"
+
+const Tab = createMaterialBottomTabNavigator()
 
 const MainScreen = () => {
-  const dispatch = useDispatch()
-  const loggedUser = useSelector((state) => state.auth.user)
-
+  const { colors } = useTheme()
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ fontSize: 25, marginBottom: 10 }}>
-        Bienvenido <Text style={{ fontWeight: "bold" }}>{loggedUser.name}</Text>
-      </Text>
-      <Button
-        title="Cerrar Sesión"
-        onPress={() => dispatch(authActions.logOut())}
+    <Tab.Navigator barStyle={{ backgroundColor: colors.accent }} shifting>
+      <Tab.Screen
+        name="Home"
+        component={MapScreen}
+        options={{
+          title: "Mapa",
+          tabBarIcon: "map-outline",
+        }}
       />
-    </View>
+      <Tab.Screen
+        name="User"
+        component={UserScreen}
+        options={{
+          title: "Usuario",
+          tabBarIcon: "shield-account-outline",
+        }}
+      />
+    </Tab.Navigator>
   )
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
-import { ActivityIndicator, View, StyleSheet } from "react-native"
 import { useDispatch } from "react-redux"
 import appActions from "../store/actions/app"
+import Spinner from "../components/spinner"
 
 const LoadingScreen = () => {
   const dispatch = useDispatch()
@@ -10,19 +10,7 @@ const LoadingScreen = () => {
     dispatch(appActions.load())
   }, [])
 
-  return (
-    <View style={styles.centered}>
-      <ActivityIndicator size="large" />
-    </View>
-  )
+  return <Spinner full size="large" />
 }
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-})
 
 export default LoadingScreen

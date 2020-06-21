@@ -190,7 +190,6 @@ const load = (platform, dotenv) => {
     repo = { ...process.env }
   } else if (platform === "app") {
     const constants = require("expo-constants")
-    console.log("constants", constants)
     repo = { ...constants.default.manifest.extra.env }
   } else {
     repo = { ...process.env }
