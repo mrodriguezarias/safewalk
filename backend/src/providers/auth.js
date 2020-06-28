@@ -1,7 +1,7 @@
 import authController from "../../../shared/controllers/auth"
 import HttpError from "../../../shared/errors/http"
 
-const authProvider = {
+const authProvider = () => ({
   login: ({ username, password }) => {
     return authController.logIn(username, password, true)
   },
@@ -21,6 +21,6 @@ const authProvider = {
   getPermissions: () => {
     return Promise.resolve()
   },
-}
+})
 
 export default authProvider

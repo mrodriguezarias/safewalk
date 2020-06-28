@@ -1,19 +1,19 @@
 import React, { useState } from "react"
 import { View, StyleSheet, ScrollView, Keyboard } from "react-native"
 import { Button, Snackbar } from "react-native-paper"
+import Form from "../../components/form"
 import Field from "../../components/field"
 import validationUtils from "../../utils/validation"
-import { reduxForm } from "redux-form"
 import { useDispatch } from "react-redux"
 import authActions from "../../store/actions/auth"
 import authController from "../../../../shared/controllers/auth"
 
-const AuthScreen = ({ handleSubmit, navigation }) => {
+const AuthScreen = ({ navigation }) => {
   const [action, setAction] = useState(null)
   const [snackbarText, setSnackbarText] = useState("")
   const dispatch = useDispatch()
 
-  const doSubmit = (action) => async ({ name, password }) => {
+  const handleSubmit = async (action, { name, password }) => {
     if (!name || !password) {
       return
     }
@@ -32,43 +32,51 @@ const AuthScreen = ({ handleSubmit, navigation }) => {
   return (
     <>
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-        <Field
-          name="name"
-          label="Nombre"
-          validate={[
-            validationUtils.required(),
-            validationUtils.minLength(4),
-            validationUtils.maxLength(16),
-          ]}
+        <Form
+          render={({ valid, values }) => (
+            <>
+              <Field
+                name="name"
+                label="Nombre"
+                validate={[
+                  validationUtils.required(),
+                  validationUtils.minLength(4),
+                  validationUtils.maxLength(16),
+                ]}
+              />
+              <Field
+                name="password"
+                label="Contraseña"
+                secureTextEntry
+                validate={[
+                  validationUtils.required(),
+                  validationUtils.minLength(8),
+                  validationUtils.maxLength(32),
+                ]}
+              />
+              <View style={styles.buttons}>
+                <Button
+                  mode="outlined"
+                  disabled={!valid}
+                  contentStyle={styles.button}
+                  loading={action === "signUp"}
+                  onPress={() => handleSubmit("signUp", values)}
+                >
+                  Registrarse
+                </Button>
+                <Button
+                  mode="contained"
+                  disabled={!valid}
+                  contentStyle={styles.button}
+                  loading={action === "logIn"}
+                  onPress={() => handleSubmit("logIn", values)}
+                >
+                  Iniciar Sesión
+                </Button>
+              </View>
+            </>
+          )}
         />
-        <Field
-          name="password"
-          label="Contraseña"
-          secureTextEntry
-          validate={[
-            validationUtils.required(),
-            validationUtils.minLength(8),
-            validationUtils.maxLength(32),
-          ]}
-        />
-        <View style={styles.buttons}>
-          <Button
-            mode="outlined"
-            contentStyle={styles.button}
-            loading={action === "signUp"}
-            onPress={handleSubmit(doSubmit("signUp"))}
-          >
-            Registrarse
-          </Button>
-          <Button
-            mode="contained"
-            contentStyle={styles.button}
-            loading={action === "logIn"}
-            onPress={handleSubmit(doSubmit("logIn"))}
-          >
-            Iniciar Sesión
-          </Button>
-        </View>
       </ScrollView>
       <Snackbar
         visible={!!snackbarText}
@@ -102,6 +110,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default reduxForm({
-  form: "auth",
-})(AuthScreen)
+export default AuthScreen

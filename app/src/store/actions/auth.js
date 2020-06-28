@@ -6,6 +6,7 @@ const authActions = {
   SIGNUP: "SIGNUP",
   LOGIN: "LOGIN",
   LOGOUT: "LOGOUT",
+  EDIT: "EDIT",
   load: (state) => ({ type: authActions.LOAD, payload: state }),
   signUp: (user) => async (dispatch) => {
     await storageUtils.set("user", user)
@@ -19,6 +20,10 @@ const authActions = {
     await authController.logOut()
     await storageUtils.set("user")
     dispatch({ type: authActions.LOGOUT })
+  },
+  edit: (data) => async (dispatch) => {
+    const user = await authController.edit(data)
+    dispatch({ type: authActions.EDIT, payload: { user } })
   },
 }
 

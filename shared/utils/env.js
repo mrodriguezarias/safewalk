@@ -170,10 +170,9 @@ const validateAll = () => {
   }
 }
 
-const load = (platform, dotenv) => {
+const load = (platform, libs = {}) => {
   if (platform === "api") {
-    const commandLineArgs = require("command-line-args")
-    const options = commandLineArgs([
+    const options = libs.commandLineArgs([
       {
         name: "env",
         alias: "e",
@@ -181,7 +180,7 @@ const load = (platform, dotenv) => {
         type: String,
       },
     ])
-    const result = dotenv.config({
+    const result = libs.dotenv.config({
       path: `./env/${options.env}.env`,
     })
     if (result.error) {
@@ -189,8 +188,7 @@ const load = (platform, dotenv) => {
     }
     repo = { ...process.env }
   } else if (platform === "app") {
-    const constants = require("expo-constants")
-    repo = { ...constants.default.manifest.extra.env }
+    repo = { ...libs.expoConstants.default.manifest.extra.env }
   } else {
     repo = { ...process.env }
   }

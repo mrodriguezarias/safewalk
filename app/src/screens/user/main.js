@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
 import { View, StyleSheet } from "react-native"
 import { Button } from "react-native-paper"
 import { useSelector } from "react-redux"
+import storageUtils from "../../../../shared/utils/storage"
 
 const LoggedOutScreen = ({ navigation }) => (
   <View style={styles.centered}>

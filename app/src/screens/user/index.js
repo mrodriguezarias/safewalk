@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import Header from "../../components/header"
 import AppSettingsScreen from "./appSettings"
 import UserSettingsScren from "./userSettings"
+import AdminScreen from "./admin"
 import MainScreen from "./main"
 import AuthScreen from "./auth"
 import AppbarAction from "../../components/appbarAction"
@@ -57,6 +58,11 @@ const UserScreen = () => {
         name="Auth"
         component={AuthScreen}
         options={{ headerTitle: "Iniciar Sesión o Registrarse" }}
+      />
+      <Stack.Screen
+        name="Admin"
+        component={AdminScreen}
+        options={{ headerTitle: "Administración" }}
       />
     </Stack.Navigator>
   )

@@ -1,9 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
-
 import "./index.css"
-import App from "./App"
 import envUtils from "../../shared/utils/env"
+import App from "./App"
 
 envUtils.load()
 

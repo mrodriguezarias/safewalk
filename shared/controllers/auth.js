@@ -1,5 +1,6 @@
 import authService from "../services/auth"
 import storageUtils from "../utils/storage"
+import userService from "../services/user"
 
 const authController = {
   signUp: async (name, password) => {
@@ -17,6 +18,13 @@ const authController = {
   isLoggedIn: async () => {
     const token = await storageUtils.get("auth")
     return token !== null
+  },
+  edit: async (data) => {
+    const user = await storageUtils.get("user")
+    const newUser = { ...user, ...data }
+    await storageUtils.set("user", newUser)
+    await userService.update(user.id, data)
+    return newUser
   },
 }
 

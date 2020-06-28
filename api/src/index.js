@@ -7,7 +7,10 @@ import routeConfig from "./config/route"
 import dbConfig from "./config/db"
 import errorConfig from "./config/error"
 
-envUtils.load("api", require("dotenv"))
+envUtils.load("api", {
+  commandLineArgs: require("command-line-args"),
+  dotenv: require("dotenv"),
+})
 
 const app = express()
 const server = http.createServer(app)

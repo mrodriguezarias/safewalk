@@ -15,6 +15,11 @@ const validationUtils = {
       ? `Debe tener ${max} caracteres como máximo`
       : undefined,
   ),
+  phoneNumber: generalUtils.memoize(() => (value) =>
+    value && !/^\+?\d+$/.test(value)
+      ? "Debe ser un número de teléfono válido"
+      : undefined,
+  ),
 }
 
 export default validationUtils

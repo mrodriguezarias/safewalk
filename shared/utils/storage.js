@@ -29,6 +29,30 @@ const storageUtils = {
       console.error(err)
     }
   },
+  clear: async () => {
+    try {
+      const allKeys = await AsyncStorage.getAllKeys()
+      const appKeys = allKeys.filter((key) => key.startsWith(APP_PREFIX))
+      await AsyncStorage.multiRemove(appKeys)
+    } catch (err) {
+      console.error(err)
+    }
+  },
+  getAll: async () => {
+    try {
+      const allKeys = await AsyncStorage.getAllKeys()
+      const appKeys = allKeys.filter((key) => key.startsWith(APP_PREFIX))
+      const all = {}
+      for (const appKey of appKeys) {
+        const key = appKey.replace(new RegExp(`^${APP_PREFIX}`), "")
+        const value = await storageUtils.get(key)
+        all[key] = value
+      }
+      return all
+    } catch (err) {
+      console.error(err)
+    }
+  },
 }
 
 export default storageUtils

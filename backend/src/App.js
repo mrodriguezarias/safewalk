@@ -15,8 +15,8 @@ const App = () => {
     <Admin
       title="Safewalk Backend"
       loginPage={LoginPage}
-      authProvider={authProvider}
-      dataProvider={dataProvider}
+      authProvider={authProvider()}
+      dataProvider={dataProvider()}
     >
       <Resource
         name="users"

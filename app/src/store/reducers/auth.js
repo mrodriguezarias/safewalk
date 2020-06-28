@@ -9,6 +9,7 @@ const load = (state, newState) => ({ ...state, ...newState })
 const signUp = (state, { user }) => ({ ...state, logged: true, user })
 const logIn = (state, { user }) => ({ ...state, logged: true, user })
 const logOut = (state) => ({ ...state, logged: false, user: null })
+const edit = (state, { user }) => ({ ...state, user })
 
 const authReducer = (state = initialState, action) => {
   const { type, payload = {} } = action
@@ -21,6 +22,8 @@ const authReducer = (state = initialState, action) => {
       return logIn(state, payload)
     case authActions.LOGOUT:
       return logOut(state, payload)
+    case authActions.EDIT:
+      return edit(state, payload)
     default:
       return state
   }

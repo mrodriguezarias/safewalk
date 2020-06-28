@@ -46,7 +46,7 @@ const requestUtils = {
   post: async (uri, data) => {
     return doRequest({ method: "post", uri, data })
   },
-  put: async (uri, params, data) => {
+  put: async (uri, data, params) => {
     return doRequest({ method: "put", uri, params, data })
   },
   delete: async (uri, params) => {
