@@ -5,6 +5,7 @@ import HttpError from "../../../shared/errors/http"
 import HttpStatus from "http-status-codes"
 import userModel from "../models/user"
 import envUtils, { env } from "../../../shared/utils/env"
+import _ from "lodash"
 
 const authService = {
   signUp: async (userData) => {
@@ -17,15 +18,16 @@ const authService = {
     }
 
     const hashedPassword = await bcrypt.hash(userData.password, 10)
-    const newUser = await userModel.create({
+    let user = await userModel.create({
       ...userData,
       password: hashedPassword,
     })
 
-    return { user: newUser }
+    user = _.omit(user.toJSON(), "password")
+    return { user }
   },
   logIn: async ({ name, password, shouldBeAdmin }) => {
-    const user = await userModel.findOne({ name })
+    let user = await userModel.findOne({ name })
     if (!user) {
       throw new HttpError(HttpStatus.CONFLICT, "Usuario inexistente")
     }
@@ -43,6 +45,7 @@ const authService = {
     const secret = envUtils.get(env.JwtSecret)
     const token = jwt.sign(payload, secret)
 
+    user = _.omit(user.toJSON(), "password")
     return { user, token }
   },
 }

@@ -6,7 +6,7 @@ import { List } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
 import appActions from "../../store/actions/app"
 
-const AdminScreen = ({ navigation }) => {
+const AdminScreen = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
 

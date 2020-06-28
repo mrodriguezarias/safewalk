@@ -12,6 +12,7 @@ import {
   DarkTheme,
 } from "@react-navigation/native"
 import { AppearanceProvider, useColorScheme } from "react-native-appearance"
+import getTheme from "./theme"
 
 import LoadingScreen from "./screens/loading"
 import MainScreen from "./screens/main"
@@ -37,15 +38,15 @@ const App = () => {
 
   const paperTheme = useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme
+    const preferredTheme = theme.dark ? "dark" : "light"
+    const customTheme = getTheme(preferredTheme)
     return {
       ...t,
       roundness: 10,
       colors: {
         ...t.colors,
         ...theme.colors,
-        surface: theme.dark ? "#027961" : "#03CEA4",
-        primary: theme.dark ? "#1573B7" : "#1A8FE3",
-        accent: theme.dark ? "#7D5BA6" : "#B5A2CD",
+        ...customTheme,
       },
     }
   }, [theme])

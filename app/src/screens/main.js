@@ -8,9 +8,9 @@ import UserScreen from "./user"
 const Tab = createMaterialBottomTabNavigator()
 
 const MainScreen = () => {
-  const { colors } = useTheme()
+  const theme = useTheme()
   return (
-    <Tab.Navigator barStyle={{ backgroundColor: colors.accent }} shifting>
+    <Tab.Navigator barStyle={{ backgroundColor: theme.colors.tabBar }} shifting>
       <Tab.Screen
         name="Home"
         component={MapScreen}

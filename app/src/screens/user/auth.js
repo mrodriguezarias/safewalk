@@ -57,7 +57,7 @@ const AuthScreen = ({ navigation }) => {
               <View style={styles.buttons}>
                 <Button
                   mode="outlined"
-                  disabled={!valid}
+                  disabled={!valid || !!action}
                   contentStyle={styles.button}
                   loading={action === "signUp"}
                   onPress={() => handleSubmit("signUp", values)}
@@ -66,7 +66,7 @@ const AuthScreen = ({ navigation }) => {
                 </Button>
                 <Button
                   mode="contained"
-                  disabled={!valid}
+                  disabled={!valid || !!action}
                   contentStyle={styles.button}
                   loading={action === "logIn"}
                   onPress={() => handleSubmit("logIn", values)}

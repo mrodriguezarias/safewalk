@@ -1,18 +1,23 @@
 import React from "react"
+import { StyleSheet, View } from "react-native"
 import { createStackNavigator } from "@react-navigation/stack"
 import { useSelector } from "react-redux"
 import Header from "../../components/header"
-import AppSettingsScreen from "./appSettings"
-import UserSettingsScren from "./userSettings"
+import SettingsScreen from "./settings"
 import AdminScreen from "./admin"
 import MainScreen from "./main"
 import AuthScreen from "./auth"
 import AppbarAction from "../../components/appbarAction"
+import PremiumScreen from "./premium"
+import PaymentScreen from "./payment"
+import EditUserScreen from "./editUser"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { Title } from "react-native-paper"
 
 const Stack = createStackNavigator()
 
 const UserScreen = () => {
-  const userName = useSelector((state) => state.auth.user?.name)
+  const user = useSelector((state) => state.auth.user)
   return (
     <Stack.Navigator
       initialRouteName="FeedList"
@@ -27,31 +32,33 @@ const UserScreen = () => {
         name="Main"
         component={MainScreen}
         options={{
-          headerTitle: userName ?? "Usuario",
-          headerRight: ({ navigation }) => (
+          headerTitle: () => (
             <>
-              {userName && (
-                <AppbarAction
-                  icon="account-circle"
-                  onPress={() => navigation.navigate("UserSettings")}
-                />
+              <Title style={styles.title}>{user?.name ?? "Usuario"}</Title>
+              {user?.premium && (
+                <>
+                  {" "}
+                  <MaterialCommunityIcons name="star-circle" size={16} />
+                </>
               )}
-              <AppbarAction
-                icon="tune"
-                onPress={() => navigation.navigate("AppSettings")}
-              />
             </>
+          ),
+          headerRight: ({ navigation }) => (
+            <AppbarAction
+              icon="tune"
+              onPress={() => navigation.navigate("Settings")}
+            />
           ),
         }}
       />
       <Stack.Screen
-        name="UserSettings"
-        component={UserSettingsScren}
-        options={{ headerTitle: "Usuario" }}
+        name="EditUser"
+        component={EditUserScreen}
+        options={{ headerTitle: "Editar Usuario" }}
       />
       <Stack.Screen
-        name="AppSettings"
-        component={AppSettingsScreen}
+        name="Settings"
+        component={SettingsScreen}
         options={{ headerTitle: "Opciones" }}
       />
       <Stack.Screen
@@ -62,10 +69,26 @@ const UserScreen = () => {
       <Stack.Screen
         name="Admin"
         component={AdminScreen}
-        options={{ headerTitle: "Administración" }}
+        options={{ headerTitle: "Panel de Control" }}
+      />
+      <Stack.Screen
+        name="Premium"
+        component={PremiumScreen}
+        options={{ headerTitle: "Adquirir Premium" }}
+      />
+      <Stack.Screen
+        name="Payment"
+        component={PaymentScreen}
+        options={{ headerTitle: "Información de Pago" }}
       />
     </Stack.Navigator>
   )
 }
+
+const styles = StyleSheet.create({
+  title: {
+    margin: 50,
+  },
+})
 
 export default UserScreen

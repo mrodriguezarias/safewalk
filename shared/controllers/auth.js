@@ -22,8 +22,8 @@ const authController = {
   edit: async (data) => {
     const user = await storageUtils.get("user")
     const newUser = { ...user, ...data }
-    await storageUtils.set("user", newUser)
     await userService.update(user.id, data)
+    await storageUtils.set("user", newUser)
     return newUser
   },
 }

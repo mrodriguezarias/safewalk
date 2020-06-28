@@ -35,7 +35,7 @@ const userService = {
     if (user) {
       throw new HttpError(
         HttpStatus.CONFLICT,
-        `User ${userData.name} already exists`,
+        `El usuario ${userData.name} ya existe`,
       )
     }
 
@@ -51,8 +51,23 @@ const userService = {
       throw new HttpError(HttpStatus.BAD_REQUEST, "User not provided")
     }
 
+    const user = await userModel.findById(userId)
+    if (!user) {
+      throw new HttpError(HttpStatus.NOT_FOUND, "User not found")
+    }
+
     if (userData.password) {
       userData.password = await bcrypt.hash(userData.password, 10)
+    }
+
+    if (userData.name && userData.name !== user.name) {
+      const existing = await userModel.findOne({ name: userData.name })
+      if (existing) {
+        throw new HttpError(
+          HttpStatus.CONFLICT,
+          `El usuario ${userData.name} ya existe`,
+        )
+      }
     }
 
     userData = _.omit(userData, "id")
