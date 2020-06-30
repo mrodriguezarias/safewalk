@@ -1,5 +1,5 @@
 import React from "react"
-import { StyleSheet, View } from "react-native"
+import { StyleSheet } from "react-native"
 import { createStackNavigator } from "@react-navigation/stack"
 import { useSelector } from "react-redux"
 import Header from "../../components/header"
@@ -11,6 +11,7 @@ import AppbarAction from "../../components/appbarAction"
 import PremiumScreen from "./premium"
 import PaymentScreen from "./payment"
 import EditUserScreen from "./editUser"
+import NewContactScreen from "./newContact"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Title } from "react-native-paper"
 
@@ -32,6 +33,13 @@ const UserScreen = () => {
         name="Main"
         component={MainScreen}
         options={{
+          headerLeft: ({ navigation }) =>
+            user && (
+              <AppbarAction
+                icon="plus"
+                onPress={() => navigation.navigate("NewContact")}
+              />
+            ),
           headerTitle: () => (
             <>
               <Title style={styles.title}>{user?.name ?? "Usuario"}</Title>
@@ -80,6 +88,11 @@ const UserScreen = () => {
         name="Payment"
         component={PaymentScreen}
         options={{ headerTitle: "Información de Pago" }}
+      />
+      <Stack.Screen
+        name="NewContact"
+        component={NewContactScreen}
+        options={{ headerTitle: "Nuevo Contacto" }}
       />
     </Stack.Navigator>
   )

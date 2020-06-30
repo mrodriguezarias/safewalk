@@ -17,7 +17,11 @@ const Header = ({ scene, previous, navigation }) => {
 
   return (
     <Appbar.Header style={{ backgroundColor: theme.colors.header }}>
-      {previous && <Appbar.BackAction onPress={() => navigation.pop()} />}
+      {previous ? (
+        <Appbar.BackAction onPress={() => navigation.pop()} />
+      ) : (
+        options.headerLeft && options.headerLeft({ navigation })
+      )}
       <Appbar.Content title={title} />
       {options.headerRight && options.headerRight({ navigation })}
     </Appbar.Header>

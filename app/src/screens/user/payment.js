@@ -1,10 +1,5 @@
 import React, { useState } from "react"
-import {
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native"
+import { View, StyleSheet } from "react-native"
 import {
   useTheme,
   Headline,
@@ -13,11 +8,12 @@ import {
   Dialog,
   Paragraph,
 } from "react-native-paper"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { CreditCardInput } from "react-native-credit-card-input"
 import generalUtils from "../../../../shared/utils/general"
 import authActions from "../../store/actions/auth"
 import authController from "../../../../shared/controllers/auth"
+import DismissKeyboard from "../../components/dismissKeyboard"
 
 const PaymentScreen = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -71,7 +67,7 @@ const PaymentScreen = ({ navigation }) => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <DismissKeyboard>
         <View style={styles.container}>
           <View style={styles.inner}>
             <CreditCardInput
@@ -108,7 +104,7 @@ const PaymentScreen = ({ navigation }) => {
             </Button>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </DismissKeyboard>
     </>
   )
 }

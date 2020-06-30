@@ -1,5 +1,5 @@
 import React from "react"
-import { View, ScrollView, StyleSheet } from "react-native"
+import { View, ScrollView, StyleSheet, Platform } from "react-native"
 import { ToggleButton, List } from "react-native-paper"
 import SettingsItem from "../../components/settingsItem"
 import { useSelector, useDispatch } from "react-redux"
@@ -8,6 +8,7 @@ import authActions from "../../store/actions/auth"
 
 const SettingsScreen = ({ navigation }) => {
   const theme = useSelector((state) => state.app.theme)
+  const mapProvider = useSelector((state) => state.app.mapProvider)
   const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
 
@@ -22,13 +23,28 @@ const SettingsScreen = ({ navigation }) => {
       <SettingsItem label="Apariencia">
         <ToggleButton.Row
           value={theme}
-          onValueChange={(theme) => dispatch(appActions.setTheme(theme))}
+          onValueChange={(theme) =>
+            theme && dispatch(appActions.setTheme(theme))
+          }
         >
           <ToggleButton icon="theme-light-dark" value="system" />
           <ToggleButton icon="white-balance-sunny" value="light" />
           <ToggleButton icon="weather-night" value="dark" />
         </ToggleButton.Row>
       </SettingsItem>
+      {Platform.OS === "ios" && (
+        <SettingsItem label="Proveedor de Mapas">
+          <ToggleButton.Row
+            value={mapProvider}
+            onValueChange={(mapProvider) =>
+              mapProvider && dispatch(appActions.setMapProvider(mapProvider))
+            }
+          >
+            <ToggleButton icon="apple" value="apple" />
+            <ToggleButton icon="google" value="google" />
+          </ToggleButton.Row>
+        </SettingsItem>
+      )}
     </List.Section>
   )
 

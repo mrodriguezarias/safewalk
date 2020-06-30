@@ -1,8 +1,11 @@
-import React, { useState } from "react"
+import React from "react"
 import { View, StyleSheet } from "react-native"
 import { Button } from "react-native-paper"
 import { useSelector } from "react-redux"
-import storageUtils from "../../../../shared/utils/storage"
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import ContactsScreen from "./contacts"
+
+const Tab = createMaterialTopTabNavigator()
 
 const LoggedOutScreen = ({ navigation }) => (
   <View style={styles.centered}>
@@ -19,17 +22,26 @@ const LoggedOutScreen = ({ navigation }) => (
 
 const MainScreen = ({ navigation }) => {
   const logged = useSelector((state) => state.auth.logged)
-  return (
-    <View style={styles.container}>
-      {!logged && <LoggedOutScreen navigation={navigation} />}
-    </View>
+  return !logged ? (
+    <LoggedOutScreen navigation={navigation} />
+  ) : (
+    <Tab.Navigator>
+      <Tab.Screen name="Todos" component={ContactsScreen} />
+      <Tab.Screen
+        name="Cuidados"
+        component={ContactsScreen}
+        initialParams={{ filter: "cared" }}
+      />
+      <Tab.Screen
+        name="Cuidadores"
+        component={ContactsScreen}
+        initialParams={{ filter: "carers" }}
+      />
+    </Tab.Navigator>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   centered: {
     flex: 1,
     justifyContent: "center",

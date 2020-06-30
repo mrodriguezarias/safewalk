@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from "react"
+import { StatusBar } from "react-native"
 import { useSelector } from "react-redux"
-import { StatusBar } from "expo-status-bar"
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
@@ -57,7 +57,9 @@ const App = () => {
 
   return (
     <PaperProvider theme={paperTheme}>
-      <StatusBar style={preferredTheme} />
+      <StatusBar
+        barStyle={preferredTheme === "dark" ? "light-content" : "dark-content"}
+      />
       <NavigationContainer theme={theme}>
         <MainScreen />
       </NavigationContainer>
