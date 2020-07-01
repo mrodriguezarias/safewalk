@@ -1,4 +1,3 @@
-import { Router } from "express"
 import { validate } from "express-validation"
 
 import authController from "../controllers/auth"

@@ -2,11 +2,13 @@ import bcrypt from "bcrypt"
 import HttpStatus from "http-status-codes"
 import userModel from "../models/user"
 import HttpError from "../../../shared/errors/http"
+import generalUtils from "../../../shared/utils/general"
 import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const userService = {
   getUsers: async (filter = {}, range, sort) => {
+    filter = generalUtils.renameKey(filter, "id", "_id")
     const query = userModel.find(filter)
     const count = await userModel.estimatedDocumentCount()
     const [paginated, contentRangeHeader] = dbUtils.paginate(

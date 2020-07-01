@@ -42,7 +42,7 @@ const UserTitle = ({ record }) => (
 
 const UserEdit = (props) => (
   <Edit title={<UserTitle />} {...props}>
-    <SimpleForm>
+    <SimpleForm redirect="list">
       <TextInput disabled source="id" className="hidden" />
       <TextInput source="name" validate={validations.name} />
       <PasswordInput source="password" validate={validations.password} />

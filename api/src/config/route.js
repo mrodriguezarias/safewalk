@@ -2,9 +2,10 @@ import path from "path"
 import { Router } from "express"
 import authRoute from "../routes/auth"
 import userRoute from "../routes/user"
+import carerRoute from "../routes/carer"
 
 const routeConfig = {
-  routes: [authRoute, userRoute],
+  routes: [authRoute, userRoute, carerRoute],
   configure: (app) => {
     const apiRouter = new Router()
     for (const { path, configureRouter } of routeConfig.routes) {
