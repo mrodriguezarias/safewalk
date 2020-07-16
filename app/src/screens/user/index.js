@@ -21,7 +21,7 @@ const UserScreen = () => {
   const user = useSelector((state) => state.auth.user)
   return (
     <Stack.Navigator
-      initialRouteName="FeedList"
+      initialRouteName="Main"
       headerMode="screen"
       screenOptions={{
         header: ({ scene, previous, navigation }) => (

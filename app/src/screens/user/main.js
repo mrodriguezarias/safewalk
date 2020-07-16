@@ -26,7 +26,6 @@ const MainScreen = ({ navigation }) => {
     <LoggedOutScreen navigation={navigation} />
   ) : (
     <Tab.Navigator>
-      <Tab.Screen name="Todos" component={ContactsScreen} />
       <Tab.Screen
         name="Cuidados"
         component={ContactsScreen}

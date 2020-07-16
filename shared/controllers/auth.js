@@ -26,6 +26,12 @@ const authController = {
     await storageUtils.set("user", newUser)
     return newUser
   },
+  deleteAccount: async () => {
+    const user = await storageUtils.get("user")
+    if (user) {
+      await userService.delete(user.id)
+    }
+  },
 }
 
 export default authController

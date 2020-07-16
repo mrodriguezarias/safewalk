@@ -1,10 +1,15 @@
 import appActions from "../actions/app"
-import { Platform } from "react-native"
-
+import { Platform, Dimensions } from "react-native"
 const initialState = {
   loading: true,
   theme: "system",
   mapProvider: Platform.OS === "ios" ? "apple" : "google",
+  heights: {
+    window: Dimensions.get("window").height,
+    header: 0,
+    tabBar: 90,
+    keyboard: 0,
+  },
 }
 
 const load = (state, { theme, mapProvider }) => ({
@@ -24,6 +29,14 @@ const setMapProvider = (state, { mapProvider }) => ({
   mapProvider,
 })
 
+const setHeight = (state, { component, height }) => ({
+  ...state,
+  heights: {
+    ...state.heights,
+    [component]: height,
+  },
+})
+
 const appReducer = (state = initialState, action) => {
   const { type, payload = {} } = action
   switch (type) {
@@ -33,6 +46,8 @@ const appReducer = (state = initialState, action) => {
       return setTheme(state, payload)
     case appActions.SET_MAP_PROVIDER:
       return setMapProvider(state, payload)
+    case appActions.SET_HEIGHT:
+      return setHeight(state, payload)
     default:
       return state
   }

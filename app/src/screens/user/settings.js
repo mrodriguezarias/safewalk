@@ -1,19 +1,33 @@
-import React from "react"
+import React, { useState } from "react"
 import { View, ScrollView, StyleSheet, Platform } from "react-native"
-import { ToggleButton, List } from "react-native-paper"
+import {
+  ToggleButton,
+  List,
+  Portal,
+  Dialog,
+  Paragraph,
+  Button,
+} from "react-native-paper"
 import SettingsItem from "../../components/settingsItem"
 import { useSelector, useDispatch } from "react-redux"
 import appActions from "../../store/actions/app"
 import authActions from "../../store/actions/auth"
+import authController from "../../../../shared/controllers/auth"
 
 const SettingsScreen = ({ navigation }) => {
   const theme = useSelector((state) => state.app.theme)
   const mapProvider = useSelector((state) => state.app.mapProvider)
   const user = useSelector((state) => state.auth.user)
-  const dispatch = useDispatch()
 
-  const handleLogOut = () => {
+  const dispatch = useDispatch()
+  const [dialogVisible, setDialogVisible] = useState(false)
+
+  const handleLogOut = async (deleteAccount = false) => {
+    if (deleteAccount) {
+      await authController.deleteAccount()
+    }
     dispatch(authActions.logOut())
+    setDialogVisible(false)
     navigation.goBack()
   }
 
@@ -71,12 +85,36 @@ const SettingsScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Premium")}
         />
       )}
+      <SettingsItem
+        label="Eliminar Cuenta"
+        onPress={() => setDialogVisible(true)}
+      />
       <SettingsItem label="Cerrar Sesión" onPress={handleLogOut} />
     </List.Section>
   )
 
   return (
     <View style={styles.container}>
+      <Portal>
+        <Dialog
+          visible={dialogVisible}
+          onDismiss={() => setDialogVisible(false)}
+        >
+          <Dialog.Title>Eliminar Cuenta</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              ¿Seguro que deseas eliminar tu cuenta permanentemente? Esta acción
+              no se puede deshacer.
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDialogVisible(false)}>Cancelar</Button>
+            <Button color="red" onPress={() => handleLogOut(true)}>
+              Eliminar
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <ScrollView>
         {renderAppSettings()}
         {user && renderUserSettings()}

@@ -2,9 +2,10 @@ import storageUtils from "../../../../shared/utils/storage"
 import authActions from "./auth"
 
 const appActions = {
-  LOAD: "LOAD",
-  SET_THEME: "SET_THEME",
-  SET_MAP_PROVIDER: "SET_MAP_PROVIDER",
+  LOAD: "APP/LOAD",
+  SET_THEME: "APP/SET_THEME",
+  SET_MAP_PROVIDER: "APP/SET_MAP_PROVIDER",
+  SET_HEIGHT: "APP/SET_HEIGHT",
   load: () => async (dispatch) => {
     const token = await storageUtils.get("auth")
     const user = await storageUtils.get("user")
@@ -22,6 +23,10 @@ const appActions = {
     await storageUtils.set("mapProvider", mapProvider)
     dispatch({ type: appActions.SET_MAP_PROVIDER, payload: { mapProvider } })
   },
+  setHeight: (component, height) => ({
+    type: appActions.SET_HEIGHT,
+    payload: { component, height },
+  }),
 }
 
 export default appActions

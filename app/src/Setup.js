@@ -7,10 +7,12 @@ import App from "./App"
 import appReducer from "./store/reducers/app"
 import authReducer from "./store/reducers/auth"
 import envUtils from "../../shared/utils/env"
+import walkReducer from "./store/reducers/walk"
 
 const rootReducer = combineReducers({
   app: appReducer,
   auth: authReducer,
+  walk: walkReducer,
 })
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk))

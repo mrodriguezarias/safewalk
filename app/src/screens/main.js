@@ -4,13 +4,23 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 
 import MapScreen from "./map"
 import UserScreen from "./user"
+import { useSelector } from "react-redux"
+import keyboardUtils from "../utils/keyboard"
 
 const Tab = createMaterialBottomTabNavigator()
 
 const MainScreen = () => {
   const theme = useTheme()
+  const tabBarHeight = useSelector((state) => state.app.heights.tabBar)
+
+  keyboardUtils.init()
+
   return (
-    <Tab.Navigator barStyle={{ backgroundColor: theme.colors.tabBar }} shifting>
+    <Tab.Navigator
+      barStyle={{ backgroundColor: theme.colors.tabBar, height: tabBarHeight }}
+      shifting
+      keyboardHidesNavigationBar={false}
+    >
       <Tab.Screen
         name="Home"
         component={MapScreen}

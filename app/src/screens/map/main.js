@@ -1,15 +1,17 @@
 import React, { useState, useEffect, memo } from "react"
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import { useTheme } from "react-native-paper"
-import { StyleSheet, View, Dimensions } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { useSelector } from "react-redux"
 import * as Location from "expo-location"
 
-import LocationMarker from "../components/locationMarker"
+import LocationMarker from "../../components/locationMarker"
+import SearchResults from "./searchResults"
 
-const MapScreen = () => {
+const MainScreen = () => {
   const [mapRegion, setMapRegion] = useState(null)
   const mapProvider = useSelector((state) => state.app.mapProvider)
+  const heights = useSelector((state) => state.app.heights)
   const theme = useTheme()
 
   useEffect(() => {
@@ -31,13 +33,17 @@ const MapScreen = () => {
   return (
     <View style={styles.container}>
       <MapView
-        style={styles.mapStyle}
+        style={[
+          styles.mapView,
+          { height: heights.window - heights.header - heights.tabBar },
+        ]}
         region={mapRegion}
         provider={mapProvider === "google" ? PROVIDER_GOOGLE : null}
         customMapStyle={theme.dark ? darkMapTheme : null}
       >
         <LocationMarker />
       </MapView>
+      <SearchResults />
     </View>
   )
 }
@@ -45,12 +51,13 @@ const MapScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    position: "relative",
   },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+  mapView: {
+    position: "absolute",
+    width: "100%",
+    zIndex: 0,
+    top: 0,
   },
 })
 
@@ -216,4 +223,4 @@ const darkMapTheme = [
   },
 ]
 
-export default memo(MapScreen)
+export default memo(MainScreen)

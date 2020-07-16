@@ -2,11 +2,11 @@ import authController from "../../../../shared/controllers/auth"
 import storageUtils from "../../../../shared/utils/storage"
 
 const authActions = {
-  LOAD: "LOAD",
-  SIGNUP: "SIGNUP",
-  LOGIN: "LOGIN",
-  LOGOUT: "LOGOUT",
-  EDIT: "EDIT",
+  LOAD: "AUTH/LOAD",
+  SIGNUP: "AUTH/SIGNUP",
+  LOGIN: "AUTH/LOGIN",
+  LOGOUT: "AUTH/LOGOUT",
+  EDIT: "AUTH/EDIT",
   load: (state) => ({ type: authActions.LOAD, payload: state }),
   signUp: (user) => async (dispatch) => {
     await storageUtils.set("user", user)
@@ -21,9 +21,7 @@ const authActions = {
     await storageUtils.set("user")
     dispatch({ type: authActions.LOGOUT })
   },
-  edit: (user) => async (dispatch) => {
-    dispatch({ type: authActions.EDIT, payload: { user } })
-  },
+  edit: (user) => ({ type: authActions.EDIT, payload: { user } }),
 }
 
 export default authActions
