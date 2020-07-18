@@ -12,7 +12,9 @@ const CONFIG_PATH = "./app.json"
 
 const nodeEnv = process.env.NODE_ENV ?? "prod"
 
-const app = JSON.parse(fs.readFileSync(CONFIG_PATH))
+const app = fs.existsSync(CONFIG_PATH)
+  ? JSON.parse(fs.readFileSync(CONFIG_PATH))
+  : null
 const curEnv = app?.expo?.extra?.env?.NODE_ENV
 
 const getFileUpdatedDate = (path) => {
