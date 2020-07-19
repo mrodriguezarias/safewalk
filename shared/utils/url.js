@@ -7,6 +7,9 @@ const urlUtils = {
       .map((part) => _.trim(part, "/"))
       .join("/")
   },
+  isAbsolute: (url) => {
+    return /^https?:\/\/.+/i.test(url)
+  },
 }
 
 export default urlUtils

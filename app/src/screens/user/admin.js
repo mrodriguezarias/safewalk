@@ -1,6 +1,6 @@
 import React from "react"
 import { View, ScrollView, StyleSheet } from "react-native"
-import SettingsItem from "../../components/settingsItem"
+import MenuItem from "../../components/menuItem"
 import storageUtils from "../../../../shared/utils/storage"
 import { List } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
@@ -32,13 +32,13 @@ const AdminScreen = () => {
       <ScrollView>
         <List.Section>
           <List.Subheader>Almacenamiento</List.Subheader>
-          <SettingsItem label="Imprimir" onPress={handlePrintStorage} />
-          <SettingsItem label="Borrar" onPress={handleClearStorage} />
+          <MenuItem label="Imprimir" onPress={handlePrintStorage} />
+          <MenuItem label="Borrar" onPress={handleClearStorage} />
         </List.Section>
         <List.Section>
           <List.Subheader>Estado</List.Subheader>
-          <SettingsItem label="Imprimir" onPress={handlePrintState} />
-          <SettingsItem label="Reiniciar" onPress={handleReloadState} />
+          <MenuItem label="Imprimir" onPress={handlePrintState} />
+          <MenuItem label="Reiniciar" onPress={handleReloadState} />
         </List.Section>
       </ScrollView>
     </View>

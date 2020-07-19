@@ -15,6 +15,7 @@ const NewContactScreen = () => {
           onChangeText={onChangeSearch}
           value={searchQuery}
           autoCapitalize="none"
+          autoCorrect={false}
           style={styles.search}
         />
       </View>

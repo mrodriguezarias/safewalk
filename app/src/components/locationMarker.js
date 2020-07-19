@@ -6,16 +6,26 @@ import _ from "lodash"
 
 const ANCHOR = { x: 0.5, y: 0.5 }
 
-const colorOfmyLocationMapMarker = "blue"
-
 const SIZE = 20
 const HALO_RADIUS = 6
 const HALO_SIZE = SIZE + HALO_RADIUS
 
-const LocationMarker = (props) => {
+const LocationMarker = ({
+  current,
+  coords,
+  color = "blue",
+  ...markerProps
+}) => {
   const [location, setLocation] = useState()
 
   useEffect(() => {
+    setLocation(coords ? { longitude: coords.x, latitude: coords.y } : null)
+  }, [coords])
+
+  useEffect(() => {
+    if (!current) {
+      return
+    }
     let subscription = null
     ;(async () => {
       const { status } = await Location.requestPermissionsAsync()
@@ -37,7 +47,7 @@ const LocationMarker = (props) => {
     return () => {
       subscription && subscription.remove()
     }
-  }, [])
+  }, [current])
 
   if (!location) {
     return null
@@ -48,11 +58,11 @@ const LocationMarker = (props) => {
       anchor={ANCHOR}
       style={styles.mapMarker}
       coordinate={location}
-      {...props}
+      {...markerProps}
     >
       <View style={styles.container}>
         <View style={styles.markerHalo} />
-        <View style={styles.marker} />
+        <View style={[styles.marker, { backgroundColor: color }]} />
       </View>
     </Marker>
   )
@@ -85,7 +95,6 @@ const styles = StyleSheet.create({
   },
   marker: {
     justifyContent: "center",
-    backgroundColor: colorOfmyLocationMapMarker,
     width: SIZE,
     height: SIZE,
     borderRadius: Math.ceil(SIZE / 2),

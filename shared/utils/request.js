@@ -1,5 +1,6 @@
 import qs from "qs"
 import HttpStatus from "http-status-codes"
+import fetch from "node-fetch"
 
 import storageUtils from "./storage"
 import urlUtils from "./url"
@@ -7,12 +8,13 @@ import HttpError from "../errors/http"
 import envUtils, { env } from "./env"
 
 const doRequest = async ({ method, uri, params, data }) => {
-  let url = urlUtils.join(envUtils.get(env.Url), "api", uri)
+  const outside = urlUtils.isAbsolute(uri)
+  let url = outside ? uri : urlUtils.join(envUtils.get(env.Url), "api", uri)
   if (params !== undefined) {
     url += `?${qs.stringify(params)}`
   }
-  const auth = await storageUtils.get("auth")
-  const response = await fetch(url, {
+  const auth = outside ? null : await storageUtils.get("auth")
+  const options = {
     method: (method ?? "get").toUpperCase(),
     mode: "cors",
     cache: "no-cache",
@@ -25,8 +27,17 @@ const doRequest = async ({ method, uri, params, data }) => {
     redirect: "follow",
     referrerPolicy: "no-referrer",
     ...(data && { body: JSON.stringify(data) }),
-  })
-  const json = await response.json()
+  }
+  const response = await fetch(url, options)
+  let json = null
+  if (response.headers.get("Content-Type") === "application/json") {
+    json = await response.json()
+  } else {
+    const text = await response.text()
+    if (text) {
+      json = JSON.parse(text.replace(/^\(|\)$/g, ""))
+    }
+  }
   if (!json) {
     throw new HttpError(
       HttpStatus.INTERNAL_SERVER_ERROR,

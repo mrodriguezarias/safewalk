@@ -1,8 +1,8 @@
 import walkActions from "../actions/walk"
 
 const initialState = {
-  source: "hasta",
-  target: "",
+  source: null,
+  target: null,
 }
 
 const load = (state, { source, target }) => ({
@@ -10,18 +10,18 @@ const load = (state, { source, target }) => ({
   source,
   target,
 })
-const setSource = (state, { source }) => ({ ...state, source })
-const setTarget = (state, { target }) => ({ ...state, target })
+const setLocation = (state, { key, location }) => ({
+  ...state,
+  [key]: location,
+})
 
 const walkReducer = (state = initialState, action) => {
   const { type, payload = {} } = action
   switch (type) {
     case walkActions.LOAD:
       return load(state, payload)
-    case walkActions.SET_SOURCE:
-      return setSource(state, payload)
-    case walkActions.SET_TARGET:
-      return setTarget(state, payload)
+    case walkActions.SET_LOCATION:
+      return setLocation(state, payload)
     default:
       return state
   }

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { View } from "react-native"
 import { Appbar, Title, useTheme } from "react-native-paper"
 import _ from "lodash"
@@ -15,6 +15,7 @@ const Header = ({
 }) => {
   const theme = useTheme()
   const dispatch = useDispatch()
+  const [measured, setMeasured] = useState(false)
   const { options } = scene.descriptor
 
   const title = (() => {
@@ -26,19 +27,25 @@ const Header = ({
   })()
 
   const handleLayout = () => {
-    if (Header.header) {
+    if (Header.header && !measured) {
       Header.header.measureInWindow((...layout) => {
         dispatch(appActions.setHeight("header", layout[3]))
       })
+      setMeasured(true)
     }
   }
 
   const renderBaseHeader = () => (
     <>
       {previous ? (
-        <Appbar.BackAction onPress={() => navigation.pop()} />
+        <Appbar.BackAction
+          onPress={() => navigation.pop()}
+          color={theme.colors.text}
+        />
+      ) : options.headerLeft ? (
+        options.headerLeft({ navigation }) || <Appbar.Action />
       ) : (
-        options.headerLeft && options.headerLeft({ navigation })
+        <Appbar.Action />
       )}
       <Appbar.Content title={title} style={{ alignItems: "center" }} />
       {options.headerRight ? (

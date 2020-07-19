@@ -8,7 +8,7 @@ import {
   Paragraph,
   Button,
 } from "react-native-paper"
-import SettingsItem from "../../components/settingsItem"
+import MenuItem from "../../components/menuItem"
 import { useSelector, useDispatch } from "react-redux"
 import appActions from "../../store/actions/app"
 import authActions from "../../store/actions/auth"
@@ -34,7 +34,7 @@ const SettingsScreen = ({ navigation }) => {
   const renderAppSettings = () => (
     <List.Section>
       <List.Subheader>Aplicación</List.Subheader>
-      <SettingsItem label="Apariencia">
+      <MenuItem label="Apariencia">
         <ToggleButton.Row
           value={theme}
           onValueChange={(theme) =>
@@ -45,9 +45,9 @@ const SettingsScreen = ({ navigation }) => {
           <ToggleButton icon="white-balance-sunny" value="light" />
           <ToggleButton icon="weather-night" value="dark" />
         </ToggleButton.Row>
-      </SettingsItem>
+      </MenuItem>
       {Platform.OS === "ios" && (
-        <SettingsItem label="Proveedor de Mapas">
+        <MenuItem label="Proveedor de Mapas">
           <ToggleButton.Row
             value={mapProvider}
             onValueChange={(mapProvider) =>
@@ -57,7 +57,7 @@ const SettingsScreen = ({ navigation }) => {
             <ToggleButton icon="apple" value="apple" />
             <ToggleButton icon="google" value="google" />
           </ToggleButton.Row>
-        </SettingsItem>
+        </MenuItem>
       )}
     </List.Section>
   )
@@ -65,7 +65,7 @@ const SettingsScreen = ({ navigation }) => {
   const renderAdminSettings = () => (
     <List.Section>
       <List.Subheader>Administración</List.Subheader>
-      <SettingsItem
+      <MenuItem
         label="Ir al Panel de Control"
         onPress={() => navigation.navigate("Admin")}
       />
@@ -75,21 +75,21 @@ const SettingsScreen = ({ navigation }) => {
   const renderUserSettings = () => (
     <List.Section>
       <List.Subheader>Usuario</List.Subheader>
-      <SettingsItem
+      <MenuItem
         label="Editar Datos"
         onPress={() => navigation.navigate("EditUser")}
       />
       {!user?.premium && (
-        <SettingsItem
+        <MenuItem
           label="Adquirir Premium"
           onPress={() => navigation.navigate("Premium")}
         />
       )}
-      <SettingsItem
+      <MenuItem
         label="Eliminar Cuenta"
         onPress={() => setDialogVisible(true)}
       />
-      <SettingsItem label="Cerrar Sesión" onPress={handleLogOut} />
+      <MenuItem label="Cerrar Sesión" onPress={handleLogOut} />
     </List.Section>
   )
 

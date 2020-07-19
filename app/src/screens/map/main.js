@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import React, { useState, useEffect, useRef, memo } from "react"
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import { useTheme } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
@@ -6,13 +6,16 @@ import { useSelector } from "react-redux"
 import * as Location from "expo-location"
 
 import LocationMarker from "../../components/locationMarker"
-import SearchResults from "./searchResults"
+import Bar from "./bar"
+import generalUtils from "../../../../shared/utils/general"
 
-const MainScreen = () => {
+const MainScreen = ({ navigation }) => {
   const [mapRegion, setMapRegion] = useState(null)
   const mapProvider = useSelector((state) => state.app.mapProvider)
-  const heights = useSelector((state) => state.app.heights)
+  const source = useSelector((state) => state.walk.source?.coords)
+  const target = useSelector((state) => state.walk.target?.coords)
   const theme = useTheme()
+  const mapRef = useRef()
 
   useEffect(() => {
     ;(async () => {
@@ -30,20 +33,47 @@ const MainScreen = () => {
     })()
   }, [])
 
+  useEffect(() => {
+    if (!source || !target) {
+      return
+    }
+    ;(async () => {
+      await generalUtils.sleep(100)
+      mapRef.current.fitToSuppliedMarkers(["mk1", "mk2", "mk3"], {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+      })
+    })()
+  }, [source, target])
+
   return (
     <View style={styles.container}>
+      <Bar navigation={navigation} />
       <MapView
-        style={[
-          styles.mapView,
-          { height: heights.window - heights.header - heights.tabBar },
-        ]}
+        ref={mapRef}
+        style={styles.mapView}
         region={mapRegion}
         provider={mapProvider === "google" ? PROVIDER_GOOGLE : null}
         customMapStyle={theme.dark ? darkMapTheme : null}
       >
-        <LocationMarker />
+        <LocationMarker
+          current
+          color={theme.colors.primary}
+          identifier="mk1"
+          zIndex={1}
+        />
+        <LocationMarker
+          coords={source}
+          color={theme.colors.header}
+          identifier="mk2"
+          zIndex={2}
+        />
+        <LocationMarker
+          coords={target}
+          color={theme.colors.tabBar}
+          identifier="mk3"
+          zIndex={3}
+        />
       </MapView>
-      <SearchResults />
     </View>
   )
 }
@@ -51,13 +81,9 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
   },
   mapView: {
-    position: "absolute",
-    width: "100%",
-    zIndex: 0,
-    top: 0,
+    flex: 1,
   },
 })
 

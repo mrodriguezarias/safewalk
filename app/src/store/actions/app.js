@@ -1,5 +1,6 @@
 import storageUtils from "../../../../shared/utils/storage"
 import authActions from "./auth"
+import walkActions from "./walk"
 
 const appActions = {
   LOAD: "APP/LOAD",
@@ -14,6 +15,7 @@ const appActions = {
     const logged = token !== null
     dispatch({ type: authActions.LOAD, payload: { logged, user } })
     dispatch({ type: appActions.LOAD, payload: { theme, mapProvider } })
+    dispatch(walkActions.setCurrentLocation("source"))
   },
   setTheme: (theme) => async (dispatch) => {
     await storageUtils.set("theme", theme)
