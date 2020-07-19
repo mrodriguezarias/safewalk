@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef, memo } from "react"
+import React, { useState, useEffect, useRef, memo, useCallback } from "react"
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import { useTheme } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
 import { useSelector } from "react-redux"
-import * as Location from "expo-location"
 
 import LocationMarker from "../../components/locationMarker"
 import Bar from "./bar"
 import generalUtils from "../../../../shared/utils/general"
+import geoUtils from "../../utils/geo"
 
 const MainScreen = ({ navigation }) => {
   const [mapRegion, setMapRegion] = useState(null)
@@ -17,16 +17,22 @@ const MainScreen = ({ navigation }) => {
   const theme = useTheme()
   const mapRef = useRef()
 
+  const fitMap = useCallback(async () => {
+    if (!source || !target) {
+      return
+    }
+    await generalUtils.sleep(100)
+    mapRef.current.fitToSuppliedMarkers(["mk1", "mk2", "mk3"], {
+      edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+    })
+  }, [source, target])
+
   useEffect(() => {
     ;(async () => {
-      const { status } = await Location.requestPermissionsAsync()
-      if (status !== "granted") {
-        return
-      }
-      const location = await Location.getCurrentPositionAsync({})
+      const location = await geoUtils.getCurrentLocation()
       setMapRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        latitude: location?.y,
+        longitude: location?.x,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       })
@@ -34,16 +40,8 @@ const MainScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    if (!source || !target) {
-      return
-    }
-    ;(async () => {
-      await generalUtils.sleep(100)
-      mapRef.current.fitToSuppliedMarkers(["mk1", "mk2", "mk3"], {
-        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-      })
-    })()
-  }, [source, target])
+    fitMap()
+  }, [fitMap, source, target])
 
   return (
     <View style={styles.container}>
@@ -54,6 +52,7 @@ const MainScreen = ({ navigation }) => {
         region={mapRegion}
         provider={mapProvider === "google" ? PROVIDER_GOOGLE : null}
         customMapStyle={theme.dark ? darkMapTheme : null}
+        onLayout={fitMap}
       >
         <LocationMarker
           current
