@@ -4,15 +4,15 @@
   "private": true,
   "main": "app/src/index.js",
   "scripts": {
-    "app:start": "cross-env NODE_ENV=local npm run _gec && expo start",
-    "app:android": "cross-env NODE_ENV=local npm run _gec && expo start --android",
-    "app:ios": "cross-env NODE_ENV=local npm run _gec && expo start --ios",
+    "app:start": "cross-env NODE_ENV=local npm run script generate_expo_config && expo start",
+    "app:android": "cross-env NODE_ENV=local npm run script generate_expo_config && expo start --android",
+    "app:ios": "cross-env NODE_ENV=local npm run script generate_expo_config && expo start --ios",
     "api:start": "nodemon --watch api/src --exec babel-node ./api/src/index.js --env=local",
     "api:start:prod": "babel-node ./api/src/index.js --env=$NODE_ENV",
     "backend:start": "cross-env NODE_ENV=local webpack-dev-server --mode development --hot",
     "backend:build": "webpack -p",
     "sandbox": "nodemon --watch . --exec babel-node ./sandbox.js",
-    "_gec": "babel-node ./generateExpoConfig.js"
+    "script": "babel-node ./scripts"
   },
   "repository": {
     "url": "https://github.com/mrodriguezarias/safewalk"

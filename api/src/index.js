@@ -7,9 +7,12 @@ import routeConfig from "./config/route"
 import dbConfig from "./config/db"
 import errorConfig from "./config/error"
 
-envUtils.load("api", {
-  commandLineArgs: require("command-line-args"),
-  dotenv: require("dotenv"),
+envUtils.load({
+  platform: "api",
+  libs: {
+    commandLineArgs: require("command-line-args"),
+    dotenv: require("dotenv"),
+  },
 })
 
 const app = express()

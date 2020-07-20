@@ -170,13 +170,13 @@ const validateAll = () => {
   }
 }
 
-const load = (platform, libs = {}) => {
+const load = ({ platform, env = "prod", libs = {} } = {}) => {
   if (platform === "api") {
     const options = libs.commandLineArgs([
       {
         name: "env",
         alias: "e",
-        defaultValue: "production",
+        defaultValue: env,
         type: String,
       },
     ])
@@ -189,6 +189,14 @@ const load = (platform, libs = {}) => {
     repo = { ...process.env }
   } else if (platform === "app") {
     repo = { ...libs.expoConstants.default.manifest.extra.env }
+  } else if (platform === "script") {
+    const result = libs.dotenv.config({
+      path: `./env/${env}.env`,
+    })
+    if (result.error) {
+      throw result.error
+    }
+    repo = { ...process.env }
   } else {
     repo = { ...process.env }
   }

@@ -17,8 +17,11 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk))
 
-envUtils.load("app", {
-  expoConstants: require("expo-constants"),
+envUtils.load({
+  platform: "app",
+  libs: {
+    expoConstants: require("expo-constants"),
+  },
 })
 
 const Setup = () => (
