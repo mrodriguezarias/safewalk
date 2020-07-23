@@ -12,6 +12,7 @@ const generateExpoConfig = {
     const CONFIG_PATH = "./app.json"
 
     const nodeEnv = process.env.NODE_ENV ?? "prod"
+    const envPath = path.resolve(process.cwd(), `env/${nodeEnv}.env`)
 
     const app = fs.existsSync(CONFIG_PATH)
       ? JSON.parse(fs.readFileSync(CONFIG_PATH))
@@ -26,15 +27,16 @@ const generateExpoConfig = {
     if (
       !(
         curEnv !== nodeEnv ||
-        getFileUpdatedDate(CONFIG_PATH) < getFileUpdatedDate(__filename)
+        getFileUpdatedDate(CONFIG_PATH) < getFileUpdatedDate(__filename) ||
+        getFileUpdatedDate(CONFIG_PATH) < getFileUpdatedDate(envPath)
       )
     ) {
       process.exit(0)
     }
 
-    const env = dotenv.config({
-      path: path.resolve(process.cwd(), `env/${nodeEnv}.env`),
-    }).parsed
+    console.log("Generating app.json")
+
+    const env = dotenv.config({ path: envPath }).parsed
 
     const config = {
       expo: {
