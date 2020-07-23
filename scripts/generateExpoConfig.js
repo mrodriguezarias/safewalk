@@ -34,8 +34,6 @@ const generateExpoConfig = {
       process.exit(0)
     }
 
-    console.log("Generating app.json")
-
     const env = dotenv.config({ path: envPath }).parsed
 
     const config = {
