@@ -15,6 +15,7 @@ import {
   maxLength,
   regex,
 } from "react-admin"
+import UserIcon from "@material-ui/icons/Group"
 
 const validations = {
   name: [required(), minLength(4), maxLength(16)],
@@ -69,6 +70,7 @@ const UserCreate = (props) => (
 )
 
 const userResource = {
+  icon: UserIcon,
   list: UserList,
   edit: UserEdit,
   create: UserCreate,

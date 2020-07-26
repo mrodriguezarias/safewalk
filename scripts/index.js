@@ -1,7 +1,8 @@
 import createAdminUser from "./createAdminUser"
 import generateExpoConfig from "./generateExpoConfig"
+import uploadGeoData from "./uploadGeoData"
 
-const scripts = [createAdminUser, generateExpoConfig]
+const scripts = [createAdminUser, generateExpoConfig, uploadGeoData]
 
 ;(() => {
   const [command, ...args] = process.argv.slice(2)

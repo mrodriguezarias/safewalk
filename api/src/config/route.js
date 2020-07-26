@@ -3,9 +3,11 @@ import { Router } from "express"
 import authRoute from "../routes/auth"
 import userRoute from "../routes/user"
 import carerRoute from "../routes/carer"
+import nodeRoute from "../routes/node"
+import pathRoute from "../routes/path"
 
 const routeConfig = {
-  routes: [authRoute, userRoute, carerRoute],
+  routes: [authRoute, userRoute, carerRoute, nodeRoute, pathRoute],
   configure: (app) => {
     const apiRouter = new Router()
     for (const { path, configureRouter } of routeConfig.routes) {

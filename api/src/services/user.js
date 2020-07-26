@@ -46,7 +46,7 @@ const userService = {
       ...userData,
       password: hashedPassword,
     })
-    return newUser
+    return newUser.toJSON()
   },
   updateUser: async (userId, userData) => {
     if (_.isEmpty(userData)) {

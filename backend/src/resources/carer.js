@@ -11,23 +11,9 @@ import {
   SimpleForm,
   BooleanInput,
   TextInput,
-  PasswordInput,
   Create,
-  required,
-  minLength,
-  maxLength,
-  regex,
 } from "react-admin"
-
-const validations = {
-  name: [required(), minLength(4), maxLength(16)],
-  phone: [
-    minLength(10),
-    maxLength(20),
-    regex(/^\+?\d+$/, "Must be a valid phone number"),
-  ],
-  password: [minLength(8), maxLength(32)],
-}
+import ContactsIcon from "@material-ui/icons/Contacts"
 
 const CarerList = (props) => (
   <List {...props}>
@@ -75,6 +61,7 @@ const CarerCreate = (props) => (
 )
 
 const carerResource = {
+  icon: ContactsIcon,
   list: CarerList,
   edit: CarerEdit,
   create: CarerCreate,
