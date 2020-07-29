@@ -1,4 +1,3 @@
-import envUtils from "../shared/utils/env"
 import dbUtils from "../shared/utils/db"
 import userService from "../api/src/services/user"
 
@@ -10,15 +9,7 @@ const userData = {
 
 const createAdminUser = {
   name: "create_admin_user",
-  run: async (args) => {
-    const env = args.join(" ") || "local"
-    envUtils.load({
-      platform: "script",
-      env,
-      libs: {
-        dotenv: require("dotenv"),
-      },
-    })
+  run: async () => {
     dbUtils.connect()
     try {
       await userService.createUser(userData)

@@ -10,7 +10,7 @@ import errorConfig from "./config/error"
 envUtils.load({
   platform: "api",
   libs: {
-    commandLineArgs: require("command-line-args"),
+    yargs: require("yargs"),
     dotenv: require("dotenv"),
   },
 })

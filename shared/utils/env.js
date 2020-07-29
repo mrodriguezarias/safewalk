@@ -172,14 +172,12 @@ const validateAll = () => {
 
 const load = ({ platform, env = "prod", libs = {} } = {}) => {
   if (platform === "api") {
-    const options = libs.commandLineArgs([
-      {
-        name: "env",
-        alias: "e",
-        defaultValue: env,
-        type: String,
-      },
-    ])
+    const options = libs.yargs.option("env", {
+      alias: "e",
+      description: "Environment",
+      type: "string",
+      default: env,
+    }).argv
     const result = libs.dotenv.config({
       path: `./env/${options.env}.env`,
     })

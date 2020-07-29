@@ -1,34 +1,28 @@
 import fs from "fs"
-import envUtils from "../shared/utils/env"
 import dbUtils from "../shared/utils/db"
 import nodeService from "../api/src/services/node"
 import pathService from "../api/src/services/path"
+import consoleUtils from "../shared/utils/console"
 
 const uploadGeoData = {
   name: "upload_geo_data",
   nodes: [],
   paths: [],
   run: async (args) => {
-    const fileName = args.join(" ")
-    if (!fileName) {
-      console.error("Please enter the path for the dataset to upload")
-      return
+    const path = uploadGeoData.parseArgs(args)
+    uploadGeoData.parseFile(path)
+    await uploadGeoData.uploadToDatabase()
+  },
+  parseArgs: (args) => {
+    const path = args._?.[1] ?? "./data/caba.json"
+    if (!fs.existsSync(path)) {
+      throw Error(`file '${path}' does not exist`)
     }
-    uploadGeoData.loadEnv()
-    uploadGeoData.parseFile(fileName)
-    uploadGeoData.uploadToDatabase()
+    return path
   },
-  loadEnv: () => {
-    envUtils.load({
-      platform: "script",
-      env: "local",
-      libs: {
-        dotenv: require("dotenv"),
-      },
-    })
-  },
-  parseFile: (fileName) => {
-    const data = fs.readFileSync(fileName)
+  parseFile: (path) => {
+    console.log("Parsing file…")
+    const data = fs.readFileSync(path)
     const { elements } = JSON.parse(data)
     for (const element of elements) {
       switch (element.type) {
@@ -41,6 +35,9 @@ const uploadGeoData = {
         default:
       }
     }
+    const numNodes = uploadGeoData.nodes.length
+    const numPaths = uploadGeoData.paths.length
+    console.log(`Processed ${numNodes} nodes and ${numPaths} paths`)
   },
   processNode: ({ id, lon, lat }) => {
     uploadGeoData.nodes.push({
@@ -63,28 +60,35 @@ const uploadGeoData = {
   uploadToDatabase: async () => {
     const nodeIdMap = new Map()
     await dbUtils.connect(true)
+    console.log("Starting database upload…")
     try {
+      console.log("Deleting preexisting nodes…")
       await nodeService.deleteAllNodes()
-      for (const nodeData of uploadGeoData.nodes) {
+      for (const [index, nodeData] of uploadGeoData.nodes.entries()) {
+        uploadGeoData.printUploadProgress("node", index)
         const node = await nodeService.createNode(nodeData)
         nodeIdMap.set(nodeData.id, node.id)
       }
+      console.log("Deleting preexisting paths…")
       await pathService.deleteAllPaths()
-      for (const { from, to } of uploadGeoData.paths) {
+      for (const [index, { from, to }] of uploadGeoData.paths.entries()) {
+        uploadGeoData.printUploadProgress("path", index)
         const pathData = {
           from: nodeIdMap.get(from),
           to: nodeIdMap.get(to),
         }
         await pathService.createPath(pathData)
       }
-      console.log(
-        `Added ${uploadGeoData.nodes.length} nodes and ${uploadGeoData.paths.length} paths`,
-      )
     } catch (error) {
       console.error(error)
     } finally {
       dbUtils.disconnect()
     }
+  },
+  printUploadProgress: (element, index) => {
+    const current = index + 1
+    const total = uploadGeoData[`${element}s`].length
+    consoleUtils.printProgress(`Adding ${element}`, current, total)
   },
 }
 
