@@ -1,5 +1,6 @@
 import requestUtils from "../utils/request"
 import generalUtils from "../utils/general"
+import boundaryService from "./boundary"
 import _ from "lodash"
 
 const APIS = {
@@ -91,7 +92,7 @@ const normalize = (location, address = true) => {
 }
 
 const castCoords = (coords) => {
-  return coords ? { x: +coords.x, y: +coords.y } : null
+  return coords ? { longitude: +coords.x, latitude: +coords.y } : null
 }
 
 const getAddressParts = (address) => {
@@ -109,7 +110,10 @@ const getLongLat = async (coords) => {
       output: "lonlat",
     },
   )
-  return status === "Ok" ? longLat : null
+  if (status !== "Ok") {
+    return null
+  }
+  return castCoords(longLat)
 }
 
 const getPlacesWithCoords = async (instances) => {
@@ -120,13 +124,21 @@ const getPlacesWithCoords = async (instances) => {
     } = await requestUtils.get(APIS.PLACE, { id })
     const [x, y] = pointLoc.match(/\d+\.\d+/g)
     const coords = await getLongLat({ x, y })
-    if (coords) {
-      const place = {
-        name: normalize(name, false),
-        coords: castCoords(coords),
-      }
-      places = [...places, place]
+    if (!coords) {
+      continue
     }
+    const withinBoundary = await boundaryService.isWithinBoundary(
+      coords.x,
+      coords.y,
+    )
+    if (!withinBoundary) {
+      continue
+    }
+    const place = {
+      name: normalize(name, false),
+      coords,
+    }
+    places = [...places, place]
   }
   return places
 }
@@ -151,9 +163,19 @@ const geoService = {
           result.Normalizacion.DireccionesCalleCalle.direcciones[0]
         name = `${normalize(address.Calle1)} y ${normalize(address.Calle2)}`
       }
-      coords = castCoords(await getLongLat(result.GeoCodificacion))
+      coords = await getLongLat(result.GeoCodificacion)
     }
-    return name && coords ? { name, coords } : null
+    if (!name || !coords) {
+      return null
+    }
+    const withinBoundary = await boundaryService.isWithinBoundary(
+      coords.x,
+      coords.y,
+    )
+    if (!withinBoundary) {
+      return null
+    }
+    return { name, coords }
   },
   searchPlaces: async (query) => {
     const result = await requestUtils.get(APIS.PLACES, {

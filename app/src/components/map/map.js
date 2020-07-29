@@ -32,12 +32,14 @@ const Map = memo(() => {
       if (mapRegion) {
         return
       }
-      const location = await geoUtils.getCurrentLocation()
+      const location = await geoUtils.getCurrentLocation({
+        checkBoundary: false,
+      })
       setMapRegion({
-        latitude: location?.y,
-        longitude: location?.x,
-        latitudeDelta: 0.0922,
+        longitude: location?.longitude,
+        latitude: location?.latitude,
         longitudeDelta: 0.0421,
+        latitudeDelta: 0.0922,
       })
     })()
   }, [])

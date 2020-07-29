@@ -4,12 +4,14 @@ import createAdminUser from "./createAdminUser"
 import generateExpoConfig from "./generateExpoConfig"
 import uploadGeoData from "./uploadGeoData"
 import uploadWeights from "./uploadWeights"
+import uploadBoundary from "./uploadBoundary"
 
 const scripts = [
   createAdminUser,
   generateExpoConfig,
   uploadGeoData,
   uploadWeights,
+  uploadBoundary,
 ]
 
 const handler = async (script, args) => {
@@ -33,4 +35,4 @@ for (const script of scripts) {
     handler: (args) => handler(script, args),
   })
 }
-args.demandCommand().version(false).help(false).argv
+args.demandCommand().version(false).help(false).strict().argv

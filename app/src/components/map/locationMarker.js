@@ -19,7 +19,7 @@ const LocationMarker = ({
   const [location, setLocation] = useState()
 
   useEffect(() => {
-    setLocation(coords ? { longitude: coords.x, latitude: coords.y } : null)
+    setLocation(coords)
   }, [coords])
 
   useEffect(() => {

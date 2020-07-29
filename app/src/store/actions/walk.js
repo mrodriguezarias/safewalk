@@ -1,5 +1,3 @@
-import geoUtils from "../../utils/geo"
-
 const walkActions = {
   LOAD: "WALK/LOAD",
   SET_LOCATION: "WALK/SET_LOCATION",
@@ -13,17 +11,6 @@ const walkActions = {
     type: walkActions.SET_LOCATION,
     payload: { key, location },
   }),
-  setCurrentLocation: (key) => async (dispatch) => {
-    const coords = await geoUtils.getCurrentLocation()
-    const location = {
-      name: "Ubicación actual",
-      coords,
-    }
-    dispatch({
-      type: walkActions.SET_LOCATION,
-      payload: { key, location },
-    })
-  },
   swapLocations: () => ({
     type: walkActions.SWAP_LOCATIONS,
   }),

@@ -8,6 +8,8 @@ import MenuItem from "../../components/menuItem"
 import Spinner from "../../components/spinner"
 import walkActions from "../../store/actions/walk"
 import geoService from "../../../../shared/services/geo"
+import geoUtils from "../../utils/geo"
+import alertUtils from "../../utils/alert"
 
 const ChangeLocationScreen = ({ route, navigation }) => {
   const searchbarRef = useRef()
@@ -58,12 +60,20 @@ const ChangeLocationScreen = ({ route, navigation }) => {
     setLoading(false)
   }
 
-  const setLocation = (location) => {
+  const setLocation = async (location) => {
     if (!location) {
-      dispatch(walkActions.setCurrentLocation(key))
-    } else {
-      dispatch(walkActions.setLocation(key, location))
+      try {
+        const coords = await geoUtils.getCurrentLocation({ shouldThrow: true })
+        location = {
+          name: "Ubicación actual",
+          coords,
+        }
+      } catch (error) {
+        alertUtils.alert("Ubicación no soportada", error.message)
+        return
+      }
     }
+    dispatch(walkActions.setLocation(key, location))
     navigation.goBack()
   }
 

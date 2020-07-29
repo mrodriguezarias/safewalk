@@ -3,7 +3,7 @@ import dbUtils from "../utils/db"
 
 const userSchema = new Schema(
   {
-    name: String,
+    name: { type: String, index: { unique: true } },
     password: String,
     phone: { type: String, default: null },
     admin: { type: Boolean, default: false },

@@ -38,7 +38,7 @@ const doRequest = async ({ method, uri, params, data }) => {
       json = JSON.parse(text.replace(/^\(|\)$/g, ""))
     }
   }
-  if (!json) {
+  if (json === undefined) {
     throw new HttpError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       "Internal server error",

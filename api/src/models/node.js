@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose"
-import dbUtils from "../utils/db"
 
 const pointSchema = new Schema({
   type: {
@@ -13,19 +12,14 @@ const pointSchema = new Schema({
   },
 })
 
-const nodeSchema = new Schema(
-  {
-    weight: { type: Number, default: 0 },
-    location: {
-      type: pointSchema,
-      required: true,
-      index: "2dsphere",
-    },
+const nodeSchema = new Schema({
+  weight: { type: Number, default: 0 },
+  location: {
+    type: pointSchema,
+    required: true,
+    index: "2dsphere",
   },
-  {
-    toJSON: dbUtils.toJSON,
-  },
-)
+})
 
 const nodeModel = model("Node", nodeSchema)
 

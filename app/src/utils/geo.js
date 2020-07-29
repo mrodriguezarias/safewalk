@@ -1,7 +1,13 @@
 import * as Location from "expo-location"
+import boundaryService from "../../../shared/services/boundary"
+import BoundaryError from "../../../shared/errors/boundary"
 
 const geoUtils = {
-  getCurrentLocation: async (highAccuracy = false) => {
+  getCurrentLocation: async ({
+    highAccuracy = false,
+    shouldThrow = false,
+    checkBoundary = true,
+  } = {}) => {
     const { status } = await Location.requestPermissionsAsync()
     if (status !== "granted") {
       return null
@@ -16,10 +22,25 @@ const geoUtils = {
         timeout: 20000,
       })
     }
-    return {
-      x: location?.coords?.longitude,
-      y: location?.coords?.latitude,
+    const { longitude, latitude } = location?.coords ?? {}
+    if (!longitude || !latitude) {
+      return null
     }
+    if (checkBoundary) {
+      const isWithinBoundary = await boundaryService.isWithinBoundary(
+        longitude,
+        latitude,
+      )
+      if (!isWithinBoundary) {
+        if (!shouldThrow) {
+          return null
+        }
+        throw new BoundaryError(
+          "De momento solo proveemos servicio dentro de la Ciudad de Buenos Aires.",
+        )
+      }
+    }
+    return { longitude, latitude }
   },
 }
 
