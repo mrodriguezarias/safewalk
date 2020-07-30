@@ -14,7 +14,7 @@ const toInternalDoc = (nodeData) => ({
 })
 
 const toExternalDoc = (nodeData) => ({
-  id: nodeData._id,
+  id: nodeData._id.toString(),
   longitude: nodeData.location.coordinates[0],
   latitude: nodeData.location.coordinates[1],
   weight: nodeData.weight,
@@ -82,7 +82,10 @@ const nodeService = {
     return toExternalDoc(node)
   },
   deleteAllNodes: async () => {
-    await nodeModel.deleteMany({})
+    const count = await nodeModel.estimatedDocumentCount()
+    if (count > 0) {
+      await nodeModel.collection.drop()
+    }
   },
   getNearestNode: async (longitude, latitude) => {
     const nearest = await nodeModel.findOne({

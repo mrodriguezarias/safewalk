@@ -1,6 +1,6 @@
 import requestUtils from "../utils/request"
 import generalUtils from "../utils/general"
-import boundaryService from "./boundary"
+import urlUtils from "../utils/url"
 import _ from "lodash"
 
 const APIS = {
@@ -127,10 +127,7 @@ const getPlacesWithCoords = async (instances) => {
     if (!coords) {
       continue
     }
-    const withinBoundary = await boundaryService.isWithinBoundary(
-      coords.x,
-      coords.y,
-    )
+    const withinBoundary = await geoService.isWithinBoundary(coords.x, coords.y)
     if (!withinBoundary) {
       continue
     }
@@ -144,6 +141,7 @@ const getPlacesWithCoords = async (instances) => {
 }
 
 const geoService = {
+  path: "/geo",
   searchAddress: async (query) => {
     const { streetName, streetNumber } = getAddressParts(query)
     const result = await requestUtils.get(APIS.ADDRESSES, {
@@ -168,10 +166,7 @@ const geoService = {
     if (!name || !coords) {
       return null
     }
-    const withinBoundary = await boundaryService.isWithinBoundary(
-      coords.x,
-      coords.y,
-    )
+    const withinBoundary = await geoService.isWithinBoundary(coords.x, coords.y)
     if (!withinBoundary) {
       return null
     }
@@ -196,6 +191,13 @@ const geoService = {
       .take(LIMIT)
       .value()
     return getPlacesWithCoords(instances)
+  },
+  isWithinBoundary: async (longitude, latitude) => {
+    const url = urlUtils.join(geoService.path, "withinBoundary")
+    return requestUtils.post(url, {
+      longitude,
+      latitude,
+    })
   },
 }
 

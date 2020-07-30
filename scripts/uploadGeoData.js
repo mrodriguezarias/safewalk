@@ -3,14 +3,18 @@ import dbUtils from "../shared/utils/db"
 import nodeService from "../api/src/services/node"
 import pathService from "../api/src/services/path"
 import consoleUtils from "../shared/utils/console"
+import createGraph from "ngraph.graph"
 
 const uploadGeoData = {
   name: "upload_geo_data",
+  graph: createGraph(),
+  nodeMap: new Map(),
   nodes: [],
   paths: [],
   run: async (args) => {
     const path = uploadGeoData.parseArgs(args)
     uploadGeoData.parseFile(path)
+    uploadGeoData.processGraph()
     await uploadGeoData.uploadToDatabase()
   },
   parseArgs: (args) => {
@@ -35,16 +39,11 @@ const uploadGeoData = {
         default:
       }
     }
-    const numNodes = uploadGeoData.nodes.length
-    const numPaths = uploadGeoData.paths.length
-    console.log(`Processed ${numNodes} nodes and ${numPaths} paths`)
   },
   processNode: ({ id, lon, lat }) => {
-    uploadGeoData.nodes.push({
-      id,
+    uploadGeoData.nodeMap.set(id, {
       longitude: lon,
       latitude: lat,
-      weight: 0,
     })
   },
   processPath: ({ nodes }) => {
@@ -54,8 +53,50 @@ const uploadGeoData = {
     for (let i = 0; i < nodes.length - 1; i++) {
       const from = nodes[i]
       const to = nodes[i + 1]
-      uploadGeoData.paths.push({ from, to })
+      uploadGeoData.graph.addLink(from, to)
     }
+  },
+  processGraph: () => {
+    console.log("Processing graph…")
+    const latLonToNodeId = new Map()
+    const nodesToDelete = new Set()
+    uploadGeoData.graph.forEachNode((node) => {
+      const data = uploadGeoData.nodeMap.get(node.id)
+      if (!data) {
+        throw new Error(`missing data for ${node.id}`)
+      }
+      const xyID = `${data.longitude};${data.latitude}`
+      const prevNode = latLonToNodeId.get(xyID)
+      if (prevNode) {
+        nodesToDelete.add(node.id)
+      } else {
+        latLonToNodeId.set(xyID, node)
+      }
+      node.data = data
+    })
+    uploadGeoData.nodeMap.clear()
+    latLonToNodeId.clear()
+    nodesToDelete.forEach((nodeId) => {
+      uploadGeoData.graph.removeNode(nodeId)
+    })
+    nodesToDelete.clear()
+    const nodeCount = uploadGeoData.graph.getNodesCount()
+    const pathCount = uploadGeoData.graph.getLinksCount()
+    console.log(`Graph has ${nodeCount} nodes and ${pathCount} paths`)
+    uploadGeoData.graph.forEachNode((node) => {
+      uploadGeoData.nodes.push({
+        id: node.id,
+        longitude: node.data.longitude,
+        latitude: node.data.latitude,
+      })
+    })
+    uploadGeoData.graph.forEachLink((path) => {
+      uploadGeoData.paths.push({
+        from: path.fromId,
+        to: path.toId,
+      })
+    })
+    uploadGeoData.graph.clear()
   },
   uploadToDatabase: async () => {
     const nodeIdMap = new Map()

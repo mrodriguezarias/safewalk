@@ -16,7 +16,8 @@ const pathService = {
       count,
     )
     const sorted = await dbUtils.sort(paginated, sort)
-    return { paths: sorted, contentRangeHeader }
+    const paths = _.map(sorted, (path) => path.toJSON())
+    return { paths, contentRangeHeader }
   },
   getPathById: async (pathId) => {
     const path = await pathModel.findById(pathId)
@@ -67,7 +68,10 @@ const pathService = {
     return path
   },
   deleteAllPaths: async () => {
-    await pathModel.deleteMany({})
+    const count = await pathModel.estimatedDocumentCount()
+    if (count > 0) {
+      await pathModel.collection.drop()
+    }
   },
 }
 

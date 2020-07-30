@@ -1,5 +1,5 @@
 import fs from "fs"
-import boundaryService from "../api/src/services/boundary"
+import geoService from "../api/src/services/geo"
 import dbUtils from "../shared/utils/db"
 
 const uploadBoundary = {
@@ -28,9 +28,9 @@ const uploadBoundary = {
     const { geometries } = JSON.parse(data)
     const location = geometries[0]
     console.log("Deleting previous boundary…")
-    await boundaryService.deleteAllBoundaries()
+    await geoService.deleteAllBoundaries()
     console.log("Adding boundary…")
-    await boundaryService.createBoundary({ location })
+    await geoService.createBoundary({ location })
   },
 }
 

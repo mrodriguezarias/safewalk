@@ -1,4 +1,5 @@
 import envUtils from "../../shared/utils/env"
+import cacheUtils from "../../shared/utils/cache"
 import express from "express"
 import http from "http"
 
@@ -29,4 +30,8 @@ server.listen(appConfig.port, appConfig.host, (error) => {
   } else {
     console.info(`Server listening @ ${appConfig.host}:${appConfig.port}`)
   }
+})
+
+server.on("listening", () => {
+  cacheUtils.load()
 })
