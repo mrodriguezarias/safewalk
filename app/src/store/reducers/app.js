@@ -4,19 +4,23 @@ const initialState = {
   loading: true,
   theme: "system",
   mapProvider: Platform.OS === "ios" ? "apple" : "google",
+  mapType: "standard",
   heights: {
     window: Dimensions.get("window").height,
     header: 0,
     tabBar: 90,
     keyboard: 0,
   },
+  mockLocation: null,
 }
 
-const load = (state, { theme, mapProvider }) => ({
+const load = (state, { theme, mapProvider, mapType, mockLocation }) => ({
   ...state,
   loading: false,
   ...(theme && { theme }),
   ...(mapProvider && { mapProvider }),
+  ...(mapType && { mapType }),
+  ...(mockLocation && { mockLocation }),
 })
 
 const setTheme = (state, { theme }) => ({
@@ -29,12 +33,22 @@ const setMapProvider = (state, { mapProvider }) => ({
   mapProvider,
 })
 
+const setMapType = (state, { mapType }) => ({
+  ...state,
+  mapType,
+})
+
 const setHeight = (state, { component, height }) => ({
   ...state,
   heights: {
     ...state.heights,
     [component]: height,
   },
+})
+
+const setMockLocation = (state, { mockLocation }) => ({
+  ...state,
+  mockLocation,
 })
 
 const appReducer = (state = initialState, action) => {
@@ -46,8 +60,12 @@ const appReducer = (state = initialState, action) => {
       return setTheme(state, payload)
     case appActions.SET_MAP_PROVIDER:
       return setMapProvider(state, payload)
+    case appActions.SET_MAP_TYPE:
+      return setMapType(state, payload)
     case appActions.SET_HEIGHT:
       return setHeight(state, payload)
+    case appActions.SET_MOCK_LOCATION:
+      return setMockLocation(state, payload)
     default:
       return state
   }

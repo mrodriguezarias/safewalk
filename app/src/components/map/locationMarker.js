@@ -1,5 +1,6 @@
 import React, { useState, useEffect, memo } from "react"
 import { StyleSheet, View } from "react-native"
+import { useTheme } from "react-native-paper"
 import { Marker } from "react-native-maps"
 import * as Location from "expo-location"
 import _ from "lodash"
@@ -10,13 +11,9 @@ const SIZE = 20
 const HALO_RADIUS = 6
 const HALO_SIZE = SIZE + HALO_RADIUS
 
-const LocationMarker = ({
-  current,
-  coords,
-  color = "blue",
-  ...markerProps
-}) => {
+const LocationMarker = memo(({ current, coords, color, ...markerProps }) => {
   const [location, setLocation] = useState()
+  const theme = useTheme()
 
   useEffect(() => {
     setLocation(coords)
@@ -62,11 +59,16 @@ const LocationMarker = ({
     >
       <View style={styles.container}>
         <View style={styles.markerHalo} />
-        <View style={[styles.marker, { backgroundColor: color }]} />
+        <View
+          style={[
+            styles.marker,
+            { backgroundColor: color ?? theme.colors.primary },
+          ]}
+        />
       </View>
     </Marker>
   )
-}
+})
 
 const styles = StyleSheet.create({
   mapMarker: {
@@ -103,4 +105,4 @@ const styles = StyleSheet.create({
   markerText: { width: 0, height: 0 },
 })
 
-export default memo(LocationMarker)
+export default LocationMarker

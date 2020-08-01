@@ -5,8 +5,9 @@ import _ from "lodash"
 import GeoError from "../errors/geo"
 
 const APIS = {
-  ADDRESSES:
+  ADDR2COORD:
     "https://ws.usig.buenosaires.gob.ar/rest/normalizar_y_geocodificar_direcciones",
+  COORD2ADDR: "http://ws.usig.buenosaires.gob.ar/geocoder/2.2/reversegeocoding",
   PLACES: "https://epok.buenosaires.gob.ar/buscar",
   PLACE: "https://epok.buenosaires.gob.ar/getObjectContent",
   COORDS: "https://ws.usig.buenosaires.gob.ar/rest/convertir_coordenadas",
@@ -144,7 +145,7 @@ const geoService = {
   path: "/geo",
   searchAddress: async (query) => {
     const { streetName, streetNumber } = getAddressParts(query)
-    const result = await requestUtils.get(APIS.ADDRESSES, {
+    const result = await requestUtils.get(APIS.ADDR2COORD, {
       calle: streetName,
       altura: streetNumber,
       desambiguar: 1,
@@ -178,16 +179,25 @@ const geoService = {
   },
   searchNearby: async (coords) => {
     const result = await requestUtils.get(APIS.NEARBY, {
-      x: coords.x,
-      y: coords.y,
+      x: coords.longitude,
+      y: coords.latitude,
       categorias: CATEGORIES.join(","),
-      radio: 100,
+      radio: 150,
     })
     const instances = _(result?.instancias)
       .sortBy("distancia")
       .take(LIMIT)
       .value()
     return getPlacesWithCoords(instances)
+  },
+  getAddressOfLocation: async (coords) => {
+    const result = await requestUtils.get(APIS.COORD2ADDR, {
+      x: coords.longitude,
+      y: coords.latitude,
+    })
+    const { streetName, streetNumber } = getAddressParts(result.puerta)
+    const address = `${normalize(streetName)} ${streetNumber}`
+    return address
   },
   isWithinBoundary: async (coords) => {
     const { longitude, latitude } = coords

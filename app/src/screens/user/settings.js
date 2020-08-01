@@ -17,6 +17,7 @@ import authController from "../../../../shared/controllers/auth"
 const SettingsScreen = ({ navigation }) => {
   const theme = useSelector((state) => state.app.theme)
   const mapProvider = useSelector((state) => state.app.mapProvider)
+  const mapType = useSelector((state) => state.app.mapType)
   const user = useSelector((state) => state.auth.user)
 
   const dispatch = useDispatch()
@@ -59,6 +60,16 @@ const SettingsScreen = ({ navigation }) => {
           </ToggleButton.Row>
         </MenuItem>
       )}
+      <MenuItem
+        label="Tipo de mapa"
+        options={[
+          { value: "standard", label: "Estándar" },
+          { value: "satellite", label: "Satélite" },
+          { value: "hybrid", label: "Híbrido" },
+        ]}
+        onChange={(mapType) => dispatch(appActions.setMapType(mapType))}
+        value={mapType}
+      />
     </List.Section>
   )
 

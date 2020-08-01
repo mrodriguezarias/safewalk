@@ -25,18 +25,19 @@ const MainScreen = ({ navigation }) => {
   return !logged ? (
     <LoggedOutScreen navigation={navigation} />
   ) : (
-    <Tab.Navigator>
-      <Tab.Screen
-        name="Cuidados"
-        component={ContactsScreen}
-        initialParams={{ filter: "cared" }}
-      />
-      <Tab.Screen
-        name="Cuidadores"
-        component={ContactsScreen}
-        initialParams={{ filter: "carers" }}
-      />
-    </Tab.Navigator>
+    <View />
+    // <Tab.Navigator>
+    //   <Tab.Screen
+    //     name="Cuidados"
+    //     component={ContactsScreen}
+    //     initialParams={{ filter: "cared" }}
+    //   />
+    //   <Tab.Screen
+    //     name="Cuidadores"
+    //     component={ContactsScreen}
+    //     initialParams={{ filter: "carers" }}
+    //   />
+    // </Tab.Navigator>
   )
 }
 

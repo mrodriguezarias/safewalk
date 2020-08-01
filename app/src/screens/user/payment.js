@@ -1,39 +1,28 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { View, StyleSheet } from "react-native"
-import {
-  useTheme,
-  Headline,
-  Button,
-  Portal,
-  Dialog,
-  Paragraph,
-} from "react-native-paper"
+import { useTheme, Headline, Button, Paragraph } from "react-native-paper"
 import { useDispatch } from "react-redux"
 import { CreditCardInput } from "react-native-credit-card-input"
 import generalUtils from "../../../../shared/utils/general"
 import authActions from "../../store/actions/auth"
 import authController from "../../../../shared/controllers/auth"
 import DismissKeyboard from "../../components/dismissKeyboard"
+import Dialog from "../../components/dialog"
 
 const PaymentScreen = ({ navigation }) => {
   const dispatch = useDispatch()
   const theme = useTheme()
   const [creditCardData, setCreditCardData] = useState()
   const [loading, setLoading] = useState(false)
-  const [dialogVisible, setDialogVisible] = useState(false)
   const [success, setSuccess] = useState(false)
+  const dialog = useRef()
 
   const themeColor = theme.colors.text
 
-  const hideDialog = () => {
-    setDialogVisible(false)
+  const handleDialogDismiss = () => {
     if (success) {
       navigation.navigate("Main")
     }
-  }
-
-  const showDialog = () => {
-    setDialogVisible(true)
   }
 
   const confirmPurchase = async () => {
@@ -45,28 +34,22 @@ const PaymentScreen = ({ navigation }) => {
       dispatch(authActions.edit(user))
       setSuccess(true)
     }
-    showDialog()
+    dialog.current.show()
   }
 
   return (
     <>
-      <Portal>
-        <Dialog visible={dialogVisible} onDismiss={hideDialog}>
-          <Dialog.Title>
-            {success ? "Pago procesado" : "Error al procesar el pago"}
-          </Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>
-              {success
-                ? "¡Enhorabuena! Has conseguido acceso a todas las funcionalidades premium de SafeWalk."
-                : "No se pudo procesar el pago. Por favor verifica los datos ingresados e intenta nuevamente."}
-            </Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialog}>Aceptar</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <Dialog
+        ref={dialog}
+        onDismiss={handleDialogDismiss}
+        title={success ? "Pago procesado" : "Error al procesar el pago"}
+        content={
+          success
+            ? "¡Enhorabuena! Has conseguido acceso a todas las funcionalidades premium de SafeWalk."
+            : "No se pudo procesar el pago. Por favor verifica los datos ingresados e intenta nuevamente."
+        }
+        accept
+      />
       <DismissKeyboard>
         <View style={styles.container}>
           <View style={styles.inner}>

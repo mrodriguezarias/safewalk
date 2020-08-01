@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
 import { StyleSheet, ScrollView } from "react-native"
-import { Searchbar, Paragraph } from "react-native-paper"
-import { useDispatch } from "react-redux"
+import { Searchbar, Paragraph, useTheme } from "react-native-paper"
+import { useSelector, useDispatch } from "react-redux"
+import { MaterialIcons } from "@expo/vector-icons"
 
 import DismissKeyboard from "../../components/dismissKeyboard"
 import MenuItem from "../../components/menuItem"
@@ -9,16 +10,17 @@ import Spinner from "../../components/spinner"
 import walkActions from "../../store/actions/walk"
 import geoService from "../../../../shared/services/geo"
 import geoUtils from "../../utils/geo"
-import alertUtils from "../../utils/alert"
 import GeoError from "../../../../shared/errors/geo"
 
 const ChangeLocationScreen = ({ route, navigation }) => {
   const searchbarRef = useRef()
+  const theme = useTheme()
   const [previousQuery, setPreviousQuery] = useState()
   const [query, setQuery] = useState("")
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
   const [noResults, setNoResults] = useState(false)
+  const mockLocation = useSelector((state) => state.app.mockLocation)
   const dispatch = useDispatch()
   const { key } = route.params
 
@@ -38,7 +40,7 @@ const ChangeLocationScreen = ({ route, navigation }) => {
     }
   }
 
-  const confirmSearch = async () => {
+  const doSearch = async (query) => {
     if (!query || query === previousQuery) {
       return
     }
@@ -70,21 +72,39 @@ const ChangeLocationScreen = ({ route, navigation }) => {
     }
   }
 
-  const setLocation = async (location) => {
-    if (!location) {
-      try {
-        const coords = await geoUtils.getCurrentLocation({ shouldThrow: true })
-        location = {
-          name: "Ubicación actual",
-          coords,
-        }
-      } catch (error) {
-        alertUtils.alert("Ubicación no soportada", error.message)
-        return
-      }
+  const getCurrentLocation = async () => {
+    let coords
+    if (mockLocation) {
+      coords = mockLocation
+    } else {
+      coords = await geoUtils.getCurrentLocation({ shouldThrow: true })
     }
+    return coords
+  }
+
+  const setLocation = async (location) => {
     dispatch(walkActions.setLocation(key, location))
     navigation.goBack()
+  }
+
+  const handleUseCurrentLocation = async () => {
+    setLoading(true)
+    setResults([])
+    setNoResults(false)
+    setQuery("")
+    try {
+      const coords = await getCurrentLocation()
+      const address = await geoService.getAddressOfLocation(coords)
+      setQuery(address)
+      doSearch(address)
+    } catch (error) {
+      if (error instanceof GeoError) {
+        setNoResults(error.message)
+        setLoading(false)
+      } else {
+        throw error
+      }
+    }
   }
 
   return (
@@ -93,19 +113,22 @@ const ChangeLocationScreen = ({ route, navigation }) => {
         ref={searchbarRef}
         placeholder="Dirección, intersección o lugar"
         onChangeText={handleChangeText}
-        onEndEditing={confirmSearch}
+        onEndEditing={() => doSearch(query)}
         value={query}
         autoCapitalize="none"
         autoCorrect={false}
         style={styles.search}
+        icon={({ size }) => (
+          <MaterialIcons
+            name="my-location"
+            size={size}
+            color={theme.colors.primary}
+          />
+        )}
+        onIconPress={handleUseCurrentLocation}
         editable={!loading}
       />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <MenuItem
-          accent
-          label="Usar ubicación actual"
-          onPress={() => setLocation()}
-        />
         {results.map((location, index) => (
           <MenuItem
             key={index}
@@ -132,6 +155,7 @@ const styles = StyleSheet.create({
   search: {
     borderRadius: 0,
     height: 60,
+    paddingLeft: 5,
   },
   noResults: {
     marginVertical: 20,
