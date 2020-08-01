@@ -7,6 +7,7 @@ import { useSelector } from "react-redux"
 import generalUtils from "../../../../shared/utils/general"
 import geoUtils from "../../utils/geo"
 import LocationMarker from "./locationMarker"
+import PathMarker from "./pathMarker"
 import { darkMapTheme } from "../../theme"
 
 const Map = memo(() => {
@@ -16,16 +17,17 @@ const Map = memo(() => {
   const mapRef = useRef()
   const source = useSelector((state) => state.walk.source?.coords)
   const target = useSelector((state) => state.walk.target?.coords)
+  const path = useSelector((state) => state.walk.path)
 
   const fitMap = useCallback(async () => {
     if (!source || !target) {
       return
     }
     await generalUtils.sleep(100)
-    mapRef.current.fitToSuppliedMarkers(["mk1", "mk2", "mk3"], {
+    mapRef.current.fitToCoordinates([source, ...path, target], {
       edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
     })
-  }, [source, target])
+  }, [source, target, path])
 
   useEffect(() => {
     ;(async () => {
@@ -46,7 +48,7 @@ const Map = memo(() => {
 
   useEffect(() => {
     fitMap()
-  }, [fitMap, source, target])
+  }, [fitMap, source, target, path])
 
   if (!mapRegion) {
     return null
@@ -78,6 +80,7 @@ const Map = memo(() => {
         identifier="mk3"
         zIndex={3}
       />
+      <PathMarker coords={path} />
     </MapView>
   )
 })

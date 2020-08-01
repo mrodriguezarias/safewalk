@@ -91,7 +91,7 @@ const nodeService = {
     const nearest = await nodeModel.findOne({
       location: {
         $near: {
-          $maxDistance: 100,
+          $maxDistance: 200,
           $geometry: {
             type: "Point",
             coordinates: [longitude, latitude],

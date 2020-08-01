@@ -23,13 +23,13 @@ const uploadBoundary = {
     return path
   },
   parseFile: async (path) => {
-    console.log("Parsing file…")
+    console.info("Parsing file…")
     const data = fs.readFileSync(path)
     const { geometries } = JSON.parse(data)
     const location = geometries[0]
-    console.log("Deleting previous boundary…")
+    console.info("Deleting previous boundary…")
     await geoService.deleteAllBoundaries()
-    console.log("Adding boundary…")
+    console.info("Adding boundary…")
     await geoService.createBoundary({ location })
   },
 }

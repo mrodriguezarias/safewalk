@@ -127,7 +127,7 @@ const getPlacesWithCoords = async (instances) => {
     if (!coords) {
       continue
     }
-    const withinBoundary = await geoService.isWithinBoundary(coords.x, coords.y)
+    const withinBoundary = await geoService.isWithinBoundary(coords)
     if (!withinBoundary) {
       continue
     }
@@ -166,7 +166,7 @@ const geoService = {
     if (!name || !coords) {
       return null
     }
-    const withinBoundary = await geoService.isWithinBoundary(coords.x, coords.y)
+    const withinBoundary = await geoService.isWithinBoundary(coords)
     if (!withinBoundary) {
       return null
     }
@@ -192,11 +192,19 @@ const geoService = {
       .value()
     return getPlacesWithCoords(instances)
   },
-  isWithinBoundary: async (longitude, latitude) => {
+  isWithinBoundary: async (coords) => {
+    const { longitude, latitude } = coords
     const url = urlUtils.join(geoService.path, "withinBoundary")
     return requestUtils.post(url, {
       longitude,
       latitude,
+    })
+  },
+  getSafestPath: async (source, target) => {
+    const url = urlUtils.join(geoService.path, "safestPath")
+    return requestUtils.post(url, {
+      source,
+      target,
     })
   },
 }

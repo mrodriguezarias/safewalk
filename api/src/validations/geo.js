@@ -9,7 +9,7 @@ const geoValidation = {
   isWithinBoundary: {
     body: geoPoint,
   },
-  getSafePath: {
+  getSafestPath: {
     body: Joi.object({
       source: geoPoint.required(),
       target: geoPoint.required(),

@@ -13,9 +13,9 @@ const createAdminUser = {
     dbUtils.connect()
     try {
       await userService.createUser(userData)
-      console.log("Created admin user")
-      console.log("Username:", userData.name)
-      console.log("Password:", userData.password)
+      console.info("Created admin user")
+      console.info("Username:", userData.name)
+      console.info("Password:", userData.password)
     } catch (error) {
       if (error.status === 409) {
         console.error("Error: user already exists")

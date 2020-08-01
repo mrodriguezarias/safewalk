@@ -12,9 +12,9 @@ const geoRoute = {
       geoController.isWithinBoundary,
     )
     router.post(
-      "/safePath",
-      validate(geoValidation.getSafePath),
-      geoController.getSafePath,
+      "/safestPath",
+      validate(geoValidation.getSafestPath),
+      geoController.getSafestPath,
     )
   },
 }

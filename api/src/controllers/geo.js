@@ -11,10 +11,10 @@ const geoController = {
       next(error)
     }
   },
-  getSafePath: async (req, res, next) => {
+  getSafestPath: async (req, res, next) => {
     const { source, target } = req.body
     try {
-      const response = await geoService.getSafePath(source, target)
+      const response = await geoService.getSafestPath(source, target)
       res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)

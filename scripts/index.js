@@ -24,7 +24,7 @@ const handler = async (script, args) => {
     },
   })
   await script.run(args)
-  console.log("Done")
+  console.info("Done")
 }
 
 let args = yargs

@@ -1,13 +1,13 @@
 import React from "react"
 import { StyleSheet, View } from "react-native"
 
-import Bar from "../../components/map/bar"
+import ActionBar from "../../components/map/actionBar"
 import Map from "../../components/map/map"
 
 const MainScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Bar navigation={navigation} />
+      <ActionBar navigation={navigation} />
       <Map />
     </View>
   )

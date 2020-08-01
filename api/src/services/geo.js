@@ -39,7 +39,7 @@ const geoService = {
     })
     return result !== null
   },
-  getSafePath: async (source, target) => {
+  getSafestPath: async (source, target) => {
     const startPoint = await nodeService.getNearestNode(
       source.longitude,
       source.latitude,
@@ -59,7 +59,7 @@ const geoService = {
       const { longitude, latitude } = point.data
       return { longitude, latitude }
     })
-    return coords
+    return [target, ...coords, source]
   },
 }
 

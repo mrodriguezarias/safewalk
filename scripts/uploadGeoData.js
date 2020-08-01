@@ -25,7 +25,7 @@ const uploadGeoData = {
     return path
   },
   parseFile: (path) => {
-    console.log("Parsing file…")
+    console.info("Parsing file…")
     const data = fs.readFileSync(path)
     const { elements } = JSON.parse(data)
     for (const element of elements) {
@@ -57,7 +57,7 @@ const uploadGeoData = {
     }
   },
   processGraph: () => {
-    console.log("Processing graph…")
+    console.info("Processing graph…")
     const latLonToNodeId = new Map()
     const nodesToDelete = new Set()
     uploadGeoData.graph.forEachNode((node) => {
@@ -82,7 +82,7 @@ const uploadGeoData = {
     nodesToDelete.clear()
     const nodeCount = uploadGeoData.graph.getNodesCount()
     const pathCount = uploadGeoData.graph.getLinksCount()
-    console.log(`Graph has ${nodeCount} nodes and ${pathCount} paths`)
+    console.info(`Graph has ${nodeCount} nodes and ${pathCount} paths`)
     uploadGeoData.graph.forEachNode((node) => {
       uploadGeoData.nodes.push({
         id: node.id,
@@ -101,16 +101,16 @@ const uploadGeoData = {
   uploadToDatabase: async () => {
     const nodeIdMap = new Map()
     await dbUtils.connect(true)
-    console.log("Starting database upload…")
+    console.info("Starting database upload…")
     try {
-      console.log("Deleting preexisting nodes…")
+      console.info("Deleting preexisting nodes…")
       await nodeService.deleteAllNodes()
       for (const [index, nodeData] of uploadGeoData.nodes.entries()) {
         uploadGeoData.printUploadProgress("node", index)
         const node = await nodeService.createNode(nodeData)
         nodeIdMap.set(nodeData.id, node.id)
       }
-      console.log("Deleting preexisting paths…")
+      console.info("Deleting preexisting paths…")
       await pathService.deleteAllPaths()
       for (const [index, { from, to }] of uploadGeoData.paths.entries()) {
         uploadGeoData.printUploadProgress("path", index)

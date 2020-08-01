@@ -23,14 +23,12 @@ const geoUtils = {
       })
     }
     const { longitude, latitude } = location?.coords ?? {}
-    if (!longitude || !latitude) {
+    if (!longitude) {
       return null
     }
+    const coords = { longitude, latitude }
     if (checkBoundary) {
-      const isWithinBoundary = await geoService.isWithinBoundary(
-        longitude,
-        latitude,
-      )
+      const isWithinBoundary = await geoService.isWithinBoundary(coords)
       if (!isWithinBoundary) {
         if (!shouldThrow) {
           return null
@@ -40,7 +38,7 @@ const geoUtils = {
         )
       }
     }
-    return { longitude, latitude }
+    return coords
   },
 }
 

@@ -27,7 +27,7 @@ const cacheUtils = {
       const value = await loader()
       cache.set(key, value)
     }
-    console.log("Cache loaded")
+    console.info("Cache loaded")
   },
   get: async (key, wait = true) => {
     if (!wait) {
