@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { StyleSheet, ScrollView } from "react-native"
-import { Searchbar, Subheading } from "react-native-paper"
+import { Searchbar, Paragraph } from "react-native-paper"
 import { useDispatch } from "react-redux"
 
 import DismissKeyboard from "../../components/dismissKeyboard"
@@ -10,6 +10,7 @@ import walkActions from "../../store/actions/walk"
 import geoService from "../../../../shared/services/geo"
 import geoUtils from "../../utils/geo"
 import alertUtils from "../../utils/alert"
+import GeoError from "../../../../shared/errors/geo"
 
 const ChangeLocationScreen = ({ route, navigation }) => {
   const searchbarRef = useRef()
@@ -42,22 +43,31 @@ const ChangeLocationScreen = ({ route, navigation }) => {
       return
     }
     setResults([])
-    setNoResults(false)
+    setNoResults(null)
     setLoading(true)
     setPreviousQuery(query)
-    let results
-    const address = await geoService.searchAddress(query)
-    if (address) {
-      setResults([address])
-      const nearby = await geoService.searchNearby(address.coords)
-      results = [address, ...nearby]
-    } else {
-      const places = await geoService.searchPlaces(query)
-      results = [...places]
+    try {
+      let results = []
+      const address = await geoService.searchAddress(query)
+      if (address) {
+        setResults([address])
+        const nearby = await geoService.searchNearby(address.coords)
+        results = [address, ...nearby]
+      } else {
+        const places = await geoService.searchPlaces(query)
+        results = [...places]
+      }
+      setResults(results)
+      setNoResults(results.length === 0 ? "Sin Resultados" : null)
+    } catch (error) {
+      if (error instanceof GeoError) {
+        setNoResults(error.message)
+      } else {
+        throw error
+      }
+    } finally {
+      setLoading(false)
     }
-    setResults(results)
-    setNoResults(results.length === 0)
-    setLoading(false)
   }
 
   const setLocation = async (location) => {
@@ -105,7 +115,7 @@ const ChangeLocationScreen = ({ route, navigation }) => {
         ))}
         <Spinner visible={loading} style={styles.spinner} />
         {noResults && (
-          <Subheading style={styles.noResults}>Sin resultados</Subheading>
+          <Paragraph style={styles.noResults}>{noResults}</Paragraph>
         )}
       </ScrollView>
     </DismissKeyboard>
@@ -124,7 +134,8 @@ const styles = StyleSheet.create({
     height: 60,
   },
   noResults: {
-    marginVertical: 15,
+    marginVertical: 20,
+    paddingHorizontal: 30,
     color: "grey",
     textAlign: "center",
   },

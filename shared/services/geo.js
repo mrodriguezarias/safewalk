@@ -2,6 +2,7 @@ import requestUtils from "../utils/request"
 import generalUtils from "../utils/general"
 import urlUtils from "../utils/url"
 import _ from "lodash"
+import GeoError from "../errors/geo"
 
 const APIS = {
   ADDRESSES:
@@ -118,7 +119,7 @@ const getLongLat = async (coords) => {
 
 const getPlacesWithCoords = async (instances) => {
   let places = []
-  for (const { id, nombre: name } of instances) {
+  for (const [index, { id, nombre: name }] of instances.entries()) {
     const {
       ubicacion: { centroide: pointLoc },
     } = await requestUtils.get(APIS.PLACE, { id })
@@ -127,9 +128,8 @@ const getPlacesWithCoords = async (instances) => {
     if (!coords) {
       continue
     }
-    const withinBoundary = await geoService.isWithinBoundary(coords)
-    if (!withinBoundary) {
-      continue
+    if (index === 0) {
+      await geoService.isWithinBoundary(coords)
     }
     const place = {
       name: normalize(name, false),
@@ -166,10 +166,7 @@ const geoService = {
     if (!name || !coords) {
       return null
     }
-    const withinBoundary = await geoService.isWithinBoundary(coords)
-    if (!withinBoundary) {
-      return null
-    }
+    await geoService.isWithinBoundary(coords)
     return { name, coords }
   },
   searchPlaces: async (query) => {
@@ -195,10 +192,15 @@ const geoService = {
   isWithinBoundary: async (coords) => {
     const { longitude, latitude } = coords
     const url = urlUtils.join(geoService.path, "withinBoundary")
-    return requestUtils.post(url, {
+    const withinBoundary = await requestUtils.post(url, {
       longitude,
       latitude,
     })
+    if (!withinBoundary) {
+      throw new GeoError(
+        "De momento solo proveemos servicio dentro de la Ciudad de Buenos Aires.",
+      )
+    }
   },
   getSafestPath: async (source, target) => {
     const url = urlUtils.join(geoService.path, "safestPath")

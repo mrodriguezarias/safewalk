@@ -1,6 +1,5 @@
 import * as Location from "expo-location"
 import geoService from "../../../shared/services/geo"
-import GeoError from "../../../shared/errors/geo"
 
 const geoUtils = {
   getCurrentLocation: async ({
@@ -28,14 +27,13 @@ const geoUtils = {
     }
     const coords = { longitude, latitude }
     if (checkBoundary) {
-      const isWithinBoundary = await geoService.isWithinBoundary(coords)
-      if (!isWithinBoundary) {
-        if (!shouldThrow) {
-          return null
+      try {
+        await geoService.isWithinBoundary(coords)
+      } catch (error) {
+        if (shouldThrow) {
+          throw error
         }
-        throw new GeoError(
-          "De momento solo proveemos servicio dentro de la Ciudad de Buenos Aires.",
-        )
+        return null
       }
     }
     return coords
