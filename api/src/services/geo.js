@@ -5,9 +5,10 @@ import boundaryModel from "../models/boundary"
 import nodeService from "./node"
 import npath from "ngraph.path"
 import cacheUtils from "../../../shared/utils/cache"
+import geoUtils from "../../../shared/utils/geo"
 
 const getDistance = (nodeA, nodeB) => {
-  return nodeA.weight - nodeB.weight
+  return -(nodeA.weight + nodeB.weight)
 }
 
 const geoService = {
@@ -40,6 +41,11 @@ const geoService = {
     return result !== null
   },
   getSafestPath: async (source, target) => {
+    const dSource = geoUtils.getDistance(source)
+    const dTarget = geoUtils.getDistance(target)
+    if (dTarget < dSource) {
+      ;[target, source] = [source, target]
+    }
     const startPoint = await nodeService.getNearestNode(
       source.longitude,
       source.latitude,
