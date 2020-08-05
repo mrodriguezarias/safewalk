@@ -66,7 +66,7 @@ const MenuItem = ({ label, children, onPress, options, value, onChange }) => {
   return (
     <>
       {options && renderDialog()}
-      <TouchableRipple onPress={handlePress}>
+      <TouchableRipple onPress={handlePress} disabled={!onPress && !options}>
         <>
           <View style={styles.container}>
             <Subheading numberOfLines={1}>{label}</Subheading>

@@ -11,10 +11,13 @@ const geoUtils = {
     if (status !== "granted") {
       return null
     }
-    let location = {}
+    let location
     if (!highAccuracy) {
-      location = await Location.getLastKnownPositionAsync()
-    } else {
+      try {
+        location = await Location.getLastKnownPositionAsync()
+      } catch {}
+    }
+    if (!location) {
       location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Highest,
         maximumAge: 1000,
