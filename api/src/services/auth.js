@@ -13,7 +13,7 @@ const authService = {
     if (preexistingUser) {
       throw new HttpError(
         HttpStatus.CONFLICT,
-        `El usuario ${userData.name} ya existe`,
+        "Por favor ingrese otro nombre de usuario",
       )
     }
 
