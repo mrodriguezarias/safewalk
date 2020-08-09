@@ -12,7 +12,7 @@ import PremiumScreen from "./premium"
 import PaymentScreen from "./payment"
 import EditUserScreen from "./editUser"
 import NewContactScreen from "./newContact"
-import ChangeLocationScreen from "./changeLocation"
+import ChangeLocationScreen from "../map/changeLocation"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Title } from "react-native-paper"
 
@@ -96,7 +96,7 @@ const UserScreen = () => {
         options={{ headerTitle: "Nuevo Contacto" }}
       />
       <Stack.Screen
-        name="ChangeCurrentLocation"
+        name="ChangeLocation"
         component={ChangeLocationScreen}
         options={{
           headerTitle: "Cambiar Ubicación",

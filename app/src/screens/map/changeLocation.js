@@ -8,9 +8,13 @@ import DismissKeyboard from "../../components/dismissKeyboard"
 import MenuItem from "../../components/menuItem"
 import Spinner from "../../components/spinner"
 import walkActions from "../../store/actions/walk"
+import appActions from "../../store/actions/app"
 import geoService from "../../../../shared/services/geo"
 import geoUtils from "../../utils/geo"
 import GeoError from "../../../../shared/errors/geo"
+import MapView from "../../components/map/mapView"
+import LocationMarker from "../../components/map/locationMarker"
+import alertUtils from "../../utils/alert"
 
 const ChangeLocationScreen = ({ route, navigation }) => {
   const searchbarRef = useRef()
@@ -21,8 +25,9 @@ const ChangeLocationScreen = ({ route, navigation }) => {
   const [results, setResults] = useState([])
   const [noResults, setNoResults] = useState(false)
   const mockLocation = useSelector((state) => state.app.mockLocation)
+  const [location, setLocation] = useState(null)
   const dispatch = useDispatch()
-  const { key } = route.params
+  const { key } = route.params ?? {}
 
   useEffect(() => {
     searchbarRef.current.focus()
@@ -35,6 +40,7 @@ const ChangeLocationScreen = ({ route, navigation }) => {
     setResults([])
     setNoResults(false)
     setQuery(value)
+    setLocation(null)
     if (!value) {
       searchbarRef.current.focus()
     }
@@ -82,28 +88,81 @@ const ChangeLocationScreen = ({ route, navigation }) => {
     return coords
   }
 
-  const setLocation = async (location) => {
-    dispatch(walkActions.setLocation(key, location))
+  const saveLocation = async (location) => {
+    if (key) {
+      dispatch(walkActions.setLocation(key, location))
+    } else {
+      dispatch(appActions.setMockLocation(location?.coords ?? null))
+    }
     navigation.goBack()
   }
 
-  const handleUseCurrentLocation = async () => {
+  const searchLocation = async (location) => {
     setLoading(true)
     setResults([])
     setNoResults(false)
     setQuery("")
+    let coords = location
     try {
-      const coords = await getCurrentLocation()
+      if (!coords) {
+        coords = await getCurrentLocation()
+      }
       const address = await geoService.getAddressOfLocation(coords)
+      if (!address) {
+        throw new GeoError("Sin Resultados")
+      }
       setQuery(address)
       doSearch(address)
     } catch (error) {
-      if (error instanceof GeoError) {
+      if (!location && error instanceof GeoError) {
         setNoResults(error.message)
-        setLoading(false)
       } else {
         throw error
       }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getMarkerColor = () => {
+    switch (key) {
+      case "source":
+        return theme.colors.header
+      case "target":
+        return theme.colors.tabBar
+      default:
+        return theme.colors.primary
+    }
+  }
+
+  const handleMapPress = async (event) => {
+    const {
+      nativeEvent: { coordinate: coords },
+    } = event
+    setLocation(coords)
+    if (!key) {
+      saveLocation({ coords })
+      return
+    }
+    try {
+      await geoService.isWithinBoundary(coords)
+      await searchLocation(coords)
+    } catch ({ message }) {
+      alertUtils.alert({
+        title: "Error",
+        message,
+        onPress: () => {
+          setLocation(null)
+        },
+      })
+    }
+  }
+
+  const handleSetCurrentLocation = () => {
+    if (key) {
+      searchLocation()
+    } else {
+      saveLocation()
     }
   }
 
@@ -125,22 +184,28 @@ const ChangeLocationScreen = ({ route, navigation }) => {
             color={theme.colors.primary}
           />
         )}
-        onIconPress={handleUseCurrentLocation}
+        onIconPress={handleSetCurrentLocation}
         editable={!loading}
       />
-      <ScrollView keyboardShouldPersistTaps="handled">
-        {results.map((location, index) => (
-          <MenuItem
-            key={index}
-            label={location.name}
-            onPress={() => setLocation(location)}
-          />
-        ))}
-        <Spinner visible={loading} style={styles.spinner} />
-        {noResults && (
-          <Paragraph style={styles.noResults}>{noResults}</Paragraph>
-        )}
-      </ScrollView>
+      {results.length > 0 || loading || noResults ? (
+        <ScrollView keyboardShouldPersistTaps="handled">
+          {results.map((location, index) => (
+            <MenuItem
+              key={index}
+              label={location.name}
+              onPress={() => saveLocation(location)}
+            />
+          ))}
+          <Spinner visible={loading} style={styles.spinner} />
+          {noResults && (
+            <Paragraph style={styles.noResults}>{noResults}</Paragraph>
+          )}
+        </ScrollView>
+      ) : (
+        <MapView onPress={handleMapPress}>
+          <LocationMarker coords={location} color={getMarkerColor()} />
+        </MapView>
+      )}
     </DismissKeyboard>
   )
 }

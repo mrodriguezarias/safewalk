@@ -195,6 +195,9 @@ const geoService = {
       x: coords.longitude,
       y: coords.latitude,
     })
+    if (!result || !result.puerta) {
+      return null
+    }
     const { streetName, streetNumber } = getAddressParts(result.puerta)
     const address = `${normalize(streetName)} ${streetNumber}`
     return address
