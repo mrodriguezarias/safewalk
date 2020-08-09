@@ -42,3 +42,11 @@ Para correr en el simulador de iOS: `npm run app:ios`, o en el emulador de Andro
 #### Creación de usuario admin
 
 `npm run script create_admin_user`
+
+#### Preparación de datos para la generación del camino seguro
+
+```
+npm run script upload_boundary
+npm run script upload_geo_data
+npm run script upload_weights
+```
