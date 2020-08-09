@@ -5,6 +5,7 @@ import userService from "../services/user"
 const authController = {
   signUp: async (name, password) => {
     const response = await authService.signUp(name, password)
+    await storageUtils.set("auth", response.token)
     return response.user
   },
   logIn: async (name, password, shouldBeAdmin = false) => {

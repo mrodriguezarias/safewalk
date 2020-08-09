@@ -8,6 +8,10 @@ import authActions from "../../store/actions/auth"
 import { Button, Snackbar } from "react-native-paper"
 import authController from "../../../../shared/controllers/auth"
 
+const emptyValues = {
+  phone: null,
+}
+
 const EditUserScreen = ({ navigation }) => {
   const [snackbarText, setSnackbarText] = useState("")
   const [loading, setLoading] = useState(false)
@@ -18,7 +22,7 @@ const EditUserScreen = ({ navigation }) => {
     Keyboard.dismiss()
     setLoading(true)
     try {
-      const user = await authController.edit(values)
+      const user = await authController.edit({ ...emptyValues, ...values })
       dispatch(authActions.edit(user))
       navigation.goBack()
     } catch (error) {

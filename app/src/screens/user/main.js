@@ -1,11 +1,17 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { View, StyleSheet } from "react-native"
 import { Button } from "react-native-paper"
 import { useSelector } from "react-redux"
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
-import ContactsScreen from "./contacts"
+import Snackbar from "../../components/snackbar"
+// import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+// import ContactsScreen from "./contacts"
 
-const Tab = createMaterialTopTabNavigator()
+// const Tab = createMaterialTopTabNavigator()
+
+const snackbarTexts = {
+  signUp: "Usuario registrado con éxito",
+  deleteAccount: "Cuenta eliminada",
+}
 
 const LoggedOutScreen = ({ navigation }) => (
   <View style={styles.centered}>
@@ -20,11 +26,8 @@ const LoggedOutScreen = ({ navigation }) => (
   </View>
 )
 
-const MainScreen = ({ navigation }) => {
-  const logged = useSelector((state) => state.auth.logged)
-  return !logged ? (
-    <LoggedOutScreen navigation={navigation} />
-  ) : (
+const LoggedInScreen = () => {
+  return (
     <View />
     // <Tab.Navigator>
     //   <Tab.Screen
@@ -41,7 +44,27 @@ const MainScreen = ({ navigation }) => {
   )
 }
 
+const MainScreen = (props) => {
+  const { action } = props.route.params ?? {}
+  const logged = useSelector((state) => state.auth.logged)
+  const [snackbarText, setSnackbarText] = useState("")
+  useEffect(() => {
+    if (action in snackbarTexts) {
+      setSnackbarText(snackbarTexts[action])
+    }
+  }, [action])
+  return (
+    <View style={styles.container}>
+      {logged ? <LoggedInScreen {...props} /> : <LoggedOutScreen {...props} />}
+      <Snackbar text={snackbarText} setText={setSnackbarText} />
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   centered: {
     flex: 1,
     justifyContent: "center",

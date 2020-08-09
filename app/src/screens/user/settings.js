@@ -1,13 +1,6 @@
 import React, { useState } from "react"
 import { View, ScrollView, StyleSheet, Platform } from "react-native"
-import {
-  ToggleButton,
-  List,
-  Portal,
-  Dialog,
-  Paragraph,
-  Button,
-} from "react-native-paper"
+import { List, Portal, Dialog, Paragraph, Button } from "react-native-paper"
 import MenuItem from "../../components/menuItem"
 import { useSelector, useDispatch } from "react-redux"
 import appActions from "../../store/actions/app"
@@ -24,41 +17,41 @@ const SettingsScreen = ({ navigation }) => {
   const [dialogVisible, setDialogVisible] = useState(false)
 
   const handleLogOut = async (deleteAccount = false) => {
+    let action = "logOut"
     if (deleteAccount) {
+      action = "deleteAccount"
       await authController.deleteAccount()
     }
     dispatch(authActions.logOut())
     setDialogVisible(false)
-    navigation.goBack()
+    navigation.navigate("Main", { action })
   }
 
   const renderAppSettings = () => (
     <List.Section>
       <List.Subheader>Aplicación</List.Subheader>
-      <MenuItem label="Apariencia">
-        <ToggleButton.Row
-          value={theme}
-          onValueChange={(theme) =>
-            theme && dispatch(appActions.setTheme(theme))
-          }
-        >
-          <ToggleButton icon="theme-light-dark" value="system" />
-          <ToggleButton icon="white-balance-sunny" value="light" />
-          <ToggleButton icon="weather-night" value="dark" />
-        </ToggleButton.Row>
-      </MenuItem>
+      <MenuItem
+        label="Apariencia"
+        options={[
+          { value: "system", label: "Automática" },
+          { value: "light", label: "Diurna" },
+          { value: "dark", label: "Nocturna" },
+        ]}
+        onChange={(theme) => dispatch(appActions.setTheme(theme))}
+        value={theme}
+      />
       {Platform.OS === "ios" && (
-        <MenuItem label="Proveedor de Mapas">
-          <ToggleButton.Row
-            value={mapProvider}
-            onValueChange={(mapProvider) =>
-              mapProvider && dispatch(appActions.setMapProvider(mapProvider))
-            }
-          >
-            <ToggleButton icon="apple" value="apple" />
-            <ToggleButton icon="google" value="google" />
-          </ToggleButton.Row>
-        </MenuItem>
+        <MenuItem
+          label="Proveedor de Mapas"
+          options={[
+            { value: "apple", label: "Apple" },
+            { value: "google", label: "Google" },
+          ]}
+          onChange={(mapProvider) =>
+            dispatch(appActions.setMapProvider(mapProvider))
+          }
+          value={mapProvider}
+        />
       )}
       <MenuItem
         label="Tipo de mapa"

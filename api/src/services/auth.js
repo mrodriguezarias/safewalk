@@ -5,7 +5,14 @@ import HttpError from "../../../shared/errors/http"
 import HttpStatus from "http-status-codes"
 import userModel from "../models/user"
 import envUtils, { env } from "../../../shared/utils/env"
-import _ from "lodash"
+
+const getUserAndToken = (dbUser) => {
+  const user = dbUser.toJSON()
+  const payload = { _id: user.id }
+  const secret = envUtils.get(env.JwtSecret)
+  const token = jwt.sign(payload, secret)
+  return { user, token }
+}
 
 const authService = {
   signUp: async (userData) => {
@@ -18,21 +25,28 @@ const authService = {
     }
 
     const hashedPassword = await bcrypt.hash(userData.password, 10)
-    let user = await userModel.create({
+    const user = await userModel.create({
       ...userData,
       password: hashedPassword,
     })
-
-    user = _.omit(user.toJSON(), "password")
-    return { user }
+    return getUserAndToken(user)
   },
   logIn: async ({ name, password, shouldBeAdmin }) => {
-    let user = await userModel.findOne({ name })
+    const user = await userModel.findOne({ name })
     if (!user) {
       throw new HttpError(HttpStatus.CONFLICT, "Usuario inexistente")
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password)
+    if (!passwordMatches) {
+      user.loginAttempts = Math.min(user.loginAttempts + 1, 2)
+      await user.save()
+    }
+
+    if (user.loginAttempts === 2) {
+      throw new HttpError(HttpStatus.CONFLICT, "Usuario bloqueado")
+    }
+
     if (!passwordMatches) {
       throw new HttpError(HttpStatus.CONFLICT, "Contraseña incorrecta")
     }
@@ -41,12 +55,9 @@ const authService = {
       throw new HttpError(HttpStatus.FORBIDDEN, "User is not admin")
     }
 
-    const payload = { _id: user._id }
-    const secret = envUtils.get(env.JwtSecret)
-    const token = jwt.sign(payload, secret)
-
-    user = _.omit(user.toJSON(), "password")
-    return { user, token }
+    user.loginAttempts = 0
+    await user.save()
+    return getUserAndToken(user)
   },
 }
 

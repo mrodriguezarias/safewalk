@@ -8,9 +8,12 @@ const userSchema = new Schema(
     phone: { type: String, default: null },
     admin: { type: Boolean, default: false },
     premium: { type: Boolean, default: false },
+    loginAttempts: { type: Number, default: 0 },
   },
   {
-    toJSON: dbUtils.toJSON,
+    toJSON: dbUtils.toJSON((user) => {
+      delete user.password
+    }),
   },
 )
 

@@ -14,7 +14,7 @@ const carerSchema = new Schema(
     confirmed: { type: Boolean, default: false },
   },
   {
-    toJSON: dbUtils.toJSON,
+    toJSON: dbUtils.toJSON(),
   },
 )
 

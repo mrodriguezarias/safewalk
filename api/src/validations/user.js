@@ -12,6 +12,7 @@ const userSchema = {
   password: Joi.string().min(8).max(32),
   admin: Joi.boolean().default(false),
   premium: Joi.boolean().default(false),
+  loginAttempts: Joi.number().default(0),
 }
 
 const userValidation = {
@@ -40,6 +41,7 @@ const userValidation = {
       password: userSchema.password,
       admin: userSchema.admin,
       premium: userSchema.premium,
+      loginAttempts: userSchema.loginAttempts,
     }),
   },
   deleteUser: {

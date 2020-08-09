@@ -1,10 +1,12 @@
 import React, { useState } from "react"
 import { View, StyleSheet, ScrollView, Keyboard } from "react-native"
-import { Button, Snackbar } from "react-native-paper"
+import { Button } from "react-native-paper"
+import { useDispatch } from "react-redux"
+
 import Form from "../../components/form"
 import Field from "../../components/field"
+import Snackbar from "../../components/snackbar"
 import validationUtils from "../../utils/validation"
-import { useDispatch } from "react-redux"
 import authActions from "../../store/actions/auth"
 import authController from "../../../../shared/controllers/auth"
 
@@ -22,7 +24,7 @@ const AuthScreen = ({ navigation }) => {
     try {
       const user = await authController[action](name, password)
       dispatch(authActions[action](user))
-      navigation.goBack()
+      navigation.navigate("Main", { action })
     } catch (error) {
       setSnackbarText(error.message)
     }
@@ -78,17 +80,7 @@ const AuthScreen = ({ navigation }) => {
           )}
         />
       </ScrollView>
-      <Snackbar
-        visible={!!snackbarText}
-        onDismiss={() => setSnackbarText("")}
-        action={{
-          label: "OK",
-          onPress: () => {},
-        }}
-        style={{ margin: 15 }}
-      >
-        {snackbarText}
-      </Snackbar>
+      <Snackbar text={snackbarText} setText={setSnackbarText} />
     </>
   )
 }

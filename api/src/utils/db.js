@@ -20,17 +20,23 @@ const dbUtils = {
   sort: (query, sort) => {
     return query.sort(sort ? { [sort[0]]: sort[1] } : {})
   },
-  toJSON: {
-    transform: (doc, ret) => {
-      for (const key in ret) {
-        if (ret[key] instanceof mongoose.Types.ObjectId) {
-          ret[key] = ret[key].toString()
+  toJSON: (callback) => {
+    const toJSON = {
+      transform: (doc, ret) => {
+        for (const key in ret) {
+          if (ret[key] instanceof mongoose.Types.ObjectId) {
+            ret[key] = ret[key].toString()
+          }
         }
-      }
-      ret.id = ret._id.toString()
-      delete ret._id
-      delete ret.__v
-    },
+        ret.id = ret._id.toString()
+        delete ret._id
+        delete ret.__v
+        if (callback) {
+          callback(ret)
+        }
+      },
+    }
+    return toJSON
   },
 }
 

@@ -8,7 +8,6 @@ const initialState = {
   heights: {
     window: Dimensions.get("window").height,
     header: 0,
-    tabBar: 90,
     keyboard: 0,
   },
   mockLocation: null,

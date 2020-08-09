@@ -9,6 +9,7 @@ import {
   BooleanInput,
   TextInput,
   PasswordInput,
+  NumberInput,
   Create,
   required,
   minLength,
@@ -50,6 +51,7 @@ const UserEdit = (props) => (
       <TextInput source="phone" validate={validations.phone} />
       <BooleanInput source="admin" />
       <BooleanInput source="premium" />
+      <NumberInput source="loginAttempts" />
     </SimpleForm>
   </Edit>
 )

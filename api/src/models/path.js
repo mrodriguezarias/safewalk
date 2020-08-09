@@ -13,7 +13,7 @@ const pathSchema = new Schema(
     },
   },
   {
-    toJSON: dbUtils.toJSON,
+    toJSON: dbUtils.toJSON(),
   },
 )
 
