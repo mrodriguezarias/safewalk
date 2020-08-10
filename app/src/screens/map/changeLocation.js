@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { StyleSheet, ScrollView } from "react-native"
 import { Searchbar, Paragraph, useTheme } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
@@ -15,9 +15,9 @@ import GeoError from "../../../../shared/errors/geo"
 import MapView from "../../components/map/mapView"
 import LocationMarker from "../../components/map/locationMarker"
 import alertUtils from "../../utils/alert"
+import requestUtils from "../../../../shared/utils/request"
 
 const ChangeLocationScreen = ({ route, navigation }) => {
-  const searchbarRef = useRef()
   const theme = useTheme()
   const [previousQuery, setPreviousQuery] = useState()
   const [query, setQuery] = useState("")
@@ -30,19 +30,18 @@ const ChangeLocationScreen = ({ route, navigation }) => {
   const { key } = route.params ?? {}
 
   useEffect(() => {
-    searchbarRef.current.focus()
+    return () => {
+      requestUtils.abort()
+    }
   }, [])
 
   const handleChangeText = async (value) => {
-    if (loading) {
-      return
-    }
     setResults([])
     setNoResults(false)
     setQuery(value)
     setLocation(null)
     if (!value) {
-      searchbarRef.current.focus()
+      requestUtils.abort()
     }
   }
 
@@ -70,7 +69,7 @@ const ChangeLocationScreen = ({ route, navigation }) => {
     } catch (error) {
       if (error instanceof GeoError) {
         setNoResults(error.message)
-      } else {
+      } else if (error.name !== "AbortError") {
         throw error
       }
     } finally {
@@ -89,6 +88,7 @@ const ChangeLocationScreen = ({ route, navigation }) => {
   }
 
   const saveLocation = async (location) => {
+    requestUtils.abort()
     if (key) {
       dispatch(walkActions.setLocation(key, location))
     } else {
@@ -114,13 +114,12 @@ const ChangeLocationScreen = ({ route, navigation }) => {
       setQuery(address)
       doSearch(address)
     } catch (error) {
+      setLoading(false)
       if (!location && error instanceof GeoError) {
         setNoResults(error.message)
-      } else {
+      } else if (error.name !== "AbortError") {
         throw error
       }
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -169,7 +168,6 @@ const ChangeLocationScreen = ({ route, navigation }) => {
   return (
     <DismissKeyboard>
       <Searchbar
-        ref={searchbarRef}
         placeholder="Dirección, intersección o lugar"
         onChangeText={handleChangeText}
         onEndEditing={() => doSearch(query)}

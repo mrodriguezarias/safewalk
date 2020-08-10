@@ -44,8 +44,9 @@ const options = [
   },
   {
     name: env.Port,
-    required: true,
+    required: false,
     type: types.Number,
+    default: 4000,
   },
   {
     name: env.Url,

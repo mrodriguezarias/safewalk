@@ -15,10 +15,9 @@ const scripts = [
 ]
 
 const handler = async (script, args) => {
-  const env = args.env ?? "local"
   envUtils.load({
     platform: "script",
-    env,
+    env: args.env,
     libs: {
       dotenv: require("dotenv"),
     },
@@ -35,4 +34,13 @@ for (const script of scripts) {
     handler: (args) => handler(script, args),
   })
 }
-args.demandCommand().version(false).help(false).strict().argv
+args
+  .demandCommand()
+  .option("env", {
+    alias: "e",
+    type: "string",
+    default: "local",
+  })
+  .version(false)
+  .help(false)
+  .strict().argv

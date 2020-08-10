@@ -116,13 +116,13 @@ const LocationsCard = ({ navigation }) => {
   )
 }
 
-const SafePathCard = () => {
-  return (
-    <View style={styles.card}>
-      <Text>SafePathCard</Text>
-    </View>
-  )
-}
+// const SafePathCard = () => {
+//   return (
+//     <View style={styles.card}>
+//       <Text>SafePathCard</Text>
+//     </View>
+//   )
+// }
 
 const ActionBar = ({ navigation }) => {
   const theme = useTheme()

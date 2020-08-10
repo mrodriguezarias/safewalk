@@ -22,8 +22,13 @@ const TextScaler = ({
   }, [children, width, minFontSize, offset])
 
   const findBestSize = (text, width) => {
+    if (!text) {
+      returnText("")
+      returnFontSize(initialFontSize)
+      return
+    }
     setFontSize(initialFontSize)
-    setText(text)
+    setText(text ?? "")
     setHidden(!!width)
   }
 
