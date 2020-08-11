@@ -83,12 +83,12 @@ const SettingsScreen = ({ navigation }) => {
         label="Editar Datos"
         onPress={() => navigation.navigate("EditUser")}
       />
-      {!user?.premium && (
+      {/* {!user?.premium && (
         <MenuItem
           label="Adquirir Premium"
           onPress={() => navigation.navigate("Premium")}
         />
-      )}
+      )} */}
       <MenuItem
         label="Eliminar Cuenta"
         onPress={() => setDialogVisible(true)}
