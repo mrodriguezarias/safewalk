@@ -1,25 +1,20 @@
 import { Schema, model } from "mongoose"
+import dbUtils from "../utils/db"
+import pointSchema from "./schemas/point"
 
-const pointSchema = new Schema({
-  type: {
-    type: String,
-    enum: ["Point"],
-    required: true,
+const nodeSchema = new Schema(
+  {
+    weight: { type: Number, default: 0 },
+    location: {
+      type: pointSchema,
+      required: true,
+      index: "2dsphere",
+    },
   },
-  coordinates: {
-    type: [Number],
-    required: true,
+  {
+    toJSON: dbUtils.toJSONWithoutLocation(),
   },
-})
-
-const nodeSchema = new Schema({
-  weight: { type: Number, default: 0 },
-  location: {
-    type: pointSchema,
-    required: true,
-    index: "2dsphere",
-  },
-})
+)
 
 const nodeModel = model("Node", nodeSchema)
 

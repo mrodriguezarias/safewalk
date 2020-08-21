@@ -3,11 +3,10 @@ import carerModel from "../models/carer"
 import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
-import generalUtils from "../../../shared/utils/general"
 
 const carerService = {
   getCarers: async (filter = {}, range, sort) => {
-    filter = generalUtils.renameKey(filter, "id", "_id")
+    filter = dbUtils.transformQueryFilter(filter)
     const query = carerModel.find(filter)
     const count = await carerModel.estimatedDocumentCount()
     const [paginated, contentRangeHeader] = dbUtils.paginate(

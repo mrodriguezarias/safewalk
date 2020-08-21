@@ -5,6 +5,8 @@ import generateExpoConfig from "./generateExpoConfig"
 import uploadGeoData from "./uploadGeoData"
 import uploadWeights from "./uploadWeights"
 import uploadBoundary from "./uploadBoundary"
+import uploadCategories from "./uploadCategories"
+import uploadPlaces from "./uploadPlaces"
 
 const scripts = [
   createAdminUser,
@@ -12,6 +14,8 @@ const scripts = [
   uploadGeoData,
   uploadWeights,
   uploadBoundary,
+  uploadCategories,
+  uploadPlaces,
 ]
 
 const handler = async (script, args) => {

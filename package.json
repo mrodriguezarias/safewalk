@@ -9,10 +9,10 @@
     "app:ios": "cross-env NODE_ENV=local npm run script generate_expo_config && expo start --ios",
     "api:start": "nodemon --watch api/src --exec babel-node ./api/src/index.js --env=local",
     "api:start:prod": "babel-node ./api/src/index.js --env=$NODE_ENV",
-    "app:start:prod": "cross-env NODE_ENV=prod npm run script generate_expo_config && expo start --no-dev --minify",
+    "app:start:prod": "cross-env NODE_ENV=local npm run script generate_expo_config && expo start --no-dev --minify",
     "backend:start": "cross-env NODE_ENV=local webpack-dev-server --mode development --hot",
     "backend:build": "webpack -p",
-    "sandbox": "nodemon --watch . --exec babel-node ./sandbox.js",
+    "sandbox": "nodemon --watch ./sandbox.js --exec babel-node ./sandbox.js",
     "script": "babel-node ./scripts"
   },
   "repository": {
@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@blackbox-vision/ra-language-spanish": "^3.5.0",
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/bottom-tabs": "^5.7.0",

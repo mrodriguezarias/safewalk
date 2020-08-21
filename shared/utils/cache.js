@@ -3,6 +3,17 @@ import nodeService from "../../api/src/services/node"
 import pathService from "../../api/src/services/path"
 import createGraph from "ngraph.graph"
 import generalUtils from "./general"
+import _ from "lodash"
+
+const loadCache = async () => {
+  const cache = new NodeCache({ stdTTL: 86400, checkperiod: 0 })
+  global._cache = cache
+  for (const { key, loader } of elements) {
+    const value = await loader()
+    cache.set(key, value)
+  }
+  console.info("Cache loaded")
+}
 
 const loadGraph = async () => {
   const { nodes } = await nodeService.getNodes()
@@ -20,14 +31,8 @@ const loadGraph = async () => {
 const elements = [{ key: "Graph", loader: loadGraph }]
 
 const cacheUtils = {
-  load: async () => {
-    const cache = new NodeCache({ stdTTL: 86400, checkperiod: 0 })
-    global._cache = cache
-    for (const { key, loader } of elements) {
-      const value = await loader()
-      cache.set(key, value)
-    }
-    console.info("Cache loaded")
+  load: () => {
+    _.debounce(loadCache)
   },
   get: async (key, wait = true) => {
     if (!wait) {

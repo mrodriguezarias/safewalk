@@ -9,7 +9,6 @@ import {
   BooleanInput,
   TextInput,
   PasswordInput,
-  NumberInput,
   Create,
   required,
   minLength,
@@ -29,44 +28,56 @@ const validations = {
 }
 
 const UserList = (props) => (
-  <List {...props}>
+  <List
+    perPage={25}
+    sort={{ field: "name", order: "ASC" }}
+    title="Lista de Usuarios"
+    {...props}
+  >
     <Datagrid rowClick="edit">
-      <TextField source="name" />
+      <TextField source="name" label="Nombre" />
       <BooleanField source="admin" />
       <BooleanField source="premium" />
+      <BooleanField source="blocked" label="Bloqueado" />
     </Datagrid>
   </List>
 )
 
 const UserTitle = ({ record }) => (
-  <span>User {record ? `"${record.name}"` : ""}</span>
+  <span>Usuario {record ? `"${record.name}"` : ""}</span>
 )
 
 const UserEdit = (props) => (
   <Edit title={<UserTitle />} {...props}>
     <SimpleForm redirect="list">
       <TextInput disabled source="id" className="hidden" />
-      <TextInput source="name" validate={validations.name} />
-      <PasswordInput source="password" validate={validations.password} />
-      <TextInput source="phone" validate={validations.phone} />
+      <TextInput source="name" label="Nombre" validate={validations.name} />
+      <PasswordInput
+        source="password"
+        label="Contraseña"
+        validate={validations.password}
+      />
+      <TextInput source="phone" label="Teléfono" validate={validations.phone} />
       <BooleanInput source="admin" />
       <BooleanInput source="premium" />
-      <NumberInput source="loginAttempts" />
+      <BooleanInput source="blocked" label="Bloqueado" />
     </SimpleForm>
   </Edit>
 )
 
 const UserCreate = (props) => (
-  <Create {...props}>
+  <Create title="Crear Usuario" {...props}>
     <SimpleForm redirect="list">
-      <TextInput source="name" validate={validations.name} />
+      <TextInput source="name" label="Nombre" validate={validations.name} />
       <PasswordInput
         source="password"
+        label="Contraseña"
         validate={[...validations.password, required()]}
       />
-      <TextInput source="phone" validate={validations.phone} />
+      <TextInput source="phone" label="Teléfono" validate={validations.phone} />
       <BooleanInput source="admin" />
       <BooleanInput source="premium" />
+      <BooleanInput source="blocked" label="Bloqueado" />
     </SimpleForm>
   </Create>
 )

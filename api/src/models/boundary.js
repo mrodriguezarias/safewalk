@@ -1,16 +1,5 @@
 import { Schema, model } from "mongoose"
-
-const polygonSchema = new Schema({
-  type: {
-    type: String,
-    enum: ["Polygon"],
-    required: true,
-  },
-  coordinates: {
-    type: [[[Number]]],
-    required: true,
-  },
-})
+import polygonSchema from "./schemas/polygon"
 
 const boundarySchema = new Schema({
   location: {

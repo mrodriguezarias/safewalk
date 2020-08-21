@@ -1,6 +1,7 @@
 import HttpStatus from "http-status-codes"
 import HttpError from "../../../shared/errors/http"
 import mongoose from "mongoose"
+import generalUtils from "../../../shared/utils/general"
 
 const dbUtils = {
   paginate: (query, range = [0, 0], count) => {
@@ -37,6 +38,34 @@ const dbUtils = {
       },
     }
     return toJSON
+  },
+  toDocWithLocation: ({ longitude, latitude, ...data }) => ({
+    ...data,
+    location: {
+      type: "Point",
+      coordinates: [longitude, latitude],
+    },
+  }),
+  toJSONWithoutLocation: (callback) => {
+    return dbUtils.toJSON((ret) => {
+      ret.longitude = ret.location.coordinates[0]
+      ret.latitude = ret.location.coordinates[1]
+      delete ret.location
+      if (callback) {
+        callback(ret)
+      }
+    })
+  },
+  transformQueryFilter: (filter, key = "name") => {
+    filter = generalUtils.renameKey(filter, "id", "_id")
+    const { q: query, ...restFilter } = filter ?? {}
+    if (!query) {
+      return filter
+    }
+    return {
+      ...restFilter,
+      [key]: new RegExp(`^${query}`, "i"),
+    }
   },
 }
 

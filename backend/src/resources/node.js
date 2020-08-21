@@ -2,14 +2,10 @@ import React from "react"
 import {
   List,
   Datagrid,
-  TextField,
-  BooleanField,
-  ReferenceField,
   NumberField,
   NumberInput,
   Edit,
   SimpleForm,
-  BooleanInput,
   TextInput,
   Create,
   required,
@@ -18,13 +14,13 @@ import {
 import NodeIcon from "@material-ui/icons/PinDrop"
 
 const validations = {
-  longitude: [number()],
-  password: [number()],
+  longitude: [required(), number()],
+  latitude: [required(), number()],
   weight: [number()],
 }
 
 const NodeList = (props) => (
-  <List {...props}>
+  <List title="Lista de Nodos" perPage={25} {...props}>
     <Datagrid rowClick="edit">
       <NumberField source="longitude" />
       <NumberField source="latitude" />
@@ -33,32 +29,41 @@ const NodeList = (props) => (
   </List>
 )
 
-const NodeTitle = () => <span>Node</span>
+const NodeTitle = () => <span>Nodo</span>
 
 const NodeEdit = (props) => (
   <Edit title={<NodeTitle />} {...props}>
     <SimpleForm redirect="list">
       <TextInput disabled source="id" className="hidden" />
-      <NumberInput source="longitude" validate={validations.longitude} />
-      <NumberInput source="latitude" validate={validations.latitude} />
-      <NumberInput source="weight" validate={validations.weight} />
+      <NumberInput
+        source="longitude"
+        label="Longitud"
+        validate={validations.longitude}
+      />
+      <NumberInput
+        source="latitude"
+        label="Latitud"
+        validate={validations.latitude}
+      />
+      <NumberInput source="weight" label="Peso" validate={validations.weight} />
     </SimpleForm>
   </Edit>
 )
 
 const NodeCreate = (props) => (
-  <Create {...props}>
+  <Create title="Crear Nodo" {...props}>
     <SimpleForm redirect="list">
       <NumberInput
         source="longitude"
-        validate={[...validations.longitude, required()]}
+        label="Longitud"
+        validate={validations.longitude}
       />
       <NumberInput
         source="latitude"
-        validate={[...validations.latitude, required()]}
+        label="Latitud"
+        validate={validations.latitude}
       />
-      <NumberInput source="latitude" validate={validations.weight} />
-      <BooleanInput source="confirmed" />
+      <NumberInput source="weight" label="Peso" validate={validations.weight} />
     </SimpleForm>
   </Create>
 )

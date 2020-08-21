@@ -12,7 +12,7 @@ const userSchema = {
   password: Joi.string().min(8).max(32),
   admin: Joi.boolean().default(false),
   premium: Joi.boolean().default(false),
-  loginAttempts: Joi.number().default(0),
+  blocked: Joi.boolean().default(false),
 }
 
 const userValidation = {
@@ -28,6 +28,7 @@ const userValidation = {
       phone: userSchema.phone,
       admin: userSchema.admin,
       premium: userSchema.premium,
+      blocked: userSchema.blocked,
     }),
   },
   updateUser: {
@@ -41,7 +42,7 @@ const userValidation = {
       password: userSchema.password,
       admin: userSchema.admin,
       premium: userSchema.premium,
-      loginAttempts: userSchema.loginAttempts,
+      blocked: userSchema.blocked,
     }),
   },
   deleteUser: {

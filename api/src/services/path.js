@@ -1,13 +1,12 @@
 import HttpStatus from "http-status-codes"
 import pathModel from "../models/path"
 import HttpError from "../../../shared/errors/http"
-import generalUtils from "../../../shared/utils/general"
 import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const pathService = {
   getPaths: async (filter = {}, range, sort) => {
-    filter = generalUtils.renameKey(filter, "id", "_id")
+    filter = dbUtils.transformQueryFilter(filter)
     const query = pathModel.find(filter)
     const count = await pathModel.estimatedDocumentCount()
     const [paginated, contentRangeHeader] = dbUtils.paginate(

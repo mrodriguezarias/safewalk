@@ -6,9 +6,20 @@ import carerRoute from "../routes/carer"
 import nodeRoute from "../routes/node"
 import pathRoute from "../routes/path"
 import geoRoute from "../routes/geo"
+import categoryRoute from "../routes/category"
+import placeRoute from "../routes/place"
 
 const routeConfig = {
-  routes: [authRoute, userRoute, carerRoute, nodeRoute, pathRoute, geoRoute],
+  routes: [
+    authRoute,
+    userRoute,
+    carerRoute,
+    nodeRoute,
+    pathRoute,
+    geoRoute,
+    categoryRoute,
+    placeRoute,
+  ],
   configure: (app) => {
     const apiRouter = new Router()
     for (const { path, configureRouter } of routeConfig.routes) {

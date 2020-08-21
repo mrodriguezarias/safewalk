@@ -40,10 +40,14 @@ const authService = {
     const passwordMatches = await bcrypt.compare(password, user.password)
     if (!passwordMatches) {
       user.loginAttempts = Math.min(user.loginAttempts + 1, 2)
+      if (user.loginAttempts === 2) {
+        user.loginAttempts = 0
+        user.blocked = true
+      }
       await user.save()
     }
 
-    if (user.loginAttempts === 2) {
+    if (user.blocked) {
       throw new HttpError(HttpStatus.CONFLICT, "Usuario bloqueado")
     }
 
