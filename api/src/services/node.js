@@ -5,7 +5,7 @@ import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const nodeService = {
-  getNodes: async (filter = {}, range, sort) => {
+  getNodes: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = nodeModel.find(filter)
     const count = await nodeModel.estimatedDocumentCount()

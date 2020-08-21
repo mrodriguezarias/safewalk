@@ -44,6 +44,9 @@ const generalUtils = {
       true,
     )
   },
+  debounce: (func) => {
+    setTimeout(func, 0)
+  },
 }
 
 export default generalUtils

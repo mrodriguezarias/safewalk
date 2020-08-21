@@ -3,7 +3,6 @@ import nodeService from "../../api/src/services/node"
 import pathService from "../../api/src/services/path"
 import createGraph from "ngraph.graph"
 import generalUtils from "./general"
-import _ from "lodash"
 
 const loadCache = async () => {
   const cache = new NodeCache({ stdTTL: 86400, checkperiod: 0 })
@@ -32,7 +31,7 @@ const elements = [{ key: "Graph", loader: loadGraph }]
 
 const cacheUtils = {
   load: () => {
-    _.debounce(loadCache)
+    generalUtils.debounce(loadCache)
   },
   get: async (key, wait = true) => {
     if (!wait) {

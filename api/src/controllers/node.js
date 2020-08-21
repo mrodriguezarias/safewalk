@@ -5,11 +5,11 @@ const nodeController = {
   getNodes: async (req, res, next) => {
     try {
       const { filter, range, sort } = req.query
-      const { nodes, contentRangeHeader } = await nodeService.getNodes(
+      const { nodes, contentRangeHeader } = await nodeService.getNodes({
         filter,
         range,
         sort,
-      )
+      })
       res.header("Content-Range", contentRangeHeader)
       res.status(HttpStatus.OK).json(nodes)
     } catch (error) {

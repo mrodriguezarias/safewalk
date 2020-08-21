@@ -8,7 +8,15 @@ import cacheUtils from "../../../shared/utils/cache"
 import geoUtils from "../../../shared/utils/geo"
 
 const getDistance = (nodeA, nodeB) => {
-  return -(nodeA.weight + nodeB.weight)
+  const distance =
+    (nodeA.data.longitude - nodeB.data.longitude) ** 2 +
+    (nodeA.data.latitude - nodeB.data.latitude) ** 2
+  const weight = -nodeB.data.weight / 1e6
+  if (distance > 1e-6) {
+    return distance
+  } else {
+    return weight
+  }
 }
 
 const geoService = {
@@ -55,7 +63,7 @@ const geoService = {
       target.latitude,
     )
     const graph = await cacheUtils.get(cacheUtils.keys.Graph)
-    const pathFinder = npath.aStar(graph, {
+    const pathFinder = npath.nba(graph, {
       oriented: true,
       distance: getDistance,
       heuristic: getDistance,

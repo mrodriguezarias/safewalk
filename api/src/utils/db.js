@@ -4,7 +4,10 @@ import mongoose from "mongoose"
 import generalUtils from "../../../shared/utils/general"
 
 const dbUtils = {
-  paginate: (query, range = [0, 0], count) => {
+  paginate: (query, range, count) => {
+    if (!range) {
+      range = [0, count - 1]
+    }
     if (range[1] - range[0] < 0) {
       throw new HttpError(
         HttpStatus.CONFLICT,
