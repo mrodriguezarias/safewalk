@@ -5,11 +5,11 @@ const placeController = {
   getPlaces: async (req, res, next) => {
     try {
       const { filter, range, sort } = req.query
-      const { places, contentRangeHeader } = await placeService.getPlaces(
+      const { places, contentRangeHeader } = await placeService.getPlaces({
         filter,
         range,
         sort,
-      )
+      })
       res.header("Content-Range", contentRangeHeader)
       res.status(HttpStatus.OK).json(places)
     } catch (error) {

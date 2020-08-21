@@ -111,6 +111,9 @@ const nodeService = {
     }
     return nearest.toJSON()
   },
+  resetWeights: async () => {
+    await nodeModel.updateMany({}, { weight: 0 })
+  },
 }
 
 export default nodeService

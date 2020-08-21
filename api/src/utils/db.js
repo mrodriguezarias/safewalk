@@ -14,7 +14,7 @@ const dbUtils = {
     if (range[0] < 0) {
       throw new HttpError(HttpStatus.CONFLICT, "Out of range")
     }
-    const paginated = query.skip(range[0]).limit(range[1] - range[0])
+    const paginated = query.skip(range[0]).limit(range[1] - range[0] + 1)
     const contentRangeHeader = `results ${range[0]}-${range[1]}/${count}`
     return [paginated, contentRangeHeader]
   },

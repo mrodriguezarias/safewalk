@@ -5,7 +5,7 @@ import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const placeService = {
-  getPlaces: async (filter = {}, range, sort) => {
+  getPlaces: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = placeModel.find(filter)
     const count = await placeModel.estimatedDocumentCount()
