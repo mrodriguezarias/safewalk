@@ -7,12 +7,24 @@ const geoPoint = Joi.object({
 
 const geoValidation = {
   isWithinBoundary: {
-    body: geoPoint,
+    body: geoPoint.required(),
   },
   getSafestPath: {
     body: Joi.object({
       source: geoPoint.required(),
       target: geoPoint.required(),
+    }),
+  },
+  getNearbyPlaces: {
+    body: Joi.object({
+      location: geoPoint.required(),
+      limit: Joi.number(),
+    }),
+  },
+  searchPlaces: {
+    body: Joi.object({
+      query: Joi.string().required(),
+      limit: Joi.number(),
     }),
   },
 }

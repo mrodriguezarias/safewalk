@@ -20,6 +20,24 @@ const geoController = {
       next(error)
     }
   },
+  getNearbyPlaces: async (req, res, next) => {
+    const { location, limit } = req.body
+    try {
+      const response = await geoService.getNearbyPlaces(location, limit)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  searchPlaces: async (req, res, next) => {
+    const { query, limit } = req.body
+    try {
+      const response = await geoService.searchPlaces(query, limit)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
 }
 
 export default geoController

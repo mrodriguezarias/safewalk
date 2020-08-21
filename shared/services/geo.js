@@ -1,87 +1,14 @@
 import requestUtils from "../utils/request"
 import generalUtils from "../utils/general"
 import urlUtils from "../utils/url"
-import _ from "lodash"
 import GeoError from "../errors/geo"
 
 const APIS = {
   ADDR2COORD:
     "https://ws.usig.buenosaires.gob.ar/rest/normalizar_y_geocodificar_direcciones",
   COORD2ADDR: "http://ws.usig.buenosaires.gob.ar/geocoder/2.2/reversegeocoding",
-  PLACES: "https://epok.buenosaires.gob.ar/buscar",
-  PLACE: "https://epok.buenosaires.gob.ar/getObjectContent",
   COORDS: "https://ws.usig.buenosaires.gob.ar/rest/convertir_coordenadas",
-  NEARBY: "https://epok.buenosaires.gob.ar/reverseGeocoderLugares",
 }
-
-const CATEGORIES = [
-  "academias_de_espanol",
-  "actividades_para_chicos",
-  "actores_sociales",
-  "agencias_de_viajes",
-  "alojamientos",
-  "bancos",
-  "bar_accesible",
-  "campanas_verdes",
-  "carnicerias_saludables",
-  "centros_comerciales",
-  "centros_de_informes",
-  "centros_integracion_laboral",
-  "centros_de_prevencion",
-  "centros_de_recreacion",
-  "centros_de_salud_no_dependientes_del_gcba",
-  "centros_de_salud_y_accion_comunitaria",
-  "cecie",
-  "centros_medicos_barriales",
-  "centros_vacunatorios",
-  "clubes_de_barrio",
-  "clubes_de_jazz",
-  "colectividades",
-  "comisarias",
-  "compromisos_salud",
-  "concursos_gastronomicos",
-  "consulados",
-  "cuarteles_de_bomberos",
-  "cuc_establecimientos_educativos",
-  "culturas_independientes",
-  "dependencias_culturales",
-  "fiscalias",
-  "discotecas",
-  "embajadas",
-  "empleos_del_futuro_sedes",
-  "empleos_del_futuro_sedes_custom",
-  "empleos_del_futuro_talleres",
-  "encuentro_con_ciencia_talleres",
-  "espacios_familiares",
-  "establecimientos_educativos_de_gestion_estatal",
-  "establecimientos_educativos_de_gestion_privada",
-  "estaciones_de_bicicletas",
-  "estaciones_de_ferrocarril",
-  "estaciones_de_metrobus",
-  "estaciones_de_premetro",
-  "estaciones_de_servicio",
-  "estaciones_de_subte",
-  "farmacias",
-  "gastronomia",
-  "hospitales_de_ninos",
-  "hospitales_especializados",
-  "hospitales_generales_de_agudos",
-  "institutos_de_formacion_tecnica_superior",
-  "lugares_de_esparcimiento",
-  "oficinas_de_empleo",
-  "patio_de_juego",
-  "pistas_de_skate",
-  "polideportivos",
-  "pubs",
-  "recuperadores_urbanos",
-  "sedes_ABASTO",
-  "sedes_de_comunas",
-  "sedes_FIBA",
-  "servicios_sociales",
-  "sitios_de_interes",
-  "universidades",
-  "usina_del_arte",
-]
 
 const LIMIT = 10
 
@@ -120,14 +47,11 @@ const getLongLat = async (coords) => {
 
 const getPlacesWithCoords = async (instances) => {
   let places = []
-  for (const [index, { id, nombre: name }] of instances.entries()) {
-    const {
-      ubicacion: { centroide: pointLoc },
-    } = await requestUtils.get(APIS.PLACE, { id })
-    const [x, y] = pointLoc.match(/\d+\.\d+/g)
-    const coords = await getLongLat({ x, y })
-    if (!coords) {
-      continue
+  for (const [index, data] of instances.entries()) {
+    const { name, longitude, latitude } = data
+    const coords = {
+      longitude,
+      latitude,
     }
     if (index === 0) {
       await geoService.isWithinBoundary(coords)
@@ -171,24 +95,18 @@ const geoService = {
     return { name, coords }
   },
   searchPlaces: async (query) => {
-    const result = await requestUtils.get(APIS.PLACES, {
-      texto: query,
+    const result = await requestUtils.post("/geo/searchPlaces", {
+      query,
       limit: LIMIT,
     })
-    return getPlacesWithCoords(result?.instancias)
+    return getPlacesWithCoords(result)
   },
-  searchNearby: async (coords) => {
-    const result = await requestUtils.get(APIS.NEARBY, {
-      x: coords.longitude,
-      y: coords.latitude,
-      categorias: CATEGORIES.join(","),
-      radio: 150,
+  searchNearby: async (location) => {
+    const result = await requestUtils.post("/geo/nearbyPlaces", {
+      location,
+      limit: LIMIT,
     })
-    const instances = _(result?.instancias)
-      .sortBy("distancia")
-      .take(LIMIT)
-      .value()
-    return getPlacesWithCoords(instances)
+    return getPlacesWithCoords(result)
   },
   getAddressOfLocation: async (coords) => {
     const result = await requestUtils.get(APIS.COORD2ADDR, {

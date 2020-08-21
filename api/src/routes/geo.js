@@ -16,6 +16,16 @@ const geoRoute = {
       validate(geoValidation.getSafestPath),
       geoController.getSafestPath,
     )
+    router.post(
+      "/nearbyPlaces",
+      validate(geoValidation.getNearbyPlaces),
+      geoController.getNearbyPlaces,
+    )
+    router.post(
+      "/searchPlaces",
+      validate(geoValidation.searchPlaces),
+      geoController.searchPlaces,
+    )
   },
 }
 

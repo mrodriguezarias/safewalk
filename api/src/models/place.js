@@ -6,7 +6,7 @@ const placeSchema = new Schema(
   {
     name: {
       type: String,
-      index: { unique: false },
+      index: "text",
       required: true,
     },
     category: {

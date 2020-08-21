@@ -2,6 +2,7 @@ import HttpStatus from "http-status-codes"
 import _ from "lodash"
 import HttpError from "../../../shared/errors/http"
 import boundaryModel from "../models/boundary"
+import placeModel from "../models/place"
 import nodeService from "./node"
 import npath from "ngraph.path"
 import cacheUtils from "../../../shared/utils/cache"
@@ -74,6 +75,36 @@ const geoService = {
       return { longitude, latitude }
     })
     return [target, ...coords, source]
+  },
+  getNearbyPlaces: async ({ longitude, latitude }, limit) => {
+    let nearest = await placeModel.find({
+      location: {
+        $near: {
+          $maxDistance: 200,
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+          },
+        },
+      },
+    })
+    nearest = _.map(nearest, (place) => place.toJSON())
+    if (limit) {
+      nearest = _.take(nearest, limit)
+    }
+    return nearest
+  },
+  searchPlaces: async (query, limit) => {
+    let places = await placeModel.find({
+      $text: {
+        $search: query,
+      },
+    })
+    places = _.map(places, (place) => place.toJSON())
+    if (limit) {
+      places = _.take(places, limit)
+    }
+    return places
   },
 }
 
