@@ -2,6 +2,7 @@ import requestUtils from "../utils/request"
 import generalUtils from "../utils/general"
 import urlUtils from "../utils/url"
 import GeoError from "../errors/geo"
+import _ from "lodash"
 
 const APIS = {
   ADDR2COORD:
@@ -48,7 +49,7 @@ const getLongLat = async (coords) => {
 const getPlacesWithCoords = async (instances) => {
   let places = []
   for (const [index, data] of instances.entries()) {
-    const { name, longitude, latitude } = data
+    const { name, longitude, latitude, safe, category } = data
     const coords = {
       longitude,
       latitude,
@@ -59,9 +60,14 @@ const getPlacesWithCoords = async (instances) => {
     const place = {
       name: normalize(name, false),
       coords,
+      safe,
+      category,
+      index,
     }
     places = [...places, place]
   }
+  places = _.orderBy(places, ["safe", "index"], ["desc", "asc"])
+  places = _.map(places, (place) => _.omit(place, ["index"]))
   return places
 }
 
@@ -75,16 +81,19 @@ const geoService = {
       desambiguar: 1,
     })
     let name = null
+    let category
     let coords = null
     if (result.Normalizacion.TipoResultado === "DireccionNormalizada") {
       const address =
         result.Normalizacion.DireccionesCalleAltura.direcciones?.[0]
       if (address) {
         name = `${normalize(address.Calle)} ${address.Altura}`
+        category = "Calle"
       } else {
         const address =
           result.Normalizacion.DireccionesCalleCalle.direcciones[0]
         name = `${normalize(address.Calle1)} y ${normalize(address.Calle2)}`
+        category = "Intersección"
       }
       coords = await getLongLat(result.GeoCodificacion)
     }
@@ -92,7 +101,7 @@ const geoService = {
       return null
     }
     await geoService.isWithinBoundary(coords)
-    return { name, coords }
+    return { name, coords, category }
   },
   searchPlaces: async (query) => {
     const result = await requestUtils.post("/geo/searchPlaces", {

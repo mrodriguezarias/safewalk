@@ -11,6 +11,10 @@ const colors = {
     light: "#B5A2CD",
     dark: "#7D5BA6",
   },
+  yellow: {
+    light: "#FFF35A",
+    dark: "#8D8C17",
+  },
 }
 
 const theme = {
@@ -18,6 +22,7 @@ const theme = {
   primary: colors.blue,
   accent: colors.blue,
   tabBar: colors.purple,
+  safe: colors.yellow,
 }
 
 const getTheme = (appearance) => {

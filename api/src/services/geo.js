@@ -3,6 +3,7 @@ import _ from "lodash"
 import HttpError from "../../../shared/errors/http"
 import boundaryModel from "../models/boundary"
 import placeModel from "../models/place"
+import categoryModel from "../models/category"
 import nodeService from "./node"
 import npath from "ngraph.path"
 import cacheUtils from "../../../shared/utils/cache"
@@ -18,6 +19,19 @@ const getDistance = (nodeA, nodeB) => {
   } else {
     return weight
   }
+}
+
+const getCategories = async (places) => {
+  let placesWithCategories = []
+  for (let place of places) {
+    const category = await categoryModel.findById(place.category)
+    place = {
+      ...place,
+      category: category.name,
+    }
+    placesWithCategories = [...placesWithCategories, place]
+  }
+  return placesWithCategories
 }
 
 const geoService = {
@@ -92,6 +106,7 @@ const geoService = {
     if (limit) {
       nearest = _.take(nearest, limit)
     }
+    nearest = getCategories(nearest)
     return nearest
   },
   searchPlaces: async (query, limit) => {
@@ -104,6 +119,7 @@ const geoService = {
     if (limit) {
       places = _.take(places, limit)
     }
+    places = getCategories(places)
     return places
   },
 }
