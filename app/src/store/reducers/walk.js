@@ -4,6 +4,7 @@ const initialState = {
   source: null,
   target: null,
   path: [],
+  places: [],
 }
 
 const load = (state, { source, target }) => ({
@@ -12,11 +13,14 @@ const load = (state, { source, target }) => ({
   target,
 })
 
-const setLocation = (state, { key, location }) => ({
-  ...state,
-  [key]: location,
-  path: [],
-})
+const setLocation = (state, { key, location }) => {
+  return {
+    ...state,
+    [key]: location,
+    path: [],
+    places: state.places.filter(({ id }) => id !== location.id),
+  }
+}
 
 const swapLocations = (state) => ({
   ...state,
@@ -27,6 +31,16 @@ const swapLocations = (state) => ({
 const setPath = (state, { path }) => ({
   ...state,
   path,
+})
+
+const markPlace = (state, { place }) => ({
+  ...state,
+  places: [...state.places, place],
+})
+
+const unmarkPlace = (state, { place }) => ({
+  ...state,
+  places: state.places.filter(({ id }) => id !== place.id),
 })
 
 const walkReducer = (state = initialState, action) => {
@@ -40,6 +54,10 @@ const walkReducer = (state = initialState, action) => {
       return swapLocations(state, payload)
     case walkActions.SET_PATH:
       return setPath(state, payload)
+    case walkActions.MARK_PLACE:
+      return markPlace(state, payload)
+    case walkActions.UNMARK_PLACE:
+      return unmarkPlace(state, payload)
     default:
       return state
   }

@@ -7,7 +7,7 @@ import _ from "lodash"
 
 const ANCHOR = { x: 0.5, y: 0.5 }
 
-const SIZE = 20
+const SIZE = 16
 const HALO_RADIUS = 6
 const HALO_SIZE = SIZE + HALO_RADIUS
 

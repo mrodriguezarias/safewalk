@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import { View, ScrollView, StyleSheet, Platform } from "react-native"
-import { List, Portal, Dialog, Paragraph, Button } from "react-native-paper"
-import MenuItem from "../../components/menuItem"
+import { Portal, Dialog, Paragraph, Button } from "react-native-paper"
+import ListSection from "../../components/listSection"
+import ListItem from "../../components/listItem"
 import { useSelector, useDispatch } from "react-redux"
 import appActions from "../../store/actions/app"
 import authActions from "../../store/actions/auth"
@@ -28,9 +29,8 @@ const SettingsScreen = ({ navigation }) => {
   }
 
   const renderAppSettings = () => (
-    <List.Section>
-      <List.Subheader>Aplicación</List.Subheader>
-      <MenuItem
+    <ListSection title="Aplicación">
+      <ListItem
         label="Apariencia"
         options={[
           { value: "system", label: "Automática" },
@@ -41,7 +41,7 @@ const SettingsScreen = ({ navigation }) => {
         value={theme}
       />
       {Platform.OS === "ios" && (
-        <MenuItem
+        <ListItem
           label="Proveedor de Mapas"
           options={[
             { value: "apple", label: "Apple" },
@@ -53,7 +53,7 @@ const SettingsScreen = ({ navigation }) => {
           value={mapProvider}
         />
       )}
-      <MenuItem
+      <ListItem
         label="Tipo de mapa"
         options={[
           { value: "standard", label: "Estándar" },
@@ -63,38 +63,36 @@ const SettingsScreen = ({ navigation }) => {
         onChange={(mapType) => dispatch(appActions.setMapType(mapType))}
         value={mapType}
       />
-    </List.Section>
+    </ListSection>
   )
 
   const renderAdminSettings = () => (
-    <List.Section>
-      <List.Subheader>Administración</List.Subheader>
-      <MenuItem
+    <ListSection title="Administración">
+      <ListItem
         label="Ir al Panel de Control"
         onPress={() => navigation.navigate("Admin")}
       />
-    </List.Section>
+    </ListSection>
   )
 
   const renderUserSettings = () => (
-    <List.Section>
-      <List.Subheader>Usuario</List.Subheader>
-      <MenuItem
+    <ListSection title="Usuario">
+      <ListItem
         label="Editar Datos"
         onPress={() => navigation.navigate("EditUser")}
       />
       {/* {!user?.premium && (
-        <MenuItem
+        <ListItem
           label="Adquirir Premium"
           onPress={() => navigation.navigate("Premium")}
         />
       )} */}
-      <MenuItem
+      <ListItem
         label="Eliminar Cuenta"
         onPress={() => setDialogVisible(true)}
       />
-      <MenuItem label="Cerrar Sesión" onPress={handleLogOut} />
-    </List.Section>
+      <ListItem label="Cerrar Sesión" onPress={handleLogOut} />
+    </ListSection>
   )
 
   return (

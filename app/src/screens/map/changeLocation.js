@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { StyleSheet, ScrollView, View } from "react-native"
-import {
-  Searchbar,
-  Paragraph,
-  useTheme,
-  List,
-  Divider,
-  Chip,
-} from "react-native-paper"
+import { StyleSheet, ScrollView } from "react-native"
+import { Searchbar, Paragraph, useTheme } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 import { MaterialIcons } from "@expo/vector-icons"
 
@@ -20,35 +13,9 @@ import geoUtils from "../../utils/geo"
 import GeoError from "../../../../shared/errors/geo"
 import MapView from "../../components/map/mapView"
 import LocationMarker from "../../components/map/locationMarker"
+import LocationItem from "../../components/map/locationItem"
 import alertUtils from "../../utils/alert"
 import requestUtils from "../../../../shared/utils/request"
-
-const Result = ({ location, onPress }) => {
-  const { name, category, safe } = location
-  const theme = useTheme()
-  return (
-    <>
-      <List.Item
-        title={name}
-        description={category}
-        onPress={onPress}
-        right={(props) =>
-          safe && (
-            <View style={styles.chipContainer}>
-              <Chip
-                icon="shield"
-                style={{ backgroundColor: theme.colors.safe }}
-              >
-                Seguro
-              </Chip>
-            </View>
-          )
-        }
-      />
-      <Divider />
-    </>
-  )
-}
 
 const ChangeLocationScreen = ({ route, navigation }) => {
   const theme = useTheme()
@@ -221,10 +188,11 @@ const ChangeLocationScreen = ({ route, navigation }) => {
       {results.length > 0 || loading || noResults ? (
         <ScrollView keyboardShouldPersistTaps="handled">
           {results.map((location, index) => (
-            <Result
+            <LocationItem
               key={index}
               location={location}
               onPress={() => saveLocation(location)}
+              navigation={navigation}
             />
           ))}
           <Spinner visible={loading} style={styles.spinner} />
@@ -258,11 +226,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     color: "grey",
     textAlign: "center",
-  },
-  chipContainer: {
-    marginLeft: 10,
-    marginRight: 5,
-    justifyContent: "center",
   },
 })
 

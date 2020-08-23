@@ -1,25 +1,40 @@
 import React, { useRef } from "react"
 import { View, StyleSheet } from "react-native"
 import {
-  Subheading,
-  Divider,
-  TouchableRipple,
   useTheme,
   RadioButton,
   Paragraph,
+  List,
+  Divider,
 } from "react-native-paper"
 import Dialog from "./dialog"
 
-const MenuItem = ({ label, children, onPress, options, value, onChange }) => {
+const ListItem = ({
+  label,
+  onPress,
+  onLongPress,
+  options,
+  value,
+  onChange,
+  right,
+  ...restProps
+}) => {
   const theme = useTheme()
   const optionsDialog = useRef()
 
   const handlePress = () => {
     if (onPress) {
       onPress()
+      return
     }
     if (options) {
       optionsDialog.current.show()
+    }
+  }
+
+  const handleLongPress = () => {
+    if (onLongPress) {
+      onLongPress({ optionsDialog })
     }
   }
 
@@ -49,43 +64,40 @@ const MenuItem = ({ label, children, onPress, options, value, onChange }) => {
     </Dialog>
   )
 
-  const renderChildren = () => {
-    if (children) {
-      return children
-    }
-    if (options && value) {
-      return (
-        <Paragraph style={{ color: theme.colors.text, fontWeight: "bold" }}>
+  const renderRight = () => (
+    <View style={styles.rightContainer}>
+      {options && value ? (
+        <Paragraph
+          style={{ color: theme.colors.text, ...styles.selectedOption }}
+        >
           {options.find((o) => o.value === value).label}
         </Paragraph>
-      )
-    }
-    return null
-  }
+      ) : (
+        right && right()
+      )}
+    </View>
+  )
 
   return (
     <>
       {options && renderDialog()}
-      <TouchableRipple onPress={handlePress} disabled={!onPress && !options}>
-        <>
-          <View style={styles.container}>
-            <Subheading numberOfLines={1}>{label}</Subheading>
-            {renderChildren()}
-          </View>
-          <Divider />
-        </>
-      </TouchableRipple>
+      <List.Item
+        title={label}
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        right={renderRight}
+        disabled={!onPress && !options}
+        style={styles.container}
+        {...restProps}
+      />
+      <Divider />
     </>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
   dialogContent: {
     paddingHorizontal: 0,
@@ -93,6 +105,14 @@ const styles = StyleSheet.create({
   optionItem: {
     paddingHorizontal: 25,
   },
+  selectedOption: {
+    fontWeight: "bold",
+  },
+  rightContainer: {
+    marginLeft: 10,
+    marginRight: 5,
+    justifyContent: "center",
+  },
 })
 
-export default MenuItem
+export default ListItem

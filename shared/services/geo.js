@@ -49,7 +49,7 @@ const getLongLat = async (coords) => {
 const getPlacesWithCoords = async (instances) => {
   let places = []
   for (const [index, data] of instances.entries()) {
-    const { name, longitude, latitude, safe, category } = data
+    const { name, longitude, latitude, safe, category, id } = data
     const coords = {
       longitude,
       latitude,
@@ -63,6 +63,7 @@ const getPlacesWithCoords = async (instances) => {
       safe,
       category,
       index,
+      id,
     }
     places = [...places, place]
   }
@@ -101,7 +102,7 @@ const geoService = {
       return null
     }
     await geoService.isWithinBoundary(coords)
-    return { name, coords, category }
+    return { name, coords, category, id: name }
   },
   searchPlaces: async (query) => {
     const result = await requestUtils.post("/geo/searchPlaces", {

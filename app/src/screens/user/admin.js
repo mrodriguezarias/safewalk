@@ -1,9 +1,10 @@
 import React from "react"
 import { View, ScrollView, StyleSheet } from "react-native"
-import { List, Switch } from "react-native-paper"
+import { Switch } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
 
-import MenuItem from "../../components/menuItem"
+import ListSection from "../../components/listSection"
+import ListItem from "../../components/listItem"
 import storageUtils from "../../../../shared/utils/storage"
 import appActions from "../../store/actions/app"
 import authController from "../../../../shared/controllers/auth"
@@ -44,29 +45,28 @@ const AdminScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <List.Section>
-          <List.Subheader>Almacenamiento</List.Subheader>
-          <MenuItem label="Imprimir" onPress={handlePrintStorage} />
-          <MenuItem label="Borrar" onPress={handleClearStorage} />
-        </List.Section>
-        <List.Section>
-          <List.Subheader>Estado</List.Subheader>
-          <MenuItem label="Imprimir" onPress={handlePrintState} />
-          <MenuItem label="Reiniciar" onPress={handleReloadState} />
-        </List.Section>
-        <List.Section>
-          <List.Subheader>Premium</List.Subheader>
-          <MenuItem label="Activo">
-            <Switch value={isPremium} onValueChange={handleTogglePremium} />
-          </MenuItem>
-        </List.Section>
-        <List.Section>
-          <List.Subheader>Mapa</List.Subheader>
-          <MenuItem
+        <ListSection title="Almacenamiento">
+          <ListItem label="Imprimir" onPress={handlePrintStorage} />
+          <ListItem label="Borrar" onPress={handleClearStorage} />
+        </ListSection>
+        <ListSection title="Estado">
+          <ListItem label="Imprimir" onPress={handlePrintState} />
+          <ListItem label="Reiniciar" onPress={handleReloadState} />
+        </ListSection>
+        <ListSection title="Premium">
+          <ListItem
+            label="Activo"
+            right={() => (
+              <Switch value={isPremium} onValueChange={handleTogglePremium} />
+            )}
+          />
+        </ListSection>
+        <ListSection title="Mapa">
+          <ListItem
             label="Cambiar ubicación actual"
             onPress={handleChangeLocation}
           />
-        </List.Section>
+        </ListSection>
       </ScrollView>
     </View>
   )

@@ -1,5 +1,6 @@
 import React from "react"
 import { StyleSheet } from "react-native"
+import { Title, useTheme } from "react-native-paper"
 import { createStackNavigator } from "@react-navigation/stack"
 import { useSelector } from "react-redux"
 import Header from "../../components/header"
@@ -14,12 +15,12 @@ import EditUserScreen from "./editUser"
 import NewContactScreen from "./newContact"
 import ChangeLocationScreen from "../map/changeLocation"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { Title } from "react-native-paper"
 
 const Stack = createStackNavigator()
 
 const UserScreen = () => {
   const user = useSelector((state) => state.auth.user)
+  const theme = useTheme()
   return (
     <Stack.Navigator
       initialRouteName="Main"
@@ -47,7 +48,11 @@ const UserScreen = () => {
               {user?.premium && (
                 <>
                   {" "}
-                  <MaterialCommunityIcons name="star-circle" size={16} />
+                  <MaterialCommunityIcons
+                    name="star-circle"
+                    size={16}
+                    color={theme.colors.text}
+                  />
                 </>
               )}
             </>
