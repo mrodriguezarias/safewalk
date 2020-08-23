@@ -19,6 +19,7 @@ const geoValidation = {
     body: Joi.object({
       location: geoPoint.required(),
       limit: Joi.number(),
+      distance: Joi.number(),
     }),
   },
   searchPlaces: {

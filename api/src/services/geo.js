@@ -90,11 +90,11 @@ const geoService = {
     })
     return [target, ...coords, source]
   },
-  getNearbyPlaces: async ({ longitude, latitude }, limit) => {
+  getNearbyPlaces: async ({ longitude, latitude }, limit, distance = 200) => {
     let nearest = await placeModel.find({
       location: {
         $near: {
-          $maxDistance: 200,
+          $maxDistance: distance,
           $geometry: {
             type: "Point",
             coordinates: [longitude, latitude],

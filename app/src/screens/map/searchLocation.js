@@ -5,13 +5,12 @@ import React, {
   useLayoutEffect,
   useCallback,
 } from "react"
-import { StyleSheet, ScrollView } from "react-native"
-import { Searchbar, Paragraph, useTheme, Chip } from "react-native-paper"
+import { StyleSheet } from "react-native"
+import { Searchbar, useTheme } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 import { MaterialIcons } from "@expo/vector-icons"
 
 import DismissKeyboard from "../../components/dismissKeyboard"
-import Spinner from "../../components/spinner"
 import walkActions from "../../store/actions/walk"
 import appActions from "../../store/actions/app"
 import geoService from "../../../../shared/services/geo"
@@ -20,35 +19,15 @@ import GeoError from "../../../../shared/errors/geo"
 import MapView from "../../components/map/mapView"
 import alertUtils from "../../utils/alert"
 import requestUtils from "../../../../shared/utils/request"
-import ListItem from "../../components/listItem"
 import LocationDialog from "../../components/map/locationDialog"
 import LocationMarker from "../../components/map/locationMarker"
+import LocationList from "../../components/map/locationList"
 
 const keyLabels = new Map([
   ["source", "Origen"],
   ["target", "Destino"],
   ["current", "Ubicación"],
 ])
-
-const LocationItem = ({ location, ...itemProps }) => {
-  const { name, category, safe } = location
-  const theme = useTheme()
-  return (
-    <ListItem
-      title={name}
-      label={name}
-      description={category}
-      right={() =>
-        safe && (
-          <Chip icon="shield" style={{ backgroundColor: theme.colors.safe }}>
-            Seguro
-          </Chip>
-        )
-      }
-      {...itemProps}
-    />
-  )
-}
 
 const SearchLocationScreen = ({ navigation, route }) => {
   const theme = useTheme()
@@ -97,7 +76,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
       return
     }
     setResults([])
-    setNoResults(null)
+    setNoResults(false)
     setLoading(true)
     setPreviousQuery(query)
     try {
@@ -112,7 +91,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
         results = [...places]
       }
       setResults(results)
-      setNoResults(results.length === 0 ? "Sin Resultados" : null)
+      setNoResults(results.length === 0)
     } catch (error) {
       if (error instanceof GeoError) {
         setNoResults(error.message)
@@ -240,20 +219,13 @@ const SearchLocationScreen = ({ navigation, route }) => {
         editable={!loading}
       />
       {results.length > 0 || loading || noResults ? (
-        <ScrollView keyboardShouldPersistTaps="handled">
-          {results.map((location, index) => (
-            <LocationItem
-              key={index}
-              location={location}
-              onPress={() => handleItemPress(location)}
-              onLongPress={() => handleItemLongPress(location)}
-            />
-          ))}
-          <Spinner visible={loading} style={styles.spinner} />
-          {noResults && (
-            <Paragraph style={styles.noResults}>{noResults}</Paragraph>
-          )}
-        </ScrollView>
+        <LocationList
+          locations={results}
+          loading={loading}
+          noResults={noResults}
+          onItemPress={handleItemPress}
+          onItemLongPress={handleItemLongPress}
+        />
       ) : (
         <MapView onPress={handleMapPress}>
           <LocationMarker coords={location} color={getMarkerColor()} />
@@ -264,22 +236,10 @@ const SearchLocationScreen = ({ navigation, route }) => {
 }
 
 const styles = StyleSheet.create({
-  spinner: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginVertical: 20,
-  },
   search: {
     borderRadius: 0,
     height: 60,
     paddingLeft: 5,
-  },
-  noResults: {
-    marginVertical: 20,
-    paddingHorizontal: 30,
-    color: "grey",
-    textAlign: "center",
   },
 })
 

@@ -7,6 +7,7 @@ import { Entypo } from "@expo/vector-icons"
 import MainScreen from "./main"
 import Header from "../../components/header"
 import SearchLocationScreen from "./searchLocation"
+import RelatedPlacesScreen from "./relatedPlaces"
 
 const Stack = createStackNavigator()
 
@@ -37,6 +38,13 @@ const MapScreen = () => {
         }}
       />
       <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
+      <Stack.Screen
+        name="RelatedPlaces"
+        component={RelatedPlacesScreen}
+        options={{
+          headerTitle: "Lugares Relacionados",
+        }}
+      />
     </Stack.Navigator>
   )
 }

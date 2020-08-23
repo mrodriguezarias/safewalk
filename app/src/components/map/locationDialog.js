@@ -48,6 +48,10 @@ const LocationDialog = forwardRef(({ navigation }, ref) => {
     navigation.navigate("Main")
   }
 
+  const showRelated = () => {
+    navigation.push("RelatedPlaces", { location })
+  }
+
   const handleOption = (option) => {
     requestUtils.abort()
     switch (option) {
@@ -61,6 +65,9 @@ const LocationDialog = forwardRef(({ navigation }, ref) => {
         break
       case "unmark":
         unmarkFromMap()
+        break
+      case "related":
+        showRelated()
         break
       default:
     }

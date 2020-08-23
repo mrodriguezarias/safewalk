@@ -150,6 +150,17 @@ const geoService = {
       target,
     })
   },
+  getRelatedPlaces: async (place) => {
+    let places = await requestUtils.post("/geo/nearbyPlaces", {
+      location: place.coords,
+      distance: 500,
+    })
+    places = places.filter(
+      ({ category, id }) => category === place.category && id !== place.id,
+    )
+    places = _.take(places, LIMIT)
+    return getPlacesWithCoords(places)
+  },
 }
 
 export default geoService
