@@ -69,8 +69,8 @@ const LocationsCard = ({ navigation }) => {
   const target = useSelector((state) => state.walk.target)
   const dispatch = useDispatch()
 
-  const changeLocation = (key, label) => {
-    navigation.navigate("ChangeLocation", { key, label })
+  const changeLocation = (key) => {
+    navigation.navigate("SearchLocation", { key })
   }
 
   const swapLocations = () => {

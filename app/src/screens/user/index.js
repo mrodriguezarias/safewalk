@@ -13,7 +13,7 @@ import PremiumScreen from "./premium"
 import PaymentScreen from "./payment"
 import EditUserScreen from "./editUser"
 import NewContactScreen from "./newContact"
-import ChangeLocationScreen from "../map/changeLocation"
+import SearchLocationScreen from "../map/searchLocation"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 const Stack = createStackNavigator()
@@ -100,13 +100,7 @@ const UserScreen = () => {
         component={NewContactScreen}
         options={{ headerTitle: "Nuevo Contacto" }}
       />
-      <Stack.Screen
-        name="ChangeLocation"
-        component={ChangeLocationScreen}
-        options={{
-          headerTitle: "Cambiar Ubicación",
-        }}
-      />
+      <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
     </Stack.Navigator>
   )
 }

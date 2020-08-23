@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+  useCallback,
+} from "react"
 import { StyleSheet, ScrollView } from "react-native"
-import { Searchbar, Paragraph, useTheme } from "react-native-paper"
+import { Searchbar, Paragraph, useTheme, Chip } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 import { MaterialIcons } from "@expo/vector-icons"
 
@@ -12,13 +18,41 @@ import geoService from "../../../../shared/services/geo"
 import geoUtils from "../../utils/geo"
 import GeoError from "../../../../shared/errors/geo"
 import MapView from "../../components/map/mapView"
-import LocationMarker from "../../components/map/locationMarker"
-import LocationItem from "../../components/map/locationItem"
 import alertUtils from "../../utils/alert"
 import requestUtils from "../../../../shared/utils/request"
+import ListItem from "../../components/listItem"
+import LocationDialog from "../../components/map/locationDialog"
+import LocationMarker from "../../components/map/locationMarker"
 
-const ChangeLocationScreen = ({ route, navigation }) => {
+const keyLabels = new Map([
+  ["source", "Origen"],
+  ["target", "Destino"],
+  ["current", "Ubicación"],
+])
+
+const LocationItem = ({ location, ...itemProps }) => {
+  const { name, category, safe } = location
   const theme = useTheme()
+  return (
+    <ListItem
+      title={name}
+      label={name}
+      description={category}
+      right={() =>
+        safe && (
+          <Chip icon="shield" style={{ backgroundColor: theme.colors.safe }}>
+            Seguro
+          </Chip>
+        )
+      }
+      {...itemProps}
+    />
+  )
+}
+
+const SearchLocationScreen = ({ navigation, route }) => {
+  const theme = useTheme()
+  const locationDialog = useRef()
   const [previousQuery, setPreviousQuery] = useState()
   const [query, setQuery] = useState("")
   const [loading, setLoading] = useState(false)
@@ -28,6 +62,19 @@ const ChangeLocationScreen = ({ route, navigation }) => {
   const [location, setLocation] = useState(null)
   const dispatch = useDispatch()
   const { key } = route.params ?? {}
+
+  const getHeaderTitle = useCallback(() => {
+    if (key) {
+      return `Cambiar ${keyLabels.get(key)}`
+    }
+    return "Buscar Lugares"
+  }, [key])
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: getHeaderTitle(),
+    })
+  }, [navigation, getHeaderTitle])
 
   useEffect(() => {
     return () => {
@@ -89,10 +136,10 @@ const ChangeLocationScreen = ({ route, navigation }) => {
 
   const saveLocation = async (location) => {
     requestUtils.abort()
-    if (key) {
-      dispatch(walkActions.setLocation(key, location))
-    } else {
+    if (key === "current") {
       dispatch(appActions.setMockLocation(location?.coords ?? null))
+    } else {
+      dispatch(walkActions.setLocation(key, location))
     }
     navigation.goBack()
   }
@@ -139,10 +186,6 @@ const ChangeLocationScreen = ({ route, navigation }) => {
       nativeEvent: { coordinate: coords },
     } = event
     setLocation(coords)
-    if (!key) {
-      saveLocation({ coords })
-      return
-    }
     try {
       await geoService.isWithinBoundary(coords)
       await searchLocation(coords)
@@ -158,15 +201,26 @@ const ChangeLocationScreen = ({ route, navigation }) => {
   }
 
   const handleSetCurrentLocation = () => {
+    searchLocation()
+  }
+
+  const handleItemPress = (location) => {
     if (key) {
-      searchLocation()
+      saveLocation(location)
     } else {
-      saveLocation()
+      locationDialog.current.show(location)
+    }
+  }
+
+  const handleItemLongPress = (location) => {
+    if (key) {
+      locationDialog.current.show(location)
     }
   }
 
   return (
     <DismissKeyboard>
+      <LocationDialog ref={locationDialog} navigation={navigation} />
       <Searchbar
         placeholder="Dirección, intersección o lugar"
         onChangeText={handleChangeText}
@@ -191,8 +245,8 @@ const ChangeLocationScreen = ({ route, navigation }) => {
             <LocationItem
               key={index}
               location={location}
-              onPress={() => saveLocation(location)}
-              navigation={navigation}
+              onPress={() => handleItemPress(location)}
+              onLongPress={() => handleItemLongPress(location)}
             />
           ))}
           <Spinner visible={loading} style={styles.spinner} />
@@ -229,4 +283,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ChangeLocationScreen
+export default SearchLocationScreen

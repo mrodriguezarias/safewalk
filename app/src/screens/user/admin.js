@@ -39,7 +39,7 @@ const AdminScreen = ({ navigation }) => {
   }
 
   const handleChangeLocation = () => {
-    navigation.navigate("ChangeLocation")
+    navigation.navigate("SearchLocation", { key: "current" })
   }
 
   return (

@@ -28,7 +28,7 @@ const MainMenu = ({ navigation }) => {
         icon={({ size, color }) => (
           <MaterialIcons name="search" size={size} color={color} />
         )}
-        onPress={() => navigate("SearchPlaces")}
+        onPress={() => navigate("SearchLocation")}
         titleStyle={styles.itemTitle}
       />
     </Menu>
