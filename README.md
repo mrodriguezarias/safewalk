@@ -48,5 +48,7 @@ Para correr en el simulador de iOS: `npm run app:ios`, o en el emulador de Andro
 ```
 npm run script upload_boundary
 npm run script upload_geo_data
+npm run script upload_categories
+npm run script upload_places
 npm run script upload_weights
 ```
