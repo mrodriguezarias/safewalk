@@ -17,6 +17,7 @@ const ListItem = ({
   value,
   onChange,
   right,
+  noDivider,
   ...restProps
 }) => {
   const theme = useTheme()
@@ -90,7 +91,7 @@ const ListItem = ({
         style={styles.container}
         {...restProps}
       />
-      <Divider />
+      {!noDivider && <Divider />}
     </>
   )
 }

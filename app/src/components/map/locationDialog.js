@@ -1,12 +1,12 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { StyleSheet } from "react-native"
-import { RadioButton } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 
 import Dialog from "../dialog"
 import requestUtils from "../../../../shared/utils/request"
 import walkActions from "../../store/actions/walk"
 import appActions from "../../store/actions/app"
+import ListItem from "../listItem"
 
 const LocationDialog = forwardRef(({ navigation }, ref) => {
   const [location, setLocation] = useState()
@@ -103,16 +103,15 @@ const LocationDialog = forwardRef(({ navigation }, ref) => {
       title={location?.name}
       contentStyle={styles.dialogContent}
     >
-      <RadioButton.Group onValueChange={handleValueChange}>
-        {getOptions().map(({ label, value }) => (
-          <RadioButton.Item
-            key={value}
-            label={label}
-            value={value}
-            style={styles.optionItem}
-          />
-        ))}
-      </RadioButton.Group>
+      {getOptions().map(({ label, value }) => (
+        <ListItem
+          key={value}
+          label={label}
+          onPress={() => handleValueChange(value)}
+          noDivider
+          style={styles.optionItem}
+        />
+      ))}
     </Dialog>
   )
 })
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   optionItem: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 15,
   },
 })
 
