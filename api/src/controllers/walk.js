@@ -1,53 +1,53 @@
 import HttpStatus from "http-status-codes"
-import nodeService from "../services/node"
+import walkService from "../services/walk"
 
-const nodeController = {
-  getNodes: async (req, res, next) => {
+const walkController = {
+  getWalks: async (req, res, next) => {
     try {
       const { filter, range, sort } = req.query
-      const { nodes, contentRangeHeader } = await nodeService.getNodes({
+      const { walks, contentRangeHeader } = await walkService.getWalks({
         filter,
         range,
         sort,
       })
       res.header("Content-Range", contentRangeHeader)
-      res.status(HttpStatus.OK).json(nodes)
+      res.status(HttpStatus.OK).json(walks)
     } catch (error) {
       next(error)
     }
   },
-  getNodeById: async (req, res, next) => {
+  getWalkById: async (req, res, next) => {
     const id = req.params.id
     try {
-      const node = await nodeService.getNodeById(id)
-      res.status(HttpStatus.OK).json(node)
+      const walk = await walkService.getWalkById(id)
+      res.status(HttpStatus.OK).json(walk)
     } catch (error) {
       next(error)
     }
   },
-  createNode: async (req, res, next) => {
+  createWalk: async (req, res, next) => {
     const data = req.body
     try {
-      const response = await nodeService.createNode(data)
+      const response = await walkService.createWalk(data)
       res.status(HttpStatus.CREATED).json(response)
     } catch (error) {
       next(error)
     }
   },
-  updateNode: async (req, res, next) => {
+  updateWalk: async (req, res, next) => {
     const id = req.params.id
     const data = req.body
     try {
-      const response = await nodeService.updateNode(id, data)
+      const response = await walkService.updateWalk(id, data)
       res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }
   },
-  deleteNode: async (req, res, next) => {
+  deleteWalk: async (req, res, next) => {
     const id = req.params.id
     try {
-      const response = await nodeService.deleteNode(id)
+      const response = await walkService.deleteWalk(id)
       res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
@@ -55,4 +55,4 @@ const nodeController = {
   },
 }
 
-export default nodeController
+export default walkController

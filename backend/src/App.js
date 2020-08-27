@@ -3,14 +3,12 @@ import { Admin, Resource, Login } from "react-admin"
 
 import authProvider from "./providers/auth"
 import dataProvider from "./providers/data"
-import i18nProvider from "./providers/is18n"
+import i18nProvider from "./providers/i18n"
 
 import userResource from "./resources/user"
-import carerResource from "./resources/carer"
-import nodeResource from "./resources/node"
-import pathResource from "./resources/path"
 import categoryResource from "./resources/category"
 import placeResource from "./resources/place"
+import walkResource from "./resources/walk"
 
 const LoginPage = () => (
   <Login backgroundImage="https://source.unsplash.com/1600x900/?kitten" />
@@ -49,6 +47,13 @@ const App = () => {
         edit={categoryResource.edit}
         create={categoryResource.create}
       />
+      <Resource
+        name="walks"
+        options={{ label: "Recorridos" }}
+        icon={walkResource.icon}
+        list={walkResource.list}
+        edit={walkResource.edit}
+      />
       {/* <Resource
         name="carers"
         options={{ label: "Cuidadores" }}
@@ -64,8 +69,8 @@ const App = () => {
         list={nodeResource.list}
         edit={nodeResource.edit}
         create={nodeResource.create}
-      />
-      <Resource
+      /> */}
+      {/* <Resource
         name="paths"
         options={{ label: "Caminos" }}
         icon={pathResource.icon}

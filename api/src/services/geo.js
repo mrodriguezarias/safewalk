@@ -88,7 +88,7 @@ const geoService = {
       const { longitude, latitude } = point.data
       return { longitude, latitude }
     })
-    return [target, ...coords, source]
+    return [target, ...coords, source].reverse()
   },
   getNearbyPlaces: async ({ longitude, latitude }, limit, distance = 200) => {
     let nearest = await placeModel.find({

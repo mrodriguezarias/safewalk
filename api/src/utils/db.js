@@ -2,11 +2,27 @@ import HttpStatus from "http-status-codes"
 import HttpError from "../../../shared/errors/http"
 import mongoose from "mongoose"
 import generalUtils from "../../../shared/utils/general"
+import _ from "lodash"
+
+const isGeoPoint = (value) => {
+  return (
+    _.isObject(value) && _.has(value, "longitude") && _.has(value, "latitude")
+  )
+}
+
+const isGeoJsonObject = (value) => {
+  return (
+    _.isObject(value) &&
+    _.has(value, "_id") &&
+    _.has(value, "type") &&
+    _.has(value, "coordinates")
+  )
+}
 
 const dbUtils = {
   paginate: (query, range, count) => {
     if (!range) {
-      range = [0, count - 1]
+      range = [0, Math.max(count - 1, 0)]
     }
     if (range[1] - range[0] < 0) {
       throw new HttpError(
@@ -49,6 +65,64 @@ const dbUtils = {
       coordinates: [longitude, latitude],
     },
   }),
+  toGeoJSON: (obj) => {
+    return _.reduce(
+      obj,
+      (result, value, key) => {
+        const newValue = (() => {
+          if (isGeoPoint(value)) {
+            return {
+              type: "Point",
+              coordinates: [value.longitude, value.latitude],
+            }
+          }
+          if (_.isArray(value) && isGeoPoint(value[0])) {
+            return {
+              type: "LineString",
+              coordinates: value.map(({ longitude, latitude }) => [
+                longitude,
+                latitude,
+              ]),
+            }
+          }
+          return value
+        })()
+        return { ...result, [key]: newValue }
+      },
+      {},
+    )
+  },
+  toJSONFromGeoJSON: (callback) => {
+    return dbUtils.toJSON((ret) => {
+      for (const key in ret) {
+        const value = ret[key]
+        if (isGeoJsonObject(value)) {
+          const newValue = (() => {
+            switch (value.type) {
+              case "LineString":
+                return value.coordinates.map(([longitude, latitude]) => ({
+                  longitude,
+                  latitude,
+                }))
+              case "Point":
+                return {
+                  longitude: value.coordinates[0],
+                  latitude: value.coordinates[1],
+                }
+              default:
+                return null
+            }
+          })()
+          if (newValue) {
+            ret[key] = newValue
+          }
+        }
+      }
+      if (callback) {
+        callback(ret)
+      }
+    })
+  },
   toJSONWithoutLocation: (callback) => {
     return dbUtils.toJSON((ret) => {
       ret.longitude = ret.location.coordinates[0]

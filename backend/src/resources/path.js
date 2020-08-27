@@ -14,12 +14,12 @@ import {
 import PathIcon from "@material-ui/icons/Directions"
 
 const PathList = (props) => (
-  <List perPage={25} {...props}>
+  <List perPage={25} title="Lista de Caminos" {...props}>
     <Datagrid>
-      <ReferenceField source="from" reference="nodes">
+      <ReferenceField source="from" label="Desde" reference="nodes">
         <TextField source="id" />
       </ReferenceField>
-      <ReferenceField source="to" reference="nodes">
+      <ReferenceField source="to" label="Hasta" reference="nodes">
         <TextField source="id" />
       </ReferenceField>
     </Datagrid>

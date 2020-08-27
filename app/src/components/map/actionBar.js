@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { StyleSheet, View, ScrollView, Dimensions } from "react-native"
 import {
   TextInput,
@@ -6,6 +6,7 @@ import {
   Text,
   IconButton as PaperIconButton,
   useTheme,
+  Button,
 } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 import walkActions from "../../store/actions/walk"
@@ -63,7 +64,7 @@ const IconButton = (props) => (
   </View>
 )
 
-const LocationsCard = ({ navigation }) => {
+const LocationsCard = ({ navigation, scrollTo }) => {
   const [loading, setLoading] = useState(false)
   const source = useSelector((state) => state.walk.source)
   const target = useSelector((state) => state.walk.target)
@@ -82,6 +83,7 @@ const LocationsCard = ({ navigation }) => {
     const path = await geoService.getSafestPath(source.coords, target.coords)
     dispatch(walkActions.setPath(path))
     setLoading(false)
+    scrollTo("Walk")
   }
 
   return (
@@ -116,20 +118,45 @@ const LocationsCard = ({ navigation }) => {
   )
 }
 
-// const SafePathCard = () => {
-//   return (
-//     <View style={styles.card}>
-//       <Text>SafePathCard</Text>
-//     </View>
-//   )
-// }
+const SafePathCard = ({ scrollTo }) => {
+  const handleGoBack = () => {
+    scrollTo("Location")
+  }
+
+  const handleStartWalk = () => {}
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.backIconContainer}>
+        <IconButton icon="chevron-left" onPress={handleGoBack} />
+      </View>
+      <View style={styles.content}>
+        <Button onPress={handleStartWalk} mode="contained">
+          Iniciar recorrido
+        </Button>
+      </View>
+    </View>
+  )
+}
 
 const ActionBar = ({ navigation }) => {
   const theme = useTheme()
+  const scrollViewRef = useRef()
 
   const backgroundColor = theme.dark ? "#343434" : "#E5E4E2"
 
-  const handleScroll = () => {}
+  const handleScroll = (card) => {
+    const cards = ["Location", "Walk"]
+    const index = cards.indexOf(card)
+    if (index === -1) {
+      return
+    }
+    scrollViewRef.current.scrollTo({
+      x: BAR_WIDTH * index,
+      y: 0,
+      animated: true,
+    })
+  }
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -141,9 +168,10 @@ const ActionBar = ({ navigation }) => {
         snapToAlignment="center"
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false}
+        ref={scrollViewRef}
       >
         <LocationsCard navigation={navigation} scrollTo={handleScroll} />
-        {/* <SafePathCard /> */}
+        <SafePathCard navigation={navigation} scrollTo={handleScroll} />
       </ScrollView>
     </View>
   )
@@ -174,6 +202,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
+    position: "relative",
     width: BAR_WIDTH,
     height: BAR_HEIGHT,
     justifyContent: "center",
@@ -183,6 +212,17 @@ const styles = StyleSheet.create({
   spinner: {
     width: 34,
     transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }],
+  },
+  backIconContainer: {
+    position: "absolute",
+    left: 0,
+    zIndex: 10,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
 })
 

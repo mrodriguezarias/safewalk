@@ -22,9 +22,9 @@ const validations = {
 const NodeList = (props) => (
   <List title="Lista de Nodos" perPage={25} {...props}>
     <Datagrid rowClick="edit">
-      <NumberField source="longitude" />
-      <NumberField source="latitude" />
-      <NumberField source="weight" />
+      <NumberField source="longitude" label="Longitud" />
+      <NumberField source="latitude" label="Latitud" />
+      <NumberField source="weight" label="Peso" />
     </Datagrid>
   </List>
 )
