@@ -8,7 +8,16 @@ import {
 
 const Dialog = forwardRef(
   (
-    { children, onDismiss, title, accept, content, contentStyle, ...props },
+    {
+      children,
+      onDismiss,
+      title,
+      accept,
+      content,
+      actions,
+      contentStyle,
+      ...props
+    },
     ref,
   ) => {
     const [visible, setVisible] = useState(false)
@@ -45,6 +54,7 @@ const Dialog = forwardRef(
               <Button onPress={handleHide}>Aceptar</Button>
             </RNDialog.Actions>
           )}
+          {actions && <RNDialog.Actions>{actions}</RNDialog.Actions>}
         </RNDialog>
       </Portal>
     )

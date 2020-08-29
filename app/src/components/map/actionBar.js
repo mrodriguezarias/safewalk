@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { StyleSheet, View, ScrollView, Dimensions } from "react-native"
 import {
   TextInput,
@@ -7,12 +7,18 @@ import {
   IconButton as PaperIconButton,
   useTheme,
   Button,
+  Switch,
 } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 import walkActions from "../../store/actions/walk"
 import Spinner from "../spinner"
 import geoService from "../../../../shared/services/geo"
+import walkController from "../../../../shared/controllers/walk"
 import TextScaler from "../textScaler"
+import Dialog from "../dialog"
+import ListItem from "../listItem"
+import geoUtils from "../../../../shared/utils/geo"
+import appGeoUtils from "../../utils/geo"
 
 const BAR_WIDTH = Dimensions.get("window").width
 const BAR_HEIGHT = 60
@@ -68,6 +74,8 @@ const LocationsCard = ({ navigation, scrollTo }) => {
   const [loading, setLoading] = useState(false)
   const source = useSelector((state) => state.walk.source)
   const target = useSelector((state) => state.walk.target)
+  const logged = useSelector((state) => state.auth.logged)
+  const mockLocation = useSelector((state) => state.app.mockLocation)
   const dispatch = useDispatch()
 
   const changeLocation = (key) => {
@@ -79,11 +87,26 @@ const LocationsCard = ({ navigation, scrollTo }) => {
   }
 
   const handleSubmit = async () => {
-    setLoading(false)
+    setLoading(true)
     const path = await geoService.getSafestPath(source.coords, target.coords)
     dispatch(walkActions.setPath(path))
     setLoading(false)
-    scrollTo("Walk")
+    if (logged) {
+      const loc = await getCurrentLocation()
+      if (geoUtils.nearCoords(loc, source.coords)) {
+        scrollTo("Walk")
+      }
+    }
+  }
+
+  const getCurrentLocation = async () => {
+    let coords
+    if (mockLocation) {
+      coords = mockLocation
+    } else {
+      coords = await appGeoUtils.getCurrentLocation()
+    }
+    return coords
   }
 
   return (
@@ -119,20 +142,86 @@ const LocationsCard = ({ navigation, scrollTo }) => {
 }
 
 const SafePathCard = ({ scrollTo }) => {
-  const handleGoBack = () => {
+  const [loading, setLoading] = useState(false)
+  const [arrived, setArrived] = useState(false)
+  const user = useSelector((state) => state.auth.user)
+  const path = useSelector((state) => state.walk.path)
+  const walk = useSelector((state) => state.walk.walk)
+  const dispatch = useDispatch()
+  const dialogRef = useRef()
+  const theme = useTheme()
+
+  useEffect(() => {
+    if (!walk) {
+      goBack()
+    }
+  }, [walk])
+
+  const goBack = () => {
     scrollTo("Location")
   }
 
-  const handleStartWalk = () => {}
+  const startWalk = async () => {
+    setLoading(true)
+    const walk = await walkController.start(user.id, path)
+    dispatch(walkActions.setWalk(walk))
+    setLoading(false)
+  }
+
+  const stopWalk = async () => {
+    setArrived(false)
+    dialogRef.current.show()
+  }
+
+  const confirmStopWalk = async () => {
+    dialogRef.current.hide()
+    setLoading(true)
+    await walkController.end(walk.id, arrived)
+    dispatch(walkActions.setWalk(null))
+    setLoading(false)
+  }
 
   return (
     <View style={styles.card}>
+      <Dialog
+        ref={dialogRef}
+        title="¿Llegaste bien?"
+        content={
+          <ListItem
+            noDivider
+            label="Anunciar Llegada Segura"
+            right={() => (
+              <Switch
+                value={arrived}
+                onValueChange={() => setArrived((arrived) => !arrived)}
+                color={theme.colors.safe}
+              />
+            )}
+          />
+        }
+        contentStyle={{
+          marginTop: -10,
+          marginBottom: -20,
+          marginHorizontal: -15,
+        }}
+        actions={
+          <>
+            <Button onPress={() => dialogRef.current.hide()}>Volver</Button>
+            <Button onPress={confirmStopWalk}>Terminar</Button>
+          </>
+        }
+      />
       <View style={styles.backIconContainer}>
-        <IconButton icon="chevron-left" onPress={handleGoBack} />
+        {!walk && <IconButton icon="chevron-left" onPress={goBack} />}
       </View>
       <View style={styles.content}>
-        <Button onPress={handleStartWalk} mode="contained">
-          Iniciar recorrido
+        <Button
+          onPress={walk ? stopWalk : startWalk}
+          mode="contained"
+          loading={loading}
+          disabled={loading}
+        >
+          {walk ? "Terminar recorrido" : "Iniciar recorrido"}
         </Button>
       </View>
     </View>

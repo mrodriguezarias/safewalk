@@ -5,6 +5,7 @@ const walkActions = {
   SET_PATH: "WALK/SET_PATH",
   MARK_PLACE: "WALK/MARK_PLACE",
   UNMARK_PLACE: "WALK/UNMARK_PLACE",
+  SET_WALK: "WALK/SET_WALK",
   load: (state) => ({ type: walkActions.LOAD, payload: state }),
   setSource: (source) => ({
     type: walkActions.SET_SOURCE,
@@ -29,6 +30,7 @@ const walkActions = {
     type: walkActions.UNMARK_PLACE,
     payload: { place },
   }),
+  setWalk: (walk) => ({ type: walkActions.SET_WALK, payload: { walk } }),
 }
 
 export default walkActions

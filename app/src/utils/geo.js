@@ -5,7 +5,7 @@ const geoUtils = {
   getCurrentLocation: async ({
     highAccuracy = false,
     shouldThrow = false,
-    checkBoundary = true,
+    checkBoundary = false,
   } = {}) => {
     const { status } = await Location.requestPermissionsAsync()
     if (status !== "granted") {

@@ -5,6 +5,7 @@ const initialState = {
   target: null,
   path: [],
   places: [],
+  walk: null,
 }
 
 const load = (state, { source, target }) => ({
@@ -43,6 +44,11 @@ const unmarkPlace = (state, { place }) => ({
   places: state.places.filter(({ id }) => id !== place.id),
 })
 
+const setWalk = (state, { walk }) => ({
+  ...state,
+  walk,
+})
+
 const walkReducer = (state = initialState, action) => {
   const { type, payload = {} } = action
   switch (type) {
@@ -58,6 +64,8 @@ const walkReducer = (state = initialState, action) => {
       return markPlace(state, payload)
     case walkActions.UNMARK_PLACE:
       return unmarkPlace(state, payload)
+    case walkActions.SET_WALK:
+      return setWalk(state, payload)
     default:
       return state
   }

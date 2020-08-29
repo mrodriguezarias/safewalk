@@ -64,8 +64,8 @@ const geoService = {
     return result !== null
   },
   getSafestPath: async (source, target) => {
-    const dSource = geoUtils.getDistance(source)
-    const dTarget = geoUtils.getDistance(target)
+    const dSource = geoUtils.getRawDistance(source)
+    const dTarget = geoUtils.getRawDistance(target)
     if (dTarget < dSource) {
       ;[target, source] = [source, target]
     }

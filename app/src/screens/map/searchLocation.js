@@ -108,7 +108,10 @@ const SearchLocationScreen = ({ navigation, route }) => {
     if (mockLocation) {
       coords = mockLocation
     } else {
-      coords = await geoUtils.getCurrentLocation({ shouldThrow: true })
+      coords = await geoUtils.getCurrentLocation({
+        shouldThrow: true,
+        checkBoundary: true,
+      })
     }
     return coords
   }
@@ -165,6 +168,10 @@ const SearchLocationScreen = ({ navigation, route }) => {
       nativeEvent: { coordinate: coords },
     } = event
     setLocation(coords)
+    if (key === "current") {
+      saveLocation({ coords })
+      return
+    }
     try {
       await geoService.isWithinBoundary(coords)
       await searchLocation(coords)
@@ -180,7 +187,11 @@ const SearchLocationScreen = ({ navigation, route }) => {
   }
 
   const handleSetCurrentLocation = () => {
-    searchLocation()
+    if (key === "current") {
+      saveLocation()
+    } else {
+      searchLocation()
+    }
   }
 
   const handleItemPress = (location) => {
@@ -227,7 +238,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
           onItemLongPress={handleItemLongPress}
         />
       ) : (
-        <MapView onPress={handleMapPress}>
+        <MapView onPress={handleMapPress} showsUserLocation>
           <LocationMarker coords={location} color={getMarkerColor()} />
         </MapView>
       )}

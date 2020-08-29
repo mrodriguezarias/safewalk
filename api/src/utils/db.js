@@ -65,28 +65,29 @@ const dbUtils = {
       coordinates: [longitude, latitude],
     },
   }),
-  toGeoJSON: (obj) => {
+  toGeoJSON: (obj, keys) => {
     return _.reduce(
       obj,
       (result, value, key) => {
-        const newValue = (() => {
-          if (isGeoPoint(value)) {
-            return {
-              type: "Point",
-              coordinates: [value.longitude, value.latitude],
-            }
+        const newValue = ((type) => {
+          switch (type) {
+            case "point":
+              return {
+                type: "Point",
+                coordinates: [value.longitude, value.latitude],
+              }
+            case "line":
+              return {
+                type: "LineString",
+                coordinates: value.map(({ longitude, latitude }) => [
+                  longitude,
+                  latitude,
+                ]),
+              }
+            default:
+              return value
           }
-          if (_.isArray(value) && isGeoPoint(value[0])) {
-            return {
-              type: "LineString",
-              coordinates: value.map(({ longitude, latitude }) => [
-                longitude,
-                latitude,
-              ]),
-            }
-          }
-          return value
-        })()
+        })((keys[key] ?? "").toLowerCase())
         return { ...result, [key]: newValue }
       },
       {},

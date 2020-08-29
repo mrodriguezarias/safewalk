@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import ActionBar from "../../components/map/actionBar"
 import MapView from "../../components/map/mapView"
 import LocationMarker from "../../components/map/locationMarker"
+import LocationTracker from "../../components/map/locationTracker"
 import PathMarker from "../../components/map/pathMarker"
 import generalUtils from "../../../../shared/utils/general"
 import MainMenu from "../../components/map/mainMenu"
@@ -42,6 +43,7 @@ const MainScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <LocationTracker />
       <LocationDialog ref={locationDialog} navigation={navigation} />
       <ActionBar navigation={navigation} />
       <MapView ref={mapRef} onLayout={fitMap} showsUserLocation>

@@ -17,6 +17,7 @@ const normalize = (location, address = true) => {
   if (address) {
     location = location.replace(/^(.+) AV\.?$/, "AV. $1")
     location = location.replace(/^(.+), (.+)$/, "$2 $1")
+    location = location.toLowerCase()
   }
   return generalUtils.titleCase(location)
 }

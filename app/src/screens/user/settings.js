@@ -6,18 +6,25 @@ import ListItem from "../../components/listItem"
 import { useSelector, useDispatch } from "react-redux"
 import appActions from "../../store/actions/app"
 import authActions from "../../store/actions/auth"
+import walkActions from "../../store/actions/walk"
 import authController from "../../../../shared/controllers/auth"
+import walkController from "../../../../shared/controllers/walk"
 
 const SettingsScreen = ({ navigation }) => {
   const theme = useSelector((state) => state.app.theme)
   const mapProvider = useSelector((state) => state.app.mapProvider)
   const mapType = useSelector((state) => state.app.mapType)
   const user = useSelector((state) => state.auth.user)
+  const walk = useSelector((state) => state.walk.walk)
 
   const dispatch = useDispatch()
   const [dialogVisible, setDialogVisible] = useState(false)
 
   const handleLogOut = async (deleteAccount = false) => {
+    if (walk) {
+      await walkController.end(walk.id)
+      dispatch(walkActions.setWalk(null))
+    }
     let action = "logOut"
     if (deleteAccount) {
       action = "deleteAccount"

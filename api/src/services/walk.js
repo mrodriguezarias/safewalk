@@ -4,6 +4,11 @@ import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
 
+const geoKeys = {
+  path: "line",
+  position: "point",
+}
+
 const walkService = {
   getWalks: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
@@ -32,7 +37,10 @@ const walkService = {
     if (!data.position) {
       data.position = data.path[0]
     }
-    data = dbUtils.toGeoJSON(data)
+    if (!data.walked) {
+      data.walked = [data.position]
+    }
+    data = dbUtils.toGeoJSON(data, geoKeys)
     const walk = await walkModel.create({
       ...data,
     })
@@ -48,7 +56,7 @@ const walkService = {
       throw new HttpError(HttpStatus.NOT_FOUND, "Walk not found")
     }
 
-    data = dbUtils.toGeoJSON(data)
+    data = dbUtils.toGeoJSON(data, geoKeys)
     const updatedWalk = await walkModel.findByIdAndUpdate(
       id,
       {

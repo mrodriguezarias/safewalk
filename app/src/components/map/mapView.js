@@ -25,9 +25,7 @@ const MapView = memo(
         if (mockLocation) {
           location = mockLocation
         } else {
-          location = await geoUtils.getCurrentLocation({
-            checkBoundary: false,
-          })
+          location = await geoUtils.getCurrentLocation()
         }
         setMapRegion({
           longitude: location?.longitude,

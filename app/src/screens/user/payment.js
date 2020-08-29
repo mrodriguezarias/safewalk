@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react"
 import { View, StyleSheet } from "react-native"
-import { useTheme, Headline, Button, Paragraph } from "react-native-paper"
+import { useTheme, Headline, Button } from "react-native-paper"
 import { useDispatch } from "react-redux"
 import { CreditCardInput } from "react-native-credit-card-input"
 import generalUtils from "../../../../shared/utils/general"

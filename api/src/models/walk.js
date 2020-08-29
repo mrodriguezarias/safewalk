@@ -1,7 +1,12 @@
 import { Schema, model } from "mongoose"
 import dbUtils from "../utils/db"
-import pointSchema from "./schemas/point"
+import geoPointSchema from "./schemas/point"
 import lineSchema from "./schemas/line"
+
+const pointSchema = new Schema({
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
+})
 
 const walkSchema = new Schema(
   {
@@ -16,11 +21,11 @@ const walkSchema = new Schema(
       index: "2dsphere",
     },
     walked: {
-      type: lineSchema,
-      index: "2dsphere",
+      type: [pointSchema],
+      default: [],
     },
     position: {
-      type: pointSchema,
+      type: geoPointSchema,
       required: true,
       index: "2dsphere",
     },
@@ -30,7 +35,9 @@ const walkSchema = new Schema(
     arrived: { type: Boolean, default: false },
   },
   {
-    toJSON: dbUtils.toJSONFromGeoJSON(),
+    toJSON: dbUtils.toJSONFromGeoJSON((walk) => {
+      walk.walked = walk.walked.map(({ _id, ...coords }) => coords)
+    }),
   },
 )
 

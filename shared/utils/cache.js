@@ -33,7 +33,7 @@ const elements = [{ key: "Graph", loader: loadGraph }]
 
 const cacheUtils = {
   load: () => {
-    // generalUtils.debounce(loadCache)
+    generalUtils.debounce(loadCache)
   },
   get: async (key, wait = true) => {
     if (!wait) {

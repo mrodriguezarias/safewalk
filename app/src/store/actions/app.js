@@ -26,7 +26,7 @@ const appActions = {
     })
     let coords = mockLocation
     if (!coords) {
-      coords = await geoUtils.getCurrentLocation()
+      coords = await geoUtils.getCurrentLocation({ checkBoundary: true })
     }
     if (coords) {
       const address = await geoService.getAddressOfLocation(coords)
