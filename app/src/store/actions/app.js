@@ -18,8 +18,13 @@ const appActions = {
     const mapProvider = await storageUtils.get("mapProvider")
     const mapType = await storageUtils.get("mapType")
     const mockLocation = await storageUtils.get("mockLocation")
+    const walk = await storageUtils.get("walk")
     const logged = token !== null
     dispatch({ type: authActions.LOAD, payload: { logged, user } })
+    dispatch({
+      type: walkActions.LOAD,
+      payload: { walk },
+    })
     dispatch({
       type: appActions.LOAD,
       payload: { theme, mapProvider, mapType, mockLocation },
@@ -28,7 +33,7 @@ const appActions = {
     if (!coords) {
       coords = await geoUtils.getCurrentLocation({ checkBoundary: true })
     }
-    if (coords) {
+    if (coords && !walk) {
       const address = await geoService.getAddressOfLocation(coords)
       dispatch(walkActions.setLocation("source", { name: address, coords }))
     }

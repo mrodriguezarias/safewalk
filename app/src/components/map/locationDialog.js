@@ -12,6 +12,7 @@ const LocationDialog = forwardRef(({ navigation }, ref) => {
   const [location, setLocation] = useState()
   const dispatch = useDispatch()
   const places = useSelector((state) => state.walk.places)
+  const walkId = useSelector((state) => state.walk.walk?.id)
   const isAdmin = useSelector((state) => state.auth?.user?.admin)
   const dialogRef = useRef()
 
@@ -80,9 +81,16 @@ const LocationDialog = forwardRef(({ navigation }, ref) => {
 
   const getOptions = () => {
     const marked = places.some(({ id }) => id === location?.id)
-    let options = [
-      { value: "source", label: "Establecer como origen" },
-      { value: "target", label: "Establecer como destino" },
+    let options = []
+    if (!walkId) {
+      options = [
+        ...options,
+        { value: "source", label: "Establecer como origen" },
+        { value: "target", label: "Establecer como destino" },
+      ]
+    }
+    options = [
+      ...options,
       marked
         ? { value: "unmark", label: "Desmarcar del mapa" }
         : { value: "mark", label: "Marcar en el mapa" },

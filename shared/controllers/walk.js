@@ -3,8 +3,10 @@ import geoUtils from "../../shared/utils/geo"
 import _ from "lodash"
 
 const walkController = {
-  start: async (user, path) => {
-    return await walkService.create({ user, path })
+  start: async ({ user, path, source, target }) => {
+    source = _.pick(source, ["name", "coords"])
+    target = _.pick(target, ["name", "coords"])
+    return await walkService.create({ user, path, source, target })
   },
   end: async (id, arrived = false) => {
     const now = Date.now()

@@ -8,20 +8,30 @@ const initialState = {
   walk: null,
 }
 
-const load = (state, { source, target }) => ({
-  ...state,
-  source,
-  target,
-})
-
-const setLocation = (state, { key, location }) => {
-  return {
-    ...state,
-    [key]: location,
-    path: [],
-    places: state.places.filter(({ id }) => id !== location.id),
+const load = (state, { walk, ...rest }) => {
+  let obj = {}
+  if (walk) {
+    obj = {
+      source: walk.source,
+      target: walk.target,
+      path: walk.path,
+      walk,
+    }
   }
+  const newState = {
+    ...state,
+    ...obj,
+    ...rest,
+  }
+  return newState
 }
+
+const setLocation = (state, { key, location }) => ({
+  ...state,
+  [key]: location,
+  path: [],
+  places: state.places.filter(({ id }) => id !== location.id),
+})
 
 const swapLocations = (state) => ({
   ...state,

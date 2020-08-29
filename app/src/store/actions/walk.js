@@ -1,3 +1,5 @@
+import storageUtils from "../../../../shared/utils/storage"
+
 const walkActions = {
   LOAD: "WALK/LOAD",
   SET_LOCATION: "WALK/SET_LOCATION",
@@ -30,7 +32,10 @@ const walkActions = {
     type: walkActions.UNMARK_PLACE,
     payload: { place },
   }),
-  setWalk: (walk) => ({ type: walkActions.SET_WALK, payload: { walk } }),
+  setWalk: (walk) => async (dispatch) => {
+    await storageUtils.set("walk", walk)
+    dispatch({ type: walkActions.SET_WALK, payload: { walk } })
+  },
 }
 
 export default walkActions

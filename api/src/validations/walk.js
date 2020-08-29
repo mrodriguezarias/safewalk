@@ -6,6 +6,11 @@ const pointSchema = Joi.object({
   longitude: Joi.number().required(),
 })
 
+const locationSchema = Joi.object({
+  name: Joi.string().required(),
+  coords: pointSchema.required(),
+})
+
 const walkSchema = {
   id: Joi.string().custom(validationUtils.objectId),
   user: Joi.string().custom(validationUtils.objectId),
@@ -16,6 +21,8 @@ const walkSchema = {
   end: Joi.date().allow(null),
   updated: Joi.date(),
   arrived: Joi.boolean().default(false),
+  source: locationSchema,
+  target: locationSchema,
 }
 
 const walkValidation = {
@@ -34,6 +41,8 @@ const walkValidation = {
       end: walkSchema.end,
       updated: walkSchema.updated,
       arrived: walkSchema.arrived,
+      source: walkSchema.source.required(),
+      target: walkSchema.target.required(),
     }),
   },
   updateWalk: {
@@ -50,6 +59,8 @@ const walkValidation = {
       end: walkSchema.end,
       updated: walkSchema.updated,
       arrived: walkSchema.arrived,
+      source: walkSchema.source,
+      target: walkSchema.target,
     }),
   },
   deleteWalk: {

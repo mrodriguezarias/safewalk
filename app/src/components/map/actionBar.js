@@ -19,6 +19,7 @@ import Dialog from "../dialog"
 import ListItem from "../listItem"
 import geoUtils from "../../../../shared/utils/geo"
 import appGeoUtils from "../../utils/geo"
+import generalUtils from "../../../../shared/utils/general"
 
 const BAR_WIDTH = Dimensions.get("window").width
 const BAR_HEIGHT = 60
@@ -146,16 +147,12 @@ const SafePathCard = ({ scrollTo }) => {
   const [arrived, setArrived] = useState(false)
   const user = useSelector((state) => state.auth.user)
   const path = useSelector((state) => state.walk.path)
+  const source = useSelector((state) => state.walk.source)
+  const target = useSelector((state) => state.walk.target)
   const walk = useSelector((state) => state.walk.walk)
   const dispatch = useDispatch()
   const dialogRef = useRef()
   const theme = useTheme()
-
-  useEffect(() => {
-    if (!walk) {
-      goBack()
-    }
-  }, [walk])
 
   const goBack = () => {
     scrollTo("Location")
@@ -163,7 +160,12 @@ const SafePathCard = ({ scrollTo }) => {
 
   const startWalk = async () => {
     setLoading(true)
-    const walk = await walkController.start(user.id, path)
+    const walk = await walkController.start({
+      user: user.id,
+      path,
+      source,
+      target,
+    })
     dispatch(walkActions.setWalk(walk))
     setLoading(false)
   }
@@ -231,21 +233,28 @@ const SafePathCard = ({ scrollTo }) => {
 const ActionBar = ({ navigation }) => {
   const theme = useTheme()
   const scrollViewRef = useRef()
+  const walkId = useSelector((state) => state.walk.walk?.id)
 
   const backgroundColor = theme.dark ? "#343434" : "#E5E4E2"
 
-  const handleScroll = (card) => {
+  const handleScroll = (card, animated = true) => {
     const cards = ["Location", "Walk"]
     const index = cards.indexOf(card)
     if (index === -1) {
       return
     }
-    scrollViewRef.current.scrollTo({
-      x: BAR_WIDTH * index,
-      y: 0,
-      animated: true,
+    generalUtils.debounce(() => {
+      scrollViewRef.current.scrollTo({
+        x: BAR_WIDTH * index,
+        y: 0,
+        animated,
+      })
     })
   }
+
+  useEffect(() => {
+    handleScroll(walkId ? "Walk" : "Location", !walkId)
+  }, [walkId])
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
