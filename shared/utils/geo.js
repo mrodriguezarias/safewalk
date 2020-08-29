@@ -22,13 +22,29 @@ const geoUtils = {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     return earthRadiusKm * c * 1000
   },
-  equalCoords: (pos1, pos2) => {
+  pointsAreEqual: (pos1, pos2) => {
     return (
       pos1?.longitude === pos2?.longitude && pos1?.latitude === pos2?.latitude
     )
   },
-  nearCoords: (pos1, pos2, distance = 100) => {
+  pointsAreNear: (pos1, pos2, distance = 100) => {
     return geoUtils.getRealDistance(pos1, pos2) < distance
+  },
+  closestToPoint: (point, path) => {
+    const distances = path.map((pos) => geoUtils.getRawDistance(pos, point))
+    const minIndex = distances.reduce(
+      (prev, cur, idx) => (cur < prev[1] ? [idx, cur] : prev),
+      [-1, Infinity],
+    )[0]
+    return path[minIndex]
+  },
+  getRealDistanceToPath: (point, path) => {
+    const closest = geoUtils.closestToPoint(point, path)
+    return geoUtils.getRealDistance(point, closest)
+  },
+  isNearPath: (point, path, distance = 100) => {
+    const closest = geoUtils.closestToPoint(point, path)
+    return geoUtils.pointsAreNear(point, closest)
   },
 }
 

@@ -16,17 +16,19 @@ const walkController = {
       updated: now,
     })
   },
-  updatePosition: async (id, walked, position) => {
+  updatePosition: async (id, path, walked, position) => {
     const lastPosition = _.last(walked)
     let data = {
       updated: Date.now(),
     }
-    if (!geoUtils.nearCoords(position, lastPosition)) {
+    if (!geoUtils.pointsAreNear(position, lastPosition)) {
+      const safe = geoUtils.isNearPath(position, path)
       walked = [...walked, position]
       data = {
         ...data,
         position,
         walked,
+        safe,
       }
     }
     return await walkService.update(id, data)

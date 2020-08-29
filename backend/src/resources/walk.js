@@ -31,6 +31,7 @@ const WalkList = (props) => (
       <DateField source="end" label="Fin" showTime />
       <DateField source="updated" label="Actualización" showTime />
       <BooleanField source="arrived" label="Llegada" />
+      <BooleanField source="safe" label="Seguro" />
     </Datagrid>
   </List>
 )
@@ -50,6 +51,7 @@ const WalkEdit = (props) => (
       <DateTimeInput source="end" label="Fin" />
       <DateTimeInput source="updated" label="Actualización" />
       <BooleanInput source="arrived" label="Llegada" />
+      <BooleanInput source="safe" label="Seguro" />
     </SimpleForm>
   </Edit>
 )

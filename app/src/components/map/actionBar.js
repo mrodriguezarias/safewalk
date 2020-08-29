@@ -94,7 +94,7 @@ const LocationsCard = ({ navigation, scrollTo }) => {
     setLoading(false)
     if (logged) {
       const loc = await getCurrentLocation()
-      if (geoUtils.nearCoords(loc, source.coords)) {
+      if (geoUtils.pointsAreNear(loc, source.coords)) {
         scrollTo("Walk")
       }
     }

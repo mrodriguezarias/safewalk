@@ -4,12 +4,6 @@ import mongoose from "mongoose"
 import generalUtils from "../../../shared/utils/general"
 import _ from "lodash"
 
-const isGeoPoint = (value) => {
-  return (
-    _.isObject(value) && _.has(value, "longitude") && _.has(value, "latitude")
-  )
-}
-
 const isGeoJsonObject = (value) => {
   return (
     _.isObject(value) &&
@@ -40,7 +34,7 @@ const dbUtils = {
   sort: (query, sort) => {
     return query.sort(sort ? { [sort[0]]: sort[1] } : {})
   },
-  toJSON: (callback) => {
+  toJSON: ({ hideId = false, next } = {}) => {
     const toJSON = {
       transform: (doc, ret) => {
         for (const key in ret) {
@@ -48,11 +42,13 @@ const dbUtils = {
             ret[key] = ret[key].toString()
           }
         }
-        ret.id = ret._id.toString()
+        if (!hideId) {
+          ret.id = ret._id.toString()
+        }
         delete ret._id
         delete ret.__v
-        if (callback) {
-          callback(ret)
+        if (next) {
+          next(ret)
         }
       },
     }
@@ -93,45 +89,49 @@ const dbUtils = {
       {},
     )
   },
-  toJSONFromGeoJSON: (callback) => {
-    return dbUtils.toJSON((ret) => {
-      for (const key in ret) {
-        const value = ret[key]
-        if (isGeoJsonObject(value)) {
-          const newValue = (() => {
-            switch (value.type) {
-              case "LineString":
-                return value.coordinates.map(([longitude, latitude]) => ({
-                  longitude,
-                  latitude,
-                }))
-              case "Point":
-                return {
-                  longitude: value.coordinates[0],
-                  latitude: value.coordinates[1],
-                }
-              default:
-                return null
+  toJSONFromGeoJSON: (next) => {
+    return dbUtils.toJSON({
+      next: (ret) => {
+        for (const key in ret) {
+          const value = ret[key]
+          if (isGeoJsonObject(value)) {
+            const newValue = (() => {
+              switch (value.type) {
+                case "LineString":
+                  return value.coordinates.map(([longitude, latitude]) => ({
+                    longitude,
+                    latitude,
+                  }))
+                case "Point":
+                  return {
+                    longitude: value.coordinates[0],
+                    latitude: value.coordinates[1],
+                  }
+                default:
+                  return null
+              }
+            })()
+            if (newValue) {
+              ret[key] = newValue
             }
-          })()
-          if (newValue) {
-            ret[key] = newValue
           }
         }
-      }
-      if (callback) {
-        callback(ret)
-      }
+        if (next) {
+          next(ret)
+        }
+      },
     })
   },
-  toJSONWithoutLocation: (callback) => {
-    return dbUtils.toJSON((ret) => {
-      ret.longitude = ret.location.coordinates[0]
-      ret.latitude = ret.location.coordinates[1]
-      delete ret.location
-      if (callback) {
-        callback(ret)
-      }
+  toJSONWithoutLocation: (next) => {
+    return dbUtils.toJSON({
+      next: (ret) => {
+        ret.longitude = ret.location.coordinates[0]
+        ret.latitude = ret.location.coordinates[1]
+        delete ret.location
+        if (next) {
+          next(ret)
+        }
+      },
     })
   },
   transformQueryFilter: (filter, key = "name") => {

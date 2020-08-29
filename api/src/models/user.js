@@ -12,9 +12,11 @@ const userSchema = new Schema(
     loginAttempts: { type: Number, default: 0 },
   },
   {
-    toJSON: dbUtils.toJSON((user) => {
-      delete user.password
-      delete user.loginAttempts
+    toJSON: dbUtils.toJSON({
+      next: (user) => {
+        delete user.password
+        delete user.loginAttempts
+      },
     }),
   },
 )

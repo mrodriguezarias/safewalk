@@ -21,6 +21,7 @@ const walkSchema = {
   end: Joi.date().allow(null),
   updated: Joi.date(),
   arrived: Joi.boolean().default(false),
+  safe: Joi.boolean().default(true),
   source: locationSchema,
   target: locationSchema,
 }
@@ -41,6 +42,7 @@ const walkValidation = {
       end: walkSchema.end,
       updated: walkSchema.updated,
       arrived: walkSchema.arrived,
+      safe: walkSchema.safe,
       source: walkSchema.source.required(),
       target: walkSchema.target.required(),
     }),
@@ -59,6 +61,7 @@ const walkValidation = {
       end: walkSchema.end,
       updated: walkSchema.updated,
       arrived: walkSchema.arrived,
+      safe: walkSchema.safe,
       source: walkSchema.source,
       target: walkSchema.target,
     }),

@@ -19,6 +19,10 @@ const colors = {
     light: "#ccc",
     dark: "#777",
   },
+  red: {
+    light: "#ff5c5c",
+    dark: "#b42a2a",
+  },
 }
 
 const theme = {
@@ -28,6 +32,7 @@ const theme = {
   tabBar: colors.purple,
   safe: colors.yellow,
   marker: colors.grey,
+  rogue: colors.red,
 }
 
 const getTheme = (appearance) => {

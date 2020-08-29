@@ -18,6 +18,7 @@ const MainScreen = ({ navigation }) => {
   const locationDialog = useRef()
   const source = useSelector((state) => state.walk.source?.coords)
   const target = useSelector((state) => state.walk.target?.coords)
+  const safeWalk = useSelector((state) => state.walk.walk?.safe)
   const places = useSelector((state) => state.walk.places)
   const path = useSelector((state) => state.walk.path)
 
@@ -41,12 +42,19 @@ const MainScreen = ({ navigation }) => {
     fitMap()
   }, [fitMap, source, target, path])
 
+  const posMarkerColor = safeWalk ? theme.colors.accent : theme.colors.rogue
+
   return (
     <View style={styles.container}>
       <LocationTracker />
       <LocationDialog ref={locationDialog} navigation={navigation} />
       <ActionBar navigation={navigation} />
-      <MapView ref={mapRef} onLayout={fitMap} showsUserLocation>
+      <MapView
+        ref={mapRef}
+        onLayout={fitMap}
+        showsUserLocation
+        tintColor={posMarkerColor}
+      >
         <LocationMarker
           coords={source}
           color={theme.colors.header}
