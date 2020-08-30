@@ -4,7 +4,7 @@ import geoUtils from "../../utils/geo"
 import walkController from "../../../../shared/controllers/walk"
 import walkActions from "../../store/actions/walk"
 
-const UPDATE_INTERVAL = 10 // seconds
+const UPDATE_INTERVAL = 5 // seconds
 
 const LocationTracker = () => {
   const walkId = useSelector((state) => state.walk.walk?.id)

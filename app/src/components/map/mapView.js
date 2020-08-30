@@ -61,7 +61,11 @@ const MapView = memo(
         {...props}
       >
         {showsUserLocation && mockLocation && (
-          <LocationMarker coords={mockLocation} zIndex={1} />
+          <LocationMarker
+            coords={mockLocation}
+            zIndex={1}
+            color={props.tintColor}
+          />
         )}
         {children}
       </RNMapView>

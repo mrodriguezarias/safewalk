@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useEffect, useLayoutEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { useTheme } from "react-native-paper"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 
 import ActionBar from "../../components/map/actionBar"
 import MapView from "../../components/map/mapView"
@@ -11,6 +11,7 @@ import PathMarker from "../../components/map/pathMarker"
 import generalUtils from "../../../../shared/utils/general"
 import MainMenu from "../../components/map/mainMenu"
 import LocationDialog from "../../components/map/locationDialog"
+import appActions from "../../store/actions/app"
 
 const MainScreen = ({ navigation }) => {
   const theme = useTheme()
@@ -21,6 +22,8 @@ const MainScreen = ({ navigation }) => {
   const safeWalk = useSelector((state) => state.walk.walk?.safe)
   const places = useSelector((state) => state.walk.places)
   const path = useSelector((state) => state.walk.path)
+  const isAdmin = useSelector((state) => state.auth?.user?.admin)
+  const dispatch = useDispatch()
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,7 +45,17 @@ const MainScreen = ({ navigation }) => {
     fitMap()
   }, [fitMap, source, target, path])
 
-  const posMarkerColor = safeWalk ? theme.colors.accent : theme.colors.rogue
+  const handleMapLongPress = async (event) => {
+    const {
+      nativeEvent: { coordinate: coords },
+    } = event
+    if (isAdmin) {
+      dispatch(appActions.setMockLocation(coords))
+    }
+  }
+
+  const posMarkerColor =
+    safeWalk === false ? theme.colors.rogue : theme.colors.accent
 
   return (
     <View style={styles.container}>
@@ -54,6 +67,7 @@ const MainScreen = ({ navigation }) => {
         onLayout={fitMap}
         showsUserLocation
         tintColor={posMarkerColor}
+        onLongPress={handleMapLongPress}
       >
         <LocationMarker
           coords={source}
