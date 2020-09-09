@@ -2,17 +2,13 @@ import { Schema, model } from "mongoose"
 import dbUtils from "../utils/db"
 import pointSchema from "./schemas/point"
 
-const nodeSchema = new Schema(
+const ZoneSchema = new Schema(
   {
-    weight: { type: Number, default: 0 },
+    radius: { type: Number, required: true },
     location: {
       type: pointSchema,
       required: true,
       index: "2dsphere",
-    },
-    created: {
-      type: Date,
-      default: Date.now,
     },
   },
   {
@@ -20,6 +16,6 @@ const nodeSchema = new Schema(
   },
 )
 
-const nodeModel = model("Node", nodeSchema)
+const zoneModel = model("zone", ZoneSchema)
 
-export default nodeModel
+export default zoneModel

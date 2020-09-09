@@ -9,6 +9,7 @@ import geoRoute from "../routes/geo"
 import categoryRoute from "../routes/category"
 import placeRoute from "../routes/place"
 import walkRoute from "../routes/walk"
+import zoneRoute from "../routes/zone"
 
 const routeConfig = {
   routes: [
@@ -21,6 +22,7 @@ const routeConfig = {
     categoryRoute,
     placeRoute,
     walkRoute,
+    zoneRoute,
   ],
   configure: (app) => {
     const apiRouter = new Router()

@@ -8,7 +8,7 @@ const nodeSchema = {
   weight: Joi.number(),
 }
 
-const carerValidation = {
+const nodeValidation = {
   getNode: {
     params: Joi.object({
       id: nodeSchema.id.required(),
@@ -39,4 +39,4 @@ const carerValidation = {
   },
 }
 
-export default carerValidation
+export default nodeValidation

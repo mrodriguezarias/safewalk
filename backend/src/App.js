@@ -76,6 +76,14 @@ const App = () => {
         icon={pathResource.icon}
         list={pathResource.list}
       /> */}
+      {/* <Resource
+        name="zones"
+        options={{ label: "Zonas" }}
+        icon={zoneResource.icon}
+        list={zoneResource.list}
+        edit={zoneResource.edit}
+        create={zoneResource.create}
+      /> */}
     </Admin>
   )
 }
