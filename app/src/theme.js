@@ -16,8 +16,8 @@ const colors = {
     dark: "#8D8C17",
   },
   grey: {
-    light: "#ccc",
-    dark: "#777",
+    light: "#E5E4E2",
+    dark: "#343434",
   },
   red: {
     light: "#ff5c5c",
@@ -33,6 +33,8 @@ const theme = {
   safe: colors.yellow,
   marker: colors.grey,
   rogue: colors.red,
+  back: colors.grey,
+  zone: colors.red,
 }
 
 const getTheme = (appearance) => {

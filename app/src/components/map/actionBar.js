@@ -206,12 +206,8 @@ const SafePathCard = ({ scrollTo }) => {
           marginBottom: -20,
           marginHorizontal: -15,
         }}
-        actions={
-          <>
-            <Button onPress={() => dialogRef.current.hide()}>Volver</Button>
-            <Button onPress={confirmStopWalk}>Terminar</Button>
-          </>
-        }
+        cancel={{ text: "Volver" }}
+        accept={{ text: "Terminar", action: confirmStopWalk }}
       />
       <View style={styles.backIconContainer}>
         {!walk && <IconButton icon="chevron-left" onPress={goBack} />}
@@ -235,8 +231,6 @@ const ActionBar = ({ navigation }) => {
   const scrollViewRef = useRef()
   const walkId = useSelector((state) => state.walk.walk?.id)
 
-  const backgroundColor = theme.dark ? "#343434" : "#E5E4E2"
-
   const handleScroll = (card, animated = true) => {
     const cards = ["Location", "Walk"]
     const index = cards.indexOf(card)
@@ -257,7 +251,7 @@ const ActionBar = ({ navigation }) => {
   }, [walkId])
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: theme.colors.back }]}>
       <ScrollView
         horizontal
         pagingEnabled
@@ -309,7 +303,7 @@ const styles = StyleSheet.create({
   },
   spinner: {
     width: 34,
-    transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }],
+    transform: [{ scale: 0.7 }],
   },
   backIconContainer: {
     position: "absolute",

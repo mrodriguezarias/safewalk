@@ -1,9 +1,10 @@
 import React, { useState, useEffect, memo } from "react"
 import { StyleSheet, View } from "react-native"
 import { useTheme } from "react-native-paper"
-import { Marker } from "react-native-maps"
+import { Marker, Circle } from "react-native-maps"
 import * as Location from "expo-location"
 import _ from "lodash"
+import Color from "color"
 
 const ANCHOR = { x: 0.5, y: 0.5 }
 
@@ -11,64 +12,88 @@ const SIZE = 16
 const HALO_RADIUS = 6
 const HALO_SIZE = SIZE + HALO_RADIUS
 
-const LocationMarker = memo(({ current, coords, color, ...markerProps }) => {
-  const [location, setLocation] = useState()
-  const theme = useTheme()
+const LocationMarker = memo(
+  ({ current, coords, color, radius, radiusColor, ...markerProps }) => {
+    const [location, setLocation] = useState()
+    const theme = useTheme()
 
-  useEffect(() => {
-    setLocation(coords)
-  }, [coords])
+    useEffect(() => {
+      setLocation(coords)
+    }, [coords])
 
-  useEffect(() => {
-    if (!current) {
-      return
-    }
-    let subscription = null
-    ;(async () => {
-      const { status } = await Location.requestPermissionsAsync()
-      if (status === "granted") {
-        subscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.Highest,
-            maximumAge: 1000,
-            timeout: 20000,
-          },
-          ({ coords }) => {
-            if (!_.isEqual(location, coords)) {
-              setLocation(coords)
-            }
-          },
-        )
+    useEffect(() => {
+      if (!current) {
+        return
       }
-    })()
-    return () => {
-      subscription && subscription.remove()
+      let subscription = null
+      ;(async () => {
+        const { status } = await Location.requestPermissionsAsync()
+        if (status === "granted") {
+          subscription = await Location.watchPositionAsync(
+            {
+              accuracy: Location.Accuracy.Highest,
+              maximumAge: 1000,
+              timeout: 20000,
+            },
+            ({ coords }) => {
+              if (!_.isEqual(location, coords)) {
+                setLocation(coords)
+              }
+            },
+          )
+        }
+      })()
+      return () => {
+        subscription && subscription.remove()
+      }
+    }, [current])
+
+    if (!location) {
+      return null
     }
-  }, [current])
 
-  if (!location) {
-    return null
-  }
-
-  return (
-    <Marker
-      anchor={ANCHOR}
-      style={styles.mapMarker}
-      coordinate={location}
-      {...markerProps}
-    >
-      <View style={styles.container}>
-        <View style={styles.markerHalo} />
-        <View
-          style={[
-            styles.marker,
-            { backgroundColor: color ?? theme.colors.primary },
-          ]}
+    const renderRadius = () => {
+      if (!radius) {
+        return
+      }
+      let strokeColor, fillColor
+      if (radiusColor) {
+        strokeColor = Color(radiusColor).darken(0.3)
+        fillColor = Color(radiusColor).alpha(0.5).lighten(0.1)
+      }
+      return (
+        <Circle
+          center={location}
+          radius={radius}
+          strokeColor={strokeColor}
+          fillColor={fillColor}
         />
-      </View>
-    </Marker>
-  )
-})
+      )
+    }
+
+    return (
+      <>
+        {renderRadius()}
+        <Marker
+          anchor={ANCHOR}
+          style={styles.mapMarker}
+          coordinate={location}
+          {...markerProps}
+        >
+          <View style={styles.container}>
+            <View style={styles.markerHalo} />
+            <View
+              style={[
+                styles.marker,
+                { backgroundColor: color ?? theme.colors.primary },
+              ]}
+            />
+          </View>
+        </Marker>
+      </>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   mapMarker: {

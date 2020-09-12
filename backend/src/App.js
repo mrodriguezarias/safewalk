@@ -9,6 +9,7 @@ import userResource from "./resources/user"
 import categoryResource from "./resources/category"
 import placeResource from "./resources/place"
 import walkResource from "./resources/walk"
+import zoneResource from "./resources/zone"
 
 const LoginPage = () => (
   <Login backgroundImage="https://source.unsplash.com/1600x900/?kitten" />
@@ -54,6 +55,14 @@ const App = () => {
         list={walkResource.list}
         edit={walkResource.edit}
       />
+      <Resource
+        name="zones"
+        options={{ label: "Zonas" }}
+        icon={zoneResource.icon}
+        list={zoneResource.list}
+        edit={zoneResource.edit}
+        create={zoneResource.create}
+      />
       {/* <Resource
         name="carers"
         options={{ label: "Cuidadores" }}
@@ -75,14 +84,6 @@ const App = () => {
         options={{ label: "Caminos" }}
         icon={pathResource.icon}
         list={pathResource.list}
-      /> */}
-      {/* <Resource
-        name="zones"
-        options={{ label: "Zonas" }}
-        icon={zoneResource.icon}
-        list={zoneResource.list}
-        edit={zoneResource.edit}
-        create={zoneResource.create}
       /> */}
     </Admin>
   )

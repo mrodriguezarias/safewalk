@@ -15,7 +15,6 @@ const zoneRoute = {
     )
     router.post(
       "/",
-      authMiddleware(true),
       validate(zoneValidation.createZone),
       zoneController.createZone,
     )

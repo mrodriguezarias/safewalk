@@ -31,6 +31,14 @@ const MainMenu = ({ navigation }) => {
         onPress={() => navigate("SearchLocation")}
         titleStyle={styles.itemTitle}
       />
+      <Menu.Item
+        title="Reportar Zona Peligrosa"
+        icon={({ size, color }) => (
+          <MaterialIcons name="report" size={size} color={color} />
+        )}
+        onPress={() => navigate("ReportZone")}
+        titleStyle={styles.itemTitle}
+      />
     </Menu>
   )
 }

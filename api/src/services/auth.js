@@ -56,7 +56,7 @@ const authService = {
     }
 
     if (shouldBeAdmin && !user.admin) {
-      throw new HttpError(HttpStatus.FORBIDDEN, "User is not admin")
+      throw new HttpError(HttpStatus.FORBIDDEN, "Usuario no autorizado")
     }
 
     user.loginAttempts = 0
