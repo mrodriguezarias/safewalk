@@ -41,6 +41,9 @@ const dbUtils = {
           if (ret[key] instanceof mongoose.Types.ObjectId) {
             ret[key] = ret[key].toString()
           }
+          if (_.isPlainObject(ret[key]) && ret[key]._id) {
+            delete ret[key]._id
+          }
         }
         if (!hideId) {
           ret.id = ret._id.toString()

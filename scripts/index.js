@@ -35,6 +35,7 @@ for (const script of scripts) {
   args = args.command({
     command: script.name,
     desc: "",
+    builder: script?.options,
     handler: (args) => handler(script, args),
   })
 }
@@ -42,9 +43,10 @@ args
   .demandCommand()
   .option("env", {
     alias: "e",
+    desc: "Specify environment",
     type: "string",
     default: "local",
   })
   .version(false)
-  .help(false)
+  .help()
   .strict().argv

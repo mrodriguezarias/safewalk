@@ -88,7 +88,7 @@ const nodeService = {
     }
     return nearest.toJSON()
   },
-  updateNearestNode: async (longitude, latitude, weight) => {
+  updateNearestNode: async (longitude, latitude, type, weight) => {
     const nearest = await nodeModel.findOneAndUpdate(
       {
         location: {
@@ -101,7 +101,7 @@ const nodeService = {
           },
         },
       },
-      { $inc: { weight } },
+      { $inc: { [`weights.${type}`]: weight } },
       {
         returnOriginal: false,
       },
@@ -111,8 +111,29 @@ const nodeService = {
     }
     return nearest.toJSON()
   },
-  resetWeights: async () => {
-    await nodeModel.updateMany({}, { weight: 0 })
+  updateNodesWithinRadius: async (
+    longitude,
+    latitude,
+    radius,
+    type,
+    weight,
+  ) => {
+    await nodeModel.updateMany(
+      {
+        location: {
+          $geoWithin: {
+            $centerSphere: [[longitude, latitude], radius / 6371009],
+          },
+        },
+      },
+      { $inc: { [`weights.${type}`]: weight } },
+      {
+        returnOriginal: false,
+      },
+    )
+  },
+  resetWeights: async (type) => {
+    await nodeModel.updateMany({}, { $set: { [`weights.${type}`]: 0 } })
   },
 }
 

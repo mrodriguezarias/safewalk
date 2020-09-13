@@ -24,7 +24,9 @@ const NodeList = (props) => (
     <Datagrid rowClick="edit">
       <NumberField source="longitude" label="Longitud" />
       <NumberField source="latitude" label="Latitud" />
-      <NumberField source="weight" label="Peso" />
+      <NumberField source="weights.crime" label="Peso (crimen)" />
+      <NumberField source="weights.places" label="Peso (lugares)" />
+      <NumberField source="weights.zones" label="Peso (zonas)" />
     </Datagrid>
   </List>
 )
@@ -45,7 +47,21 @@ const NodeEdit = (props) => (
         label="Latitud"
         validate={validations.latitude}
       />
-      <NumberInput source="weight" label="Peso" validate={validations.weight} />
+      <NumberInput
+        source="weights.crime"
+        label="Peso (crimen)"
+        validate={validations.weight}
+      />
+      <NumberInput
+        source="weights.places"
+        label="Peso (lugares)"
+        validate={validations.weight}
+      />
+      <NumberInput
+        source="weights.zones"
+        label="Peso (zonas)"
+        validate={validations.weight}
+      />
     </SimpleForm>
   </Edit>
 )
@@ -63,7 +79,21 @@ const NodeCreate = (props) => (
         label="Latitud"
         validate={validations.latitude}
       />
-      <NumberInput source="weight" label="Peso" validate={validations.weight} />
+      <NumberInput
+        source="weights.crime"
+        label="Peso (crimen)"
+        validate={validations.weight}
+      />
+      <NumberInput
+        source="weights.places"
+        label="Peso (lugares)"
+        validate={validations.weight}
+      />
+      <NumberInput
+        source="weights.zones"
+        label="Peso (zonas)"
+        validate={validations.weight}
+      />
     </SimpleForm>
   </Create>
 )

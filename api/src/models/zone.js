@@ -4,11 +4,15 @@ import pointSchema from "./schemas/point"
 
 const ZoneSchema = new Schema(
   {
-    radius: { type: Number, required: true },
     location: {
       type: pointSchema,
       required: true,
       index: "2dsphere",
+    },
+    radius: { type: Number, required: true },
+    created: {
+      type: Date,
+      default: Date.now,
     },
   },
   {

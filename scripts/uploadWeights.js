@@ -3,7 +3,9 @@ import csvParser from "csv-parse"
 import consoleUtils from "../shared/utils/console"
 import nodeService from "../api/src/services/node"
 import placeService from "../api/src/services/place"
+import zoneService from "../api/src/services/zone"
 import dbUtils from "../shared/utils/db"
+import moment from "moment"
 
 const BATCH_SIZE = 1024
 const COLUMNS = [
@@ -26,20 +28,50 @@ const POINTS = new Map([
   ["Robo (con violencia)", -6],
   ["Homicidio", -8],
   ["Safe Place", 100],
+  ["Dangerous Zone", -30],
 ])
 
 const uploadWeights = {
   name: "upload_weights",
+  path: null,
   count: 0,
   batch: 0,
   items: [],
+  options: {
+    processCriminalData: {
+      alias: "c",
+      desc: "Process criminal data",
+      type: "boolean",
+    },
+    criminalData: {
+      alias: "d",
+      desc: "Path for criminal data",
+      type: "string",
+      default: "./data/delitos_2019.csv",
+    },
+    processSafePlaces: {
+      alias: "p",
+      desc: "Process safe places",
+      type: "boolean",
+    },
+    processDangerousZones: {
+      alias: "z",
+      desc: "Process dangerous zones",
+      type: "boolean",
+    },
+    processAll: {
+      alias: "a",
+      desc: "Process all",
+      type: "boolean",
+    },
+  },
   run: async (args) => {
-    const path = uploadWeights.parseArgs(args)
+    const operations = uploadWeights.parseArgs(args)
     await dbUtils.connect(true)
     try {
-      await uploadWeights.resetWeights()
-      await uploadWeights.processCriminalData(path)
-      await uploadWeights.processSafePlaces()
+      for (const operation of operations) {
+        await operation()
+      }
     } catch (error) {
       console.error(error)
     } finally {
@@ -47,11 +79,25 @@ const uploadWeights = {
     }
   },
   parseArgs: (args) => {
-    const path = args._?.[1] ?? "./data/delitos_2019.csv"
+    uploadWeights.parsePath(args.criminalData)
+    const operationNames = [
+      "processCriminalData",
+      "processSafePlaces",
+      "processDangerousZones",
+    ]
+    if (operationNames.every((opt) => !Object.keys(args).includes(opt))) {
+      args.processAll = true
+    }
+    const operations = operationNames
+      .filter((op) => args.processAll || args[op])
+      .map((op) => uploadWeights[op])
+    return operations
+  },
+  parsePath: (path) => {
     if (!fs.existsSync(path)) {
       throw Error(`file '${path}' does not exist`)
     }
-    return path
+    uploadWeights.path = path
   },
   countLines: (path) =>
     new Promise((resolve, reject) => {
@@ -70,13 +116,11 @@ const uploadWeights = {
         })
         .on("error", reject)
     }),
-  resetWeights: async () => {
-    console.info("Resetting all weights…")
-    await nodeService.resetWeights()
-  },
-  processCriminalData: async (path) => {
+  processCriminalData: async () => {
+    console.info("Resetting criminal data weights…")
+    await nodeService.resetWeights("crime")
     console.info("Uploading weights from criminal data…")
-    uploadWeights.count = await uploadWeights.countLines(path)
+    uploadWeights.count = await uploadWeights.countLines(uploadWeights.path)
     let from = 2
     let to = 0
     while (to !== undefined) {
@@ -84,7 +128,11 @@ const uploadWeights = {
       if (to > uploadWeights.count) {
         to = undefined
       }
-      uploadWeights.items = await uploadWeights.parseFile(path, from, to)
+      uploadWeights.items = await uploadWeights.parseFile(
+        uploadWeights.path,
+        from,
+        to,
+      )
       await uploadWeights.processBatch(uploadWeights.processCriminalDataItem)
       from += BATCH_SIZE
     }
@@ -131,9 +179,11 @@ const uploadWeights = {
     if (!weight) {
       return
     }
-    await nodeService.updateNearestNode(long, lat, weight)
+    await nodeService.updateNearestNode(long, lat, "crime", weight)
   },
   processSafePlaces: async () => {
+    console.info("Resetting safe places weights…")
+    await nodeService.resetWeights("places")
     console.info("Uploading weights from safe places…")
     let from = 0
     let to = -1
@@ -155,7 +205,41 @@ const uploadWeights = {
       return
     }
     const weight = POINTS.get("Safe Place")
-    await nodeService.updateNearestNode(longitude, latitude, weight)
+    await nodeService.updateNearestNode(longitude, latitude, "places", weight)
+  },
+  processDangerousZones: async () => {
+    console.info("Resetting dangerous zones weights…")
+    await nodeService.resetWeights("zones")
+    console.info("Uploading weights from dangerous zones…")
+    let from = 0
+    let to = -1
+    do {
+      to += BATCH_SIZE
+      const { contentRangeHeader, zones } = await zoneService.getZones({
+        range: [from, to],
+      })
+      uploadWeights.count = +contentRangeHeader.split("/")[1]
+      uploadWeights.items = zones
+      await uploadWeights.processBatch(uploadWeights.processDangerousZonesItem)
+      from += BATCH_SIZE
+    } while (from < uploadWeights.count)
+  },
+  processDangerousZonesItem: async (item) => {
+    const { created, radius, longitude, latitude } = item
+    const daysElapsed = moment().diff(created, "days")
+    if (daysElapsed > 180) {
+      return
+    }
+    const weight = Math.round(
+      POINTS.get("Dangerous Zone") * (1 - daysElapsed / 180),
+    )
+    await nodeService.updateNodesWithinRadius(
+      longitude,
+      latitude,
+      radius,
+      "zones",
+      weight,
+    )
   },
 }
 

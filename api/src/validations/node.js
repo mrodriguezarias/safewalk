@@ -5,7 +5,11 @@ const nodeSchema = {
   id: Joi.string().custom(validationUtils.objectId),
   longitude: Joi.number(),
   latitude: Joi.number(),
-  weight: Joi.number(),
+  weights: Joi.object({
+    crime: Joi.number(),
+    places: Joi.number(),
+    zones: Joi.number(),
+  }),
 }
 
 const nodeValidation = {
@@ -18,7 +22,7 @@ const nodeValidation = {
     body: Joi.object({
       longitude: nodeSchema.longitude.required(),
       latitude: nodeSchema.latitude.required(),
-      weight: nodeSchema.weight,
+      weights: nodeSchema.weights,
     }),
   },
   updateNode: {
@@ -29,7 +33,7 @@ const nodeValidation = {
       id: nodeSchema.id,
       longitude: nodeSchema.longitude,
       latitude: nodeSchema.latitude,
-      weight: nodeSchema.weight,
+      weights: nodeSchema.weights,
     }),
   },
   deleteNode: {
