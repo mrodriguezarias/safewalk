@@ -135,7 +135,6 @@ const ReportZoneScreen = ({ navigation }) => {
           identifier="center"
           coords={location}
           color={theme.colors.zone}
-          radiusColor={theme.colors.zone}
           radius={radius}
         />
       </MapView>

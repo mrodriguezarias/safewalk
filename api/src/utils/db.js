@@ -6,10 +6,10 @@ import _ from "lodash"
 
 const isGeoJsonObject = (value) => {
   return (
-    _.isObject(value) &&
-    _.has(value, "_id") &&
+    _.isPlainObject(value) &&
+    _.has(value, "coordinates") &&
     _.has(value, "type") &&
-    _.has(value, "coordinates")
+    ["LineString", "Point"].includes(value.type)
   )
 }
 

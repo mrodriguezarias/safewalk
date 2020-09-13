@@ -65,6 +65,7 @@ const MapView = memo(
             coords={mockLocation}
             zIndex={1}
             color={props.tintColor}
+            radius={100}
           />
         )}
         {children}
