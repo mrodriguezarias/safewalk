@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect, useCallback } from "react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Platform } from "react-native"
 import { useTheme, Text, Divider } from "react-native-paper"
 import Slider from "@react-native-community/slider"
 import { MaterialIcons } from "@expo/vector-icons"
@@ -150,15 +150,15 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   slider: {
-    width: 100,
     flexGrow: 1,
+    marginHorizontal: Platform.OS === "android" ? -5 : 0,
   },
   label: {
     fontSize: 14,
     fontWeight: "bold",
-    width: 55,
     textAlign: "right",
     marginRight: 10,
+    minWidth: 50,
   },
   center: {
     flex: 1,
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   radius: {
-    width: 85,
+    minWidth: 80,
     textAlign: "right",
   },
   spinner: {

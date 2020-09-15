@@ -64,7 +64,7 @@ const MapView = memo(
           <LocationMarker
             coords={mockLocation}
             zIndex={1}
-            color={props.tintColor}
+            color={props.tintColor ?? theme.colors.accent}
             radius={100}
           />
         )}
