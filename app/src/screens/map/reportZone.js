@@ -17,10 +17,12 @@ const ReportZoneScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
   const [center, setCenter] = useState("")
   const [radius, setRadius] = useState(50)
+  const [error, setError] = useState(null)
   const theme = useTheme()
   const mapRef = useRef()
   const confirmDialogRef = useRef()
   const successDialogRef = useRef()
+  const errorDialogRef = useRef()
 
   const getConfirmButton = useCallback(
     () => (
@@ -55,16 +57,23 @@ const ReportZoneScreen = ({ navigation }) => {
     const {
       nativeEvent: { coordinate: coords },
     } = event
-    setLocation(coords)
     setLoading(true)
-    const address = await geoService.getAddressOfLocation(coords)
-    if (!address) {
-      setLocation(null)
-    } else {
-      fitMap(coords)
+    try {
+      await geoService.isWithinBoundary(coords)
+      setLocation(coords)
+      const address = await geoService.getAddressOfLocation(coords)
+      if (!address) {
+        setLocation(null)
+      } else {
+        fitMap(coords)
+      }
+      setCenter(address)
+    } catch (error) {
+      setError(error.message)
+      errorDialogRef.current.show()
+    } finally {
+      setLoading(false)
     }
-    setCenter(address)
-    setLoading(false)
   }
 
   const confirmReport = async () => {
@@ -93,10 +102,15 @@ const ReportZoneScreen = ({ navigation }) => {
     />
   )
 
+  const renderErrorDialog = () => (
+    <Dialog ref={errorDialogRef} title="Error" content={error} accept />
+  )
+
   return (
     <>
       {renderConfirmDialog()}
       {renderSuccessDialog()}
+      {renderErrorDialog()}
       <View style={{ backgroundColor: theme.colors.back }}>
         <View style={styles.selector}>
           <Text style={styles.label}>Centro:</Text>
