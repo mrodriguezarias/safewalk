@@ -56,8 +56,8 @@ const LocationMarker = memo(
       if (!radius) {
         return
       }
-      const strokeColor = Color(color).darken(0.3)
-      const fillColor = Color(color).alpha(0.3)
+      const strokeColor = Color(color).darken(0.3).string()
+      const fillColor = Color(color).alpha(0.3).string()
       return (
         <Circle
           center={location}
