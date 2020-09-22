@@ -158,8 +158,10 @@ const SearchLocationScreen = ({ navigation, route }) => {
         return theme.colors.header
       case "target":
         return theme.colors.tabBar
-      default:
+      case "current":
         return theme.colors.primary
+      default:
+        return theme.colors.marker
     }
   }
 
