@@ -10,6 +10,7 @@ import categoryResource from "./resources/category"
 import placeResource from "./resources/place"
 import walkResource from "./resources/walk"
 import zoneResource from "./resources/zone"
+import contactResource from "./resources/contact"
 
 const LoginPage = () => (
   <Login backgroundImage="https://source.unsplash.com/1600x900/?kitten" />
@@ -31,6 +32,14 @@ const App = () => {
         list={userResource.list}
         edit={userResource.edit}
         create={userResource.create}
+      />
+      <Resource
+        name="contacts"
+        options={{ label: "Contactos" }}
+        icon={contactResource.icon}
+        list={contactResource.list}
+        edit={contactResource.edit}
+        create={contactResource.create}
       />
       <Resource
         name="places"
@@ -63,14 +72,6 @@ const App = () => {
         edit={zoneResource.edit}
         create={zoneResource.create}
       />
-      {/* <Resource
-        name="carers"
-        options={{ label: "Cuidadores" }}
-        icon={carerResource.icon}
-        list={carerResource.list}
-        edit={carerResource.edit}
-        create={carerResource.create}
-      /> */}
       {/* <Resource
         name="nodes"
         options={{ label: "Nodos" }}

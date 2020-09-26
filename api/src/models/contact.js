@@ -1,13 +1,17 @@
 import { Schema, model } from "mongoose"
 import dbUtils from "../utils/db"
 
-const carerSchema = new Schema(
+const contactSchema = new Schema(
   {
-    user: {
+    carer: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
     cared: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    creator: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
@@ -18,6 +22,6 @@ const carerSchema = new Schema(
   },
 )
 
-const userModel = model("Carer", carerSchema)
+const contactModel = model("Contact", contactSchema)
 
-export default userModel
+export default contactModel

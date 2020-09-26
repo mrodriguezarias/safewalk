@@ -2,7 +2,7 @@ import path from "path"
 import { Router } from "express"
 import authRoute from "../routes/auth"
 import userRoute from "../routes/user"
-import carerRoute from "../routes/carer"
+import contactRoute from "../routes/contact"
 import nodeRoute from "../routes/node"
 import pathRoute from "../routes/path"
 import geoRoute from "../routes/geo"
@@ -15,7 +15,7 @@ const routeConfig = {
   routes: [
     authRoute,
     userRoute,
-    carerRoute,
+    contactRoute,
     nodeRoute,
     pathRoute,
     geoRoute,

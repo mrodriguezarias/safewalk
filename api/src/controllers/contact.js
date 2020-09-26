@@ -1,53 +1,55 @@
 import HttpStatus from "http-status-codes"
-import carerService from "../services/carer"
+import contactService from "../services/contact"
 
-const carerController = {
-  getCarers: async (req, res, next) => {
+const contactController = {
+  getContacts: async (req, res, next) => {
     try {
       const { filter, range, sort } = req.query
-      const { carers, contentRangeHeader } = await carerService.getCarers(
-        filter,
-        range,
-        sort,
+      const { contacts, contentRangeHeader } = await contactService.getContacts(
+        {
+          filter,
+          range,
+          sort,
+        },
       )
       res.header("Content-Range", contentRangeHeader)
-      res.status(HttpStatus.OK).json(carers)
+      res.status(HttpStatus.OK).json(contacts)
     } catch (error) {
       next(error)
     }
   },
-  getCarerById: async (req, res, next) => {
+  getContactById: async (req, res, next) => {
     const id = req.params.id
     try {
-      const user = await carerService.getCarerById(id)
+      const user = await contactService.getContactById(id)
       res.status(HttpStatus.OK).json(user)
     } catch (error) {
       next(error)
     }
   },
-  createCarer: async (req, res, next) => {
+  createContact: async (req, res, next) => {
     const data = req.body
     try {
-      const response = await carerService.createCarer(data)
+      const response = await contactService.createContact(data)
       res.status(HttpStatus.CREATED).json(response)
     } catch (error) {
       next(error)
     }
   },
-  updateCarer: async (req, res, next) => {
+  updateContact: async (req, res, next) => {
     const id = req.params.id
     const data = req.body
     try {
-      const response = await carerService.updateCarer(id, data)
+      const response = await contactService.updateContact(id, data)
       res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
     }
   },
-  deleteCarer: async (req, res, next) => {
+  deleteContact: async (req, res, next) => {
     const id = req.params.id
     try {
-      const response = await carerService.deleteCarer(id)
+      const response = await contactService.deleteContact(id)
       res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)
@@ -55,4 +57,4 @@ const carerController = {
   },
 }
 
-export default carerController
+export default contactController
