@@ -5,6 +5,7 @@ import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const placeService = {
+  model: "place",
   getPlaces: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = placeModel.find(filter)

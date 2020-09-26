@@ -5,6 +5,7 @@ import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const nodeService = {
+  model: "node",
   getNodes: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = nodeModel.find(filter)

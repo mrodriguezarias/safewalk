@@ -4,6 +4,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 
 import MapScreen from "./map"
 import UserScreen from "./user"
+import SettingsScreen from "./settings"
 import keyboardUtils from "../utils/keyboard"
 
 const Tab = createMaterialBottomTabNavigator()
@@ -24,7 +25,7 @@ const MainScreen = () => {
         component={MapScreen}
         options={{
           title: "Mapa",
-          tabBarIcon: "map-outline",
+          tabBarIcon: "map",
         }}
       />
       <Tab.Screen
@@ -32,7 +33,15 @@ const MainScreen = () => {
         component={UserScreen}
         options={{
           title: "Usuario",
-          tabBarIcon: "shield-account-outline",
+          tabBarIcon: "shield-account",
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          title: "Opciones",
+          tabBarIcon: "settings",
         }}
       />
     </Tab.Navigator>

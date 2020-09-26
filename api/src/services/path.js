@@ -5,7 +5,8 @@ import dbUtils from "../utils/db"
 import _ from "lodash"
 
 const pathService = {
-  getPaths: async (filter = {}, range, sort) => {
+  model: "path",
+  getPaths: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = pathModel.find(filter)
     const count = await pathModel.estimatedDocumentCount()

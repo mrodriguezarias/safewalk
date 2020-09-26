@@ -24,7 +24,7 @@ const AuthScreen = ({ navigation }) => {
     try {
       const user = await authController[action](name, password)
       dispatch(authActions[action](user))
-      navigation.navigate("Main", { action })
+      navigation.navigate("MainUser", { action })
     } catch (error) {
       setSnackbarText(error.message)
     }

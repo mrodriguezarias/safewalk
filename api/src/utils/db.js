@@ -148,6 +148,36 @@ const dbUtils = {
       [key]: new RegExp(`^${query}`, "i"),
     }
   },
+  processInBatch: async (service, itemProcessor, batchSize = 1024) => {
+    let batch = 0
+    let from = 0
+    let to = -1
+    let count = 0
+    let items = []
+
+    const processBatch = async () => {
+      for (const [index, item] of items.entries()) {
+        const current = batch * batchSize + index
+        await itemProcessor(item, current)
+      }
+      batch += 1
+    }
+
+    const modelName = `${service.model}s`
+
+    do {
+      to += batchSize
+      const { contentRangeHeader, [modelName]: itemsRef } = await service[
+        `get${_.capitalize(modelName)}`
+      ]({
+        range: [from, to],
+      })
+      count = +contentRangeHeader.split("/")[1]
+      items = itemsRef
+      await processBatch()
+      from += batchSize
+    } while (from < count)
+  },
 }
 
 export default dbUtils

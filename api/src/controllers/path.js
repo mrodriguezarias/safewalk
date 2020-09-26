@@ -5,11 +5,11 @@ const pathController = {
   getPaths: async (req, res, next) => {
     try {
       const { filter, range, sort } = req.query
-      const { paths, contentRangeHeader } = await pathService.getPaths(
+      const { paths, contentRangeHeader } = await pathService.getPaths({
         filter,
         range,
         sort,
-      )
+      })
       res.header("Content-Range", contentRangeHeader)
       res.status(HttpStatus.OK).json(paths)
     } catch (error) {

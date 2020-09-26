@@ -28,7 +28,7 @@ const POINTS = new Map([
   ["Robo (con violencia)", -6],
   ["Homicidio", -8],
   ["Safe Place", 100],
-  ["Dangerous Zone", -30],
+  ["Dangerous Zone", -50],
 ])
 
 const uploadWeights = {

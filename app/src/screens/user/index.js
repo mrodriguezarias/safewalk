@@ -4,17 +4,12 @@ import { Title, useTheme } from "react-native-paper"
 import { createStackNavigator } from "@react-navigation/stack"
 import { useSelector } from "react-redux"
 import Header from "../../components/header"
-import SettingsScreen from "./settings"
-import AdminScreen from "./admin"
 import MainScreen from "./main"
 import AuthScreen from "./auth"
 import AppbarAction from "../../components/appbarAction"
-import PremiumScreen from "./premium"
-import PaymentScreen from "./payment"
-import EditUserScreen from "./editUser"
 import NewContactScreen from "./newContact"
-import SearchLocationScreen from "../map/searchLocation"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import RequestsScreen from "./requests"
 
 const Stack = createStackNavigator()
 
@@ -23,7 +18,7 @@ const UserScreen = () => {
   const theme = useTheme()
   return (
     <Stack.Navigator
-      initialRouteName="Main"
+      initialRouteName="MainUser"
       headerMode="screen"
       screenOptions={{
         header: ({ scene, previous, navigation }) => (
@@ -32,7 +27,7 @@ const UserScreen = () => {
       }}
     >
       <Stack.Screen
-        name="Main"
+        name="MainUser"
         component={MainScreen}
         options={{
           headerLeft: ({ navigation }) =>
@@ -57,23 +52,7 @@ const UserScreen = () => {
               )}
             </>
           ),
-          headerRight: ({ navigation }) => (
-            <AppbarAction
-              icon="tune"
-              onPress={() => navigation.navigate("Settings")}
-            />
-          ),
         }}
-      />
-      <Stack.Screen
-        name="EditUser"
-        component={EditUserScreen}
-        options={{ headerTitle: "Editar Usuario" }}
-      />
-      <Stack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{ headerTitle: "Opciones" }}
       />
       <Stack.Screen
         name="Auth"
@@ -81,26 +60,15 @@ const UserScreen = () => {
         options={{ headerTitle: "Iniciar Sesión o Registrarse" }}
       />
       <Stack.Screen
-        name="Admin"
-        component={AdminScreen}
-        options={{ headerTitle: "Panel de Control" }}
-      />
-      <Stack.Screen
-        name="Premium"
-        component={PremiumScreen}
-        options={{ headerTitle: "Adquirir Premium" }}
-      />
-      <Stack.Screen
-        name="Payment"
-        component={PaymentScreen}
-        options={{ headerTitle: "Información de Pago" }}
-      />
-      <Stack.Screen
         name="NewContact"
         component={NewContactScreen}
         options={{ headerTitle: "Nuevo Contacto" }}
       />
-      <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
+      <Stack.Screen
+        name="Requests"
+        component={RequestsScreen}
+        options={{ headerTitle: "Solicitudes" }}
+      />
     </Stack.Navigator>
   )
 }

@@ -4,6 +4,7 @@ import pathService from "../../api/src/services/path"
 import createGraph from "ngraph.graph"
 import generalUtils from "./general"
 import _ from "lodash"
+import dbUtils from "../../api/src/utils/db"
 
 const CACHE_PATH = "./data/cache.json"
 
@@ -18,16 +19,17 @@ const loadCache = async () => {
 }
 
 const loadGraph = async () => {
-  const { nodes } = await nodeService.getNodes()
-  const { paths } = await pathService.getPaths()
   const graph = createGraph()
-  for (const { id, longitude, latitude, weights } of nodes) {
-    const weight = _.sum(Object.values(weights))
-    graph.addNode(id, { longitude, latitude, weight })
-  }
-  for (const { from, to } of paths) {
+  await dbUtils.processInBatch(
+    nodeService,
+    ({ id, longitude, latitude, weights }) => {
+      const weight = _.sum(Object.values(weights))
+      graph.addNode(id, { longitude, latitude, weight })
+    },
+  )
+  await dbUtils.processInBatch(pathService, ({ from, to }) => {
     graph.addLink(from, to)
-  }
+  })
   return graph
 }
 
