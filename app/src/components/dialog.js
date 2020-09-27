@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react"
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from "react"
 import { StyleSheet } from "react-native"
 import {
   Dialog as RNDialog,
@@ -6,6 +11,7 @@ import {
   Button,
   Paragraph,
 } from "react-native-paper"
+import _ from "lodash"
 
 const Dialog = forwardRef(
   (
@@ -18,19 +24,27 @@ const Dialog = forwardRef(
       content,
       actions,
       contentStyle,
+      visible: parentVisible,
+      dismissable = true,
       ...props
     },
     ref,
   ) => {
     const [visible, setVisible] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [params, setParams] = useState()
+
+    useEffect(() => {
+      setVisible(parentVisible)
+    }, [parentVisible])
 
     useImperativeHandle(ref, () => ({
       show: handleShow,
       hide: handleHide,
     }))
 
-    const handleShow = () => {
+    const handleShow = (params) => {
+      setParams(params)
       setVisible(true)
     }
 
@@ -44,15 +58,24 @@ const Dialog = forwardRef(
     const handleAccept = async (action) => {
       if (action) {
         setLoading(true)
-        await action()
+        await action(params)
         setLoading(false)
       }
       handleHide()
     }
 
-    content = content ?? children
-    content =
-      typeof content === "string" ? <Paragraph>{content}</Paragraph> : content
+    const getContent = () => {
+      let cont = content ?? children
+      if (_.isFunction(cont)) {
+        cont = cont(params)
+      }
+      if (_.isString(cont)) {
+        cont = <Paragraph>{cont}</Paragraph>
+      }
+      return cont
+    }
+
+    content = getContent()
 
     const renderCancel = () => {
       if (!cancel) {
@@ -82,10 +105,17 @@ const Dialog = forwardRef(
 
     return (
       <Portal>
-        <RNDialog visible={visible} onDismiss={handleHide} {...props}>
+        <RNDialog
+          visible={visible}
+          onDismiss={handleHide}
+          dismissable={!loading && dismissable}
+          {...props}
+        >
           {title && <RNDialog.Title>{title}</RNDialog.Title>}
           {content && (
-            <RNDialog.Content style={contentStyle}>{content}</RNDialog.Content>
+            <RNDialog.Content style={{ ...styles.content, ...contentStyle }}>
+              {content}
+            </RNDialog.Content>
           )}
           <RNDialog.Actions style={styles.actions}>
             {renderAccept()}
@@ -102,6 +132,9 @@ const styles = StyleSheet.create({
   actions: {
     justifyContent: "space-between",
     flexDirection: "row-reverse",
+  },
+  content: {
+    marginBottom: -15,
   },
 })
 

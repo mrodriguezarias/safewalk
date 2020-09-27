@@ -91,6 +91,15 @@ const userService = {
     }
     return user
   },
+  searchUsers: async (query) => {
+    if (_.isEmpty(query)) {
+      return []
+    }
+    query = new RegExp(`^${query}`, "i")
+    let users = await userModel.find({ name: query })
+    users = _.map(users, (user) => _.pick(user.toJSON(), ["id", "name"]))
+    return users
+  },
 }
 
 export default userService

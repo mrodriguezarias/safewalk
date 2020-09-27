@@ -5,8 +5,7 @@ import React, {
   useLayoutEffect,
   useCallback,
 } from "react"
-import { StyleSheet } from "react-native"
-import { Searchbar, useTheme } from "react-native-paper"
+import { useTheme } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
 import { MaterialIcons } from "@expo/vector-icons"
 
@@ -22,6 +21,7 @@ import requestUtils from "../../../../shared/utils/request"
 import LocationDialog from "../../components/map/locationDialog"
 import LocationMarker from "../../components/map/locationMarker"
 import LocationList from "../../components/map/locationList"
+import SearchBar from "../../components/searchBar"
 
 const keyLabels = new Map([
   ["source", "Origen"],
@@ -213,14 +213,11 @@ const SearchLocationScreen = ({ navigation, route }) => {
   return (
     <DismissKeyboard>
       <LocationDialog ref={locationDialog} navigation={navigation} />
-      <Searchbar
+      <SearchBar
         placeholder="Dirección, intersección o lugar"
         onChangeText={handleChangeText}
         onEndEditing={() => doSearch(query)}
         value={query}
-        autoCapitalize="none"
-        autoCorrect={false}
-        style={styles.search}
         icon={({ size }) => (
           <MaterialIcons
             name="my-location"
@@ -247,13 +244,5 @@ const SearchLocationScreen = ({ navigation, route }) => {
     </DismissKeyboard>
   )
 }
-
-const styles = StyleSheet.create({
-  search: {
-    borderRadius: 0,
-    height: 60,
-    paddingLeft: 5,
-  },
-})
 
 export default SearchLocationScreen

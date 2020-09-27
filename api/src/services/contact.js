@@ -35,7 +35,7 @@ const contactService = {
       cared: data.cared,
     })
     if (contact) {
-      throw new HttpError(HttpStatus.CONFLICT, "Contact already exists")
+      throw new HttpError(HttpStatus.CONFLICT, "El contacto ya existe")
     }
     const newContact = await contactModel.create(data)
     return newContact

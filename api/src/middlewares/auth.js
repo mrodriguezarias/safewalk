@@ -1,9 +1,8 @@
-import jwt from "jsonwebtoken"
 import HttpStatus from "http-status-codes"
 import HttpError from "../../../shared/errors/http"
 import userModel from "../models/user"
-import envUtils, { env } from "../../../shared/utils/env"
 import _ from "lodash"
+import reqUtils from "../utils/req"
 
 const getUserIdFromPath = async (req, path) => {
   const [type, ...rel] = path.split(".")
@@ -19,14 +18,8 @@ const getUserIdFromPath = async (req, path) => {
 
 const authMiddleware = (admin = false, userIdPath = "req.params.id") => {
   return async (req, res, next) => {
-    const token = req.headers.authorization
-    const secret = envUtils.get(env.JwtSecret)
     try {
-      if (!token) {
-        throw new Error()
-      }
-      const verificationResponse = jwt.verify(token, secret)
-      const userId = verificationResponse._id
+      const userId = reqUtils.getLoggedUserId(req)
       const user = await userModel.findById(userId)
       if (!user) {
         throw new Error()

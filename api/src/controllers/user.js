@@ -1,5 +1,6 @@
 import HttpStatus from "http-status-codes"
 import userService from "../services/user"
+import reqUtils from "../utils/req"
 
 const userController = {
   getUsers: async (req, res, next) => {
@@ -49,6 +50,17 @@ const userController = {
     try {
       const response = await userService.deleteUser(userId)
       res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  searchUsers: async (req, res, next) => {
+    const { query } = req.query
+    const userId = reqUtils.getLoggedUserId(req)
+    try {
+      let users = await userService.searchUsers(query)
+      users = users.filter(({ id }) => id !== userId)
+      res.status(HttpStatus.OK).json(users)
     } catch (error) {
       next(error)
     }

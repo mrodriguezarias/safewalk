@@ -15,7 +15,7 @@ const contactRoute = {
     )
     router.post(
       "/",
-      authMiddleware(true),
+      authMiddleware(true, "req.body.creator"),
       validate(contactValidation.createContact),
       contactController.createContact,
     )

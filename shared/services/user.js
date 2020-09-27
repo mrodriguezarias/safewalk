@@ -11,6 +11,10 @@ const userService = {
     const url = urlUtils.join(userService.path, id)
     return requestUtils.delete(url)
   },
+  search: async (query) => {
+    const url = urlUtils.join(userService.path, "search")
+    return requestUtils.get(url, { query })
+  },
 }
 
 export default userService

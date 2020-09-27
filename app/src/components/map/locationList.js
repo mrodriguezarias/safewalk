@@ -1,10 +1,8 @@
 import React from "react"
-import { ScrollView, StyleSheet } from "react-native"
-import { Chip, useTheme, Paragraph } from "react-native-paper"
-import _ from "lodash"
+import { Chip, useTheme } from "react-native-paper"
 
 import ListItem from "../listItem"
-import Spinner from "../spinner"
+import SearchResults from "../searchResults"
 
 const LocationItem = ({ location, ...itemProps }) => {
   const { name, category, safe } = location
@@ -33,39 +31,22 @@ const LocationList = ({
   onItemPress,
   onItemLongPress,
 }) => {
+  const renderItem = (location) => (
+    <LocationItem
+      location={location}
+      onPress={() => onItemPress && onItemPress(location)}
+      onLongPress={() => onItemLongPress && onItemLongPress(location)}
+    />
+  )
+
   return (
-    <ScrollView keyboardShouldPersistTaps="handled">
-      {locations.map((location, index) => (
-        <LocationItem
-          key={index}
-          location={location}
-          onPress={() => onItemPress && onItemPress(location)}
-          onLongPress={() => onItemLongPress && onItemLongPress(location)}
-        />
-      ))}
-      <Spinner visible={loading} style={styles.spinner} />
-      {noResults && (
-        <Paragraph style={styles.noResults}>
-          {_.isString(noResults) ? noResults : "Sin Resultados"}
-        </Paragraph>
-      )}
-    </ScrollView>
+    <SearchResults
+      results={locations}
+      renderItem={renderItem}
+      loading={loading}
+      noResults={noResults}
+    />
   )
 }
-
-const styles = StyleSheet.create({
-  spinner: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  noResults: {
-    marginVertical: 20,
-    paddingHorizontal: 30,
-    color: "grey",
-    textAlign: "center",
-  },
-})
 
 export default LocationList

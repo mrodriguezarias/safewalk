@@ -6,6 +6,7 @@ import userValidation from "../validations/user"
 const userRoute = {
   path: "/users",
   configureRouter: (router) => {
+    router.get("/search", authMiddleware(), userController.searchUsers)
     router.get("/", authMiddleware(true), userController.getUsers)
     router.get(
       "/:id",

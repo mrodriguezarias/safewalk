@@ -10,6 +10,8 @@ import AppbarAction from "../../components/appbarAction"
 import NewContactScreen from "./newContact"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import RequestsScreen from "./requests"
+import PremiumScreen from "../settings/premium"
+import PaymentScreen from "../settings/payment"
 
 const Stack = createStackNavigator()
 
@@ -68,6 +70,16 @@ const UserScreen = () => {
         name="Requests"
         component={RequestsScreen}
         options={{ headerTitle: "Solicitudes" }}
+      />
+      <Stack.Screen
+        name="Premium"
+        component={PremiumScreen}
+        options={{ headerTitle: "Adquirir Premium" }}
+      />
+      <Stack.Screen
+        name="Payment"
+        component={PaymentScreen}
+        options={{ headerTitle: "Información de Pago" }}
       />
     </Stack.Navigator>
   )
