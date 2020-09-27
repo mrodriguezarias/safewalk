@@ -17,17 +17,19 @@ const CarerPremiumDialog = forwardRef(({ navigation }, ref) => {
     dialogRef.current.hide()
   }
 
-  const getPremium = () => {
-    navigation.navigate("Premium")
-  }
+  // TODO: Uncomment on sprint 5
+  // const getPremium = () => {
+  //   navigation.navigate("Premium")
+  // }
 
   return (
     <Dialog
       ref={dialogRef}
       title="Beneficio Premium"
       content="Los contactos cuidadores son un beneficio exclusivo para usuarios premium."
-      accept={{ text: "Obtener premium", action: getPremium }}
-      cancel
+      accept
+      // accept={{ text: "Obtener premium", action: getPremium }}
+      // cancel
     />
   )
 })

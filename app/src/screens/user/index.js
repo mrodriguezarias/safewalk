@@ -35,7 +35,7 @@ const UserScreen = () => {
           headerLeft: ({ navigation }) =>
             user && (
               <AppbarAction
-                icon="plus"
+                icon="account-plus"
                 onPress={() => navigation.navigate("NewContact")}
               />
             ),

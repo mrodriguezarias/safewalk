@@ -88,12 +88,12 @@ const MainScreen = ({ navigation }) => {
         label="Editar Datos"
         onPress={() => navigation.navigate("EditUser")}
       />
-      {!user?.premium && (
+      {/* {!user?.premium && (
         <ListItem
           label="Adquirir Premium"
           onPress={() => navigation.navigate("Premium")}
         />
-      )}
+      )} */}
       <ListItem
         label="Eliminar Cuenta"
         onPress={() => setDialogVisible(true)}
