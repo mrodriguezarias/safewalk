@@ -9,6 +9,7 @@ import authActions from "../../store/actions/auth"
 import walkActions from "../../store/actions/walk"
 import authController from "../../../../shared/controllers/auth"
 import walkController from "../../../../shared/controllers/walk"
+import requestUtils from "../../../../shared/utils/request"
 
 const MainScreen = ({ navigation }) => {
   const theme = useSelector((state) => state.app.theme)
@@ -21,6 +22,7 @@ const MainScreen = ({ navigation }) => {
   const [dialogVisible, setDialogVisible] = useState(false)
 
   const handleLogOut = async (deleteAccount = false) => {
+    requestUtils.abort()
     if (walk) {
       await walkController.end(walk.id)
       dispatch(walkActions.setWalk(null))

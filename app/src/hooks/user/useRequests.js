@@ -19,10 +19,8 @@ const useRequests = (active = true) => {
   }, [userId, active])
 
   const fetchRequests = async () => {
-    try {
-      const requests = await contactController.getPendingRequests(userId)
-      setRequests(requests)
-    } catch {}
+    const requests = await contactController.getPendingRequests(userId)
+    setRequests(requests)
   }
 
   return requests

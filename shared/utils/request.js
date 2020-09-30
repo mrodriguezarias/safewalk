@@ -57,18 +57,22 @@ const doRequest = async ({ method, uri, params, data }) => {
   return json
 }
 
+const doRequestWrapper = async (...args) => {
+  return await doRequest(...args)
+}
+
 const requestUtils = {
   get: async (uri, params) => {
-    return doRequest({ method: "get", uri, params })
+    return doRequestWrapper({ method: "get", uri, params })
   },
   post: async (uri, data) => {
-    return doRequest({ method: "post", uri, data })
+    return doRequestWrapper({ method: "post", uri, data })
   },
   put: async (uri, data, params) => {
-    return doRequest({ method: "put", uri, params, data })
+    return doRequestWrapper({ method: "put", uri, params, data })
   },
   delete: async (uri, params) => {
-    return doRequest({ method: "delete", uri, params })
+    return doRequestWrapper({ method: "delete", uri, params })
   },
   abort: () => {
     abortControllers.forEach((abortController) => abortController.abort())
