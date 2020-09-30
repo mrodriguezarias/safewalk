@@ -2,22 +2,24 @@ import contactService from "../services/contact"
 
 const contactController = {
   sendRequest: async ({ from, to, relation }) => {
-    const [carer, cared] = (() => {
-      switch (relation) {
-        case "carer":
-          return [to.id, from.id]
-        case "cared":
-          return [from.id, to.id]
-        default:
-          throw new Error("Unknown relation")
-      }
-    })()
     const contactData = {
-      carer,
-      cared,
-      creator: from.id,
+      source: from.id,
+      target: to.id,
+      relation,
     }
     await contactService.create(contactData)
+  },
+  getPendingRequests: async (userId) => {
+    return await contactService.getPendingRequests(userId)
+  },
+  respond: async (id, confirmed) => {
+    return await contactService.respond(id, confirmed)
+  },
+  getContactsForUser: async (userId, relation) => {
+    return await contactService.getContactsForUser(userId, relation)
+  },
+  removeContact: async (source, target, relation) => {
+    return await contactService.removeContact(source, target, relation)
   },
 }
 

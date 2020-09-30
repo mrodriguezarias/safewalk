@@ -32,7 +32,7 @@ const Dialog = forwardRef(
   ) => {
     const [visible, setVisible] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [params, setParams] = useState()
+    const [params, setParams] = useState({})
 
     useEffect(() => {
       setVisible(parentVisible)
@@ -64,6 +64,13 @@ const Dialog = forwardRef(
       handleHide()
     }
 
+    const getTitle = () => {
+      if (_.isFunction(title)) {
+        return title(params)
+      }
+      return title
+    }
+
     const getContent = () => {
       let cont = content ?? children
       if (_.isFunction(cont)) {
@@ -75,11 +82,15 @@ const Dialog = forwardRef(
       return cont
     }
 
+    title = getTitle()
     content = getContent()
 
     const renderCancel = () => {
       if (!cancel) {
         return null
+      }
+      if (_.isFunction(cancel)) {
+        cancel = cancel(params)
       }
       const action = cancel?.action ?? handleHide
       const text = cancel?.text ?? "Cancelar"
@@ -89,6 +100,9 @@ const Dialog = forwardRef(
     const renderAccept = () => {
       if (!accept) {
         return null
+      }
+      if (_.isFunction(accept)) {
+        accept = accept(params)
       }
       const action = accept?.action
       const text = accept?.text ?? "Aceptar"

@@ -48,7 +48,7 @@ const NewContactScreen = ({ navigation }) => {
         results={results}
         loading={loading}
         renderItem={renderItem}
-        noResults={!!searchQuery && results.length === 0}
+        noResults={!!searchQuery}
       />
     </DismissKeyboard>
   )

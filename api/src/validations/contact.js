@@ -3,10 +3,11 @@ import validationUtils from "../utils/validation"
 
 const contactSchema = {
   id: Joi.string().custom(validationUtils.objectId),
-  carer: Joi.string().custom(validationUtils.objectId),
-  cared: Joi.string().custom(validationUtils.objectId),
-  creator: Joi.string().custom(validationUtils.objectId),
+  source: Joi.string().custom(validationUtils.objectId),
+  target: Joi.string().custom(validationUtils.objectId),
+  relation: Joi.string().valid("carer", "cared"),
   confirmed: Joi.boolean().default(false),
+  created: Joi.date(),
 }
 
 const contactValidation = {
@@ -17,10 +18,11 @@ const contactValidation = {
   },
   createContact: {
     body: Joi.object({
-      carer: contactSchema.carer.required(),
-      cared: contactSchema.cared.required(),
-      creator: contactSchema.creator.required(),
+      source: contactSchema.source.required(),
+      target: contactSchema.target.required(),
+      relation: contactSchema.relation.required(),
       confirmed: contactSchema.confirmed,
+      created: contactSchema.created,
     }),
   },
   updateContact: {
@@ -29,15 +31,24 @@ const contactValidation = {
     }),
     body: Joi.object({
       id: contactSchema.id,
-      carer: contactSchema.carer,
-      cared: contactSchema.cared,
-      creator: contactSchema.creator,
+      source: contactSchema.source,
+      target: contactSchema.target,
+      relation: contactSchema.relation,
       confirmed: contactSchema.confirmed,
+      created: contactSchema.created,
     }),
   },
   deleteContact: {
     params: Joi.object({
       id: contactSchema.id.required(),
+    }),
+  },
+  respond: {
+    params: Joi.object({
+      id: contactSchema.id.required(),
+    }),
+    body: Joi.object({
+      confirmed: contactSchema.confirmed.required(),
     }),
   },
 }

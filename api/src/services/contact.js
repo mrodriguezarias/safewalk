@@ -4,6 +4,14 @@ import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
 
+const switchRelation = (relation) => {
+  const relations = {
+    carer: "cared",
+    cared: "carer",
+  }
+  return relations[relation]
+}
+
 const contactService = {
   model: "contact",
   getContacts: async ({ filter = {}, range, sort } = {}) => {
@@ -31,8 +39,8 @@ const contactService = {
       throw new HttpError(HttpStatus.BAD_REQUEST, "Contact not provided")
     }
     const contact = await contactModel.findOne({
-      carer: data.carer,
-      cared: data.cared,
+      source: data.source,
+      target: data.target,
     })
     if (contact) {
       throw new HttpError(HttpStatus.CONFLICT, "El contacto ya existe")
@@ -60,6 +68,74 @@ const contactService = {
     if (!contact) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Contact not found")
     }
+    return contact
+  },
+  getPendingRequests: async (userId) => {
+    let pending = await contactModel
+      .find({
+        confirmed: false,
+        target: userId,
+      })
+      .populate("source")
+      .sort({ created: -1 })
+    pending = _.map(pending, (req) => {
+      req = req.toJSON()
+      const { id, relation, source } = req
+      return {
+        id,
+        relation: switchRelation(relation),
+        user: source,
+      }
+    })
+    return pending
+  },
+  respond: async (id, confirmed) => {
+    if (confirmed) {
+      return contactService.updateContact(id, { confirmed })
+    }
+    return contactService.deleteContact(id)
+  },
+  getContactsForUser: async (userId, relation) => {
+    let contacts = await contactModel
+      .find({
+        confirmed: true,
+        $or: [
+          {
+            relation,
+            source: userId,
+          },
+          {
+            relation: switchRelation(relation),
+            target: userId,
+          },
+        ],
+      })
+      .populate("source")
+      .populate("target")
+      .sort({ created: -1 })
+    contacts = _.map(contacts, (req) => {
+      req = req.toJSON()
+      const rel = req.relation === relation ? "target" : "source"
+      return req[rel]
+    })
+    return contacts
+  },
+  removeContact: async (source, target, relation) => {
+    const contact = await contactModel.findOneAndDelete({
+      confirmed: true,
+      $or: [
+        {
+          relation,
+          target,
+          source,
+        },
+        {
+          relation: switchRelation(relation),
+          target: source,
+          source: target,
+        },
+      ],
+    })
     return contact
   },
 }

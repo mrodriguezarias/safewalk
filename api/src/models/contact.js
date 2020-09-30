@@ -3,19 +3,23 @@ import dbUtils from "../utils/db"
 
 const contactSchema = new Schema(
   {
-    carer: {
+    source: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    cared: {
+    target: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    creator: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    relation: {
+      type: String,
+      enum: ["carer", "cared"],
     },
     confirmed: { type: Boolean, default: false },
+    created: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     toJSON: dbUtils.toJSON(),

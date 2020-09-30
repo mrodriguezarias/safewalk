@@ -55,6 +55,47 @@ const contactController = {
       next(error)
     }
   },
+  getPendingRequests: async (req, res, next) => {
+    const { userId } = req.query
+    try {
+      const response = await contactService.getPendingRequests(userId)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  respond: async (req, res, next) => {
+    const id = req.params.id
+    const { confirmed } = req.body
+    try {
+      const response = await contactService.respond(id, confirmed)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  getContactsForUser: async (req, res, next) => {
+    const { userId, relation } = req.query
+    try {
+      const response = await contactService.getContactsForUser(userId, relation)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  removeContact: async (req, res, next) => {
+    const { source, target, relation } = req.query
+    try {
+      const response = await contactService.removeContact(
+        source,
+        target,
+        relation,
+      )
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
 }
 
 export default contactController

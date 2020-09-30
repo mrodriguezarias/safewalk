@@ -4,8 +4,10 @@ import { Button } from "react-native-paper"
 import { useSelector } from "react-redux"
 import Snackbar from "../../components/snackbar"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import { useIsFocused } from "@react-navigation/native"
 import ContactsScreen from "./contacts"
 import AppbarAction from "../../components/appbarAction"
+import useRequests from "../../hooks/user/useRequests"
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -33,12 +35,12 @@ const LoggedInScreen = () => {
       <Tab.Screen
         name="Cuidados"
         component={ContactsScreen}
-        initialParams={{ filter: "cared" }}
+        initialParams={{ relation: "cared" }}
       />
       <Tab.Screen
         name="Cuidadores"
         component={ContactsScreen}
-        initialParams={{ filter: "carers" }}
+        initialParams={{ relation: "carer" }}
       />
     </Tab.Navigator>
   )
@@ -46,9 +48,12 @@ const LoggedInScreen = () => {
 
 const MainScreen = (props) => {
   const { navigation, route } = props
+  const isFocused = useIsFocused()
   const { action } = route.params ?? {}
   const logged = useSelector((state) => state.auth.logged)
   const [snackbarText, setSnackbarText] = useState("")
+  const requests = useRequests(isFocused)
+  const pendingReqs = requests.length > 0
 
   useEffect(() => {
     if (action in snackbarTexts) {
@@ -59,16 +64,16 @@ const MainScreen = (props) => {
   const getBellButton = useCallback(
     () => (
       <AppbarAction
-        icon="bell-outline"
+        icon={pendingReqs ? "bell" : "bell-outline"}
         onPress={() => navigation.navigate("Requests")}
       />
     ),
-    [navigation],
+    [navigation, pendingReqs],
   )
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => logged && getBellButton(),
+      headerRight: logged && getBellButton,
     })
   }, [navigation, logged, getBellButton])
 
