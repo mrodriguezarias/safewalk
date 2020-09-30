@@ -59,7 +59,6 @@ const Dialog = forwardRef(
       if (action) {
         setLoading(true)
         await action(params)
-        setLoading(false)
       }
       handleHide()
     }

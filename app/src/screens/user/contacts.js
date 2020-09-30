@@ -16,7 +16,6 @@ const ContactScreen = ({ route }) => {
   const { relation } = route.params ?? {}
   const removeContactDialog = useRef()
   const isFocused = useIsFocused()
-  const [triggerFetch, setTriggerFetch] = useState(false)
 
   const fetchContacts = useCallback(async () => {
     if (!userId) {
@@ -35,7 +34,7 @@ const ContactScreen = ({ route }) => {
     if (isFocused) {
       fetchContacts()
     }
-  }, [fetchContacts, isFocused, triggerFetch])
+  }, [fetchContacts, isFocused])
 
   const placeCall = (phone) => {
     Linking.openURL(`tel:${phone}`)
@@ -50,7 +49,7 @@ const ContactScreen = ({ route }) => {
 
   const confirmRemoval = async ({ id: target }) => {
     await contactController.removeContact(userId, target, relation)
-    setTriggerFetch((trigger) => !trigger)
+    fetchContacts()
   }
 
   const RemoveContactDialog = () => (
