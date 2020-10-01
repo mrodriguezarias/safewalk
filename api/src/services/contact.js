@@ -43,7 +43,10 @@ const contactService = {
       target: data.target,
     })
     if (contact) {
-      throw new HttpError(HttpStatus.CONFLICT, "El contacto ya existe")
+      const error = contact.confirmed
+        ? "El contacto ya existe"
+        : "Ya se le envió una solicitud a este contacto"
+      throw new HttpError(HttpStatus.CONFLICT, error)
     }
     const newContact = await contactModel.create(data)
     return newContact

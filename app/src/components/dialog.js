@@ -48,10 +48,10 @@ const Dialog = forwardRef(
       setVisible(true)
     }
 
-    const handleHide = () => {
+    const handleHide = (accepted) => {
       setVisible(false)
       if (onDismiss) {
-        onDismiss()
+        onDismiss(accepted)
       }
     }
 
@@ -59,8 +59,9 @@ const Dialog = forwardRef(
       if (action) {
         setLoading(true)
         await action(params)
+        setLoading(false)
       }
-      handleHide()
+      handleHide(true)
     }
 
     const getTitle = () => {
@@ -91,7 +92,7 @@ const Dialog = forwardRef(
       if (_.isFunction(cancel)) {
         cancel = cancel(params)
       }
-      const action = cancel?.action ?? handleHide
+      const action = cancel?.action ?? (() => handleHide())
       const text = cancel?.text ?? "Cancelar"
       return <Button onPress={action}>{text}</Button>
     }

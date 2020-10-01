@@ -49,7 +49,6 @@ const ContactScreen = ({ route }) => {
 
   const confirmRemoval = async ({ id: target }) => {
     await contactController.removeContact(userId, target, relation)
-    fetchContacts()
   }
 
   const RemoveContactDialog = () => (
@@ -64,6 +63,7 @@ const ContactScreen = ({ route }) => {
         text: "Eliminar",
         action: () => confirmRemoval(contact),
       })}
+      onDismiss={(accepted) => accepted && fetchContacts()}
     />
   )
 
