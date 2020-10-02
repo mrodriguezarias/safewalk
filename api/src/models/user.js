@@ -10,6 +10,7 @@ const userSchema = new Schema(
     premium: { type: Boolean, default: false },
     blocked: { type: Boolean, default: false },
     loginAttempts: { type: Number, default: 0 },
+    pushToken: { type: String, default: null },
   },
   {
     toJSON: dbUtils.toJSON({

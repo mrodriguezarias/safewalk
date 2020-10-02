@@ -3,14 +3,9 @@ import contactModel from "../models/contact"
 import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
-
-const switchRelation = (relation) => {
-  const relations = {
-    carer: "cared",
-    cared: "carer",
-  }
-  return relations[relation]
-}
+import pushUtils from "../utils/push"
+import userService from "./user"
+import contactUtils from "../../../app/src/utils/contact"
 
 const contactService = {
   model: "contact",
@@ -49,6 +44,18 @@ const contactService = {
       throw new HttpError(HttpStatus.CONFLICT, error)
     }
     const newContact = await contactModel.create(data)
+    if (!data.confirmed) {
+      const sourceUser = await userService.getUserById(data.source)
+      const targetUser = await userService.getUserById(data.target)
+      pushUtils.sendNotification(
+        targetUser.pushToken,
+        `${
+          sourceUser.name
+        } te envió una solicitud para ser su contacto ${contactUtils.translateRelation(
+          data.relation,
+        )}`,
+      )
+    }
     return newContact
   },
   updateContact: async (id, data) => {
@@ -86,7 +93,7 @@ const contactService = {
       const { id, relation, source } = req
       return {
         id,
-        relation: switchRelation(relation),
+        relation: contactUtils.switchRelation(relation),
         user: source,
       }
     })
@@ -108,7 +115,7 @@ const contactService = {
             source: userId,
           },
           {
-            relation: switchRelation(relation),
+            relation: contactUtils.switchRelation(relation),
             target: userId,
           },
         ],
@@ -133,7 +140,7 @@ const contactService = {
           source,
         },
         {
-          relation: switchRelation(relation),
+          relation: contactUtils.switchRelation(relation),
           target: source,
           source: target,
         },

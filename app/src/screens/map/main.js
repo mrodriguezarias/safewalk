@@ -12,6 +12,7 @@ import generalUtils from "../../../../shared/utils/general"
 import MainMenu from "../../components/map/mainMenu"
 import LocationDialog from "../../components/map/locationDialog"
 import appActions from "../../store/actions/app"
+import NotificationTracker from "../../components/notificationTracker"
 
 const MainScreen = ({ navigation }) => {
   const theme = useTheme()
@@ -60,6 +61,7 @@ const MainScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LocationTracker />
+      <NotificationTracker navigation={navigation} />
       <LocationDialog ref={locationDialog} navigation={navigation} />
       <ActionBar navigation={navigation} />
       <MapView

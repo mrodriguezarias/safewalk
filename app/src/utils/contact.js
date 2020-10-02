@@ -10,6 +10,13 @@ const relations = {
 }
 
 const contactUtils = {
+  switchRelation: (relation) => {
+    const relations = {
+      carer: "cared",
+      cared: "carer",
+    }
+    return relations[relation]
+  },
   translateRelation: (relation, plural = false) => {
     return relations[relation][plural ? "plural" : "singular"]
   },

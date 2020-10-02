@@ -13,6 +13,7 @@ const userSchema = {
   admin: Joi.boolean().default(false),
   premium: Joi.boolean().default(false),
   blocked: Joi.boolean().default(false),
+  pushToken: Joi.string().allow(null),
 }
 
 const userValidation = {
@@ -29,6 +30,7 @@ const userValidation = {
       admin: userSchema.admin,
       premium: userSchema.premium,
       blocked: userSchema.blocked,
+      pushToken: userSchema.pushToken,
     }),
   },
   updateUser: {
@@ -43,6 +45,7 @@ const userValidation = {
       admin: userSchema.admin,
       premium: userSchema.premium,
       blocked: userSchema.blocked,
+      pushToken: userSchema.pushToken,
     }),
   },
   deleteUser: {
