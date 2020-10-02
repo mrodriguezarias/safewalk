@@ -36,6 +36,7 @@ const contactService = {
     const contact = await contactModel.findOne({
       source: data.source,
       target: data.target,
+      relation: data.relation,
     })
     if (contact) {
       const error = contact.confirmed
