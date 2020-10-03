@@ -61,6 +61,7 @@ const UserEdit = (props) => (
       <BooleanInput source="admin" />
       <BooleanInput source="premium" />
       <BooleanInput source="blocked" label="Bloqueado" />
+      <TextInput source="pushToken" label="Push Token" />
     </SimpleForm>
   </Edit>
 )
@@ -78,6 +79,7 @@ const UserCreate = (props) => (
       <BooleanInput source="admin" />
       <BooleanInput source="premium" />
       <BooleanInput source="blocked" label="Bloqueado" />
+      <TextInput source="pushToken" label="Push Token" />
     </SimpleForm>
   </Create>
 )
