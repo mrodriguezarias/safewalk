@@ -59,6 +59,7 @@ const generateExpoConfig = {
         android: {
           package: APP_ID,
           versionCode: +APP_VERSION.replace(/\./g, ""),
+          softwareKeyboardLayoutMode: "pan",
         },
         ios: {
           bundleIdentifier: APP_ID,

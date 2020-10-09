@@ -97,6 +97,7 @@ const userService = {
     }
     query = new RegExp(`^${query}`, "i")
     let users = await userModel.find({ name: query })
+    users = _.filter(users, (user) => !user.admin)
     users = _.map(users, (user) => _.pick(user.toJSON(), ["id", "name"]))
     return users
   },
