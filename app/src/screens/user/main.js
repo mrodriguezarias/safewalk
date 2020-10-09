@@ -79,7 +79,11 @@ const MainScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {logged ? <LoggedInScreen {...props} /> : <LoggedOutScreen {...props} />}
+      {logged && action !== "logOut" ? (
+        <LoggedInScreen {...props} />
+      ) : (
+        <LoggedOutScreen {...props} />
+      )}
       <Snackbar text={snackbarText} setText={setSnackbarText} />
     </View>
   )

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, LogBox } from "react-native"
 import { useTheme, Headline, Button } from "react-native-paper"
 import { useDispatch } from "react-redux"
 import { CreditCardInput } from "react-native-credit-card-input"
@@ -8,6 +8,8 @@ import authActions from "../../store/actions/auth"
 import authController from "../../../../shared/controllers/auth"
 import DismissKeyboard from "../../components/dismissKeyboard"
 import Dialog from "../../components/dialog"
+
+LogBox.ignoreLogs(["Warning: componentWillReceiveProps has been renamed"])
 
 const PaymentScreen = ({ navigation }) => {
   const dispatch = useDispatch()

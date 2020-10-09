@@ -78,8 +78,7 @@ const ContactScreen = ({ route }) => {
           <IconButton
             icon="phone"
             onPress={() => placeCall(contact.phone)}
-            // disabled={!contact.phone}
-            disabled
+            disabled={!contact.phone}
           />
           <IconButton icon="trash-can" onPress={() => removeContact(contact)} />
         </>
