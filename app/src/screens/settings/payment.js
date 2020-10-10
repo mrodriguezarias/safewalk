@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react"
-import { View, StyleSheet, LogBox } from "react-native"
+import { View, StyleSheet, LogBox, Keyboard } from "react-native"
 import { useTheme, Headline, Button } from "react-native-paper"
 import { useDispatch } from "react-redux"
 import { CreditCardInput } from "react-native-credit-card-input"
@@ -23,7 +23,7 @@ const PaymentScreen = ({ navigation }) => {
 
   const handleDialogDismiss = () => {
     if (success) {
-      navigation.navigate("Main")
+      navigation.pop(2)
     }
   }
 
@@ -39,8 +39,15 @@ const PaymentScreen = ({ navigation }) => {
     dialog.current.show()
   }
 
+  const handleCardInputChange = (data) => {
+    if (data?.valid) {
+      Keyboard.dismiss()
+    }
+    setCreditCardData(data)
+  }
+
   return (
-    <>
+    <DismissKeyboard>
       <Dialog
         ref={dialog}
         onDismiss={handleDialogDismiss}
@@ -52,45 +59,43 @@ const PaymentScreen = ({ navigation }) => {
         }
         accept
       />
-      <DismissKeyboard>
-        <View style={styles.container}>
-          <View style={styles.inner}>
-            <CreditCardInput
-              allowScroll
-              onChange={setCreditCardData}
-              labels={{
-                number: "Número de la tarjeta",
-                expiry: "Vence",
-                cvc: "CVC/CCV",
-              }}
-              placeholders={{
-                number: "1234 5678 1234 5678",
-                expiry: "MM/AA",
-                cvc: "CVC",
-              }}
-              labelStyle={{ color: themeColor }}
-              inputStyle={{ color: themeColor }}
-              inputContainerStyle={{
-                borderBottomWidth: 1,
-                borderBottomColor: themeColor,
-              }}
-            />
-          </View>
-          <View>
-            <Headline style={styles.headline}>Pago único de $150</Headline>
-            <Button
-              mode="contained"
-              contentStyle={styles.button}
-              disabled={!creditCardData?.valid || loading}
-              loading={loading}
-              onPress={confirmPurchase}
-            >
-              {loading ? "Confirmando Compra…" : "Confirmar Compra"}
-            </Button>
-          </View>
+      <View style={styles.container}>
+        <View style={styles.inner}>
+          <CreditCardInput
+            allowScroll
+            onChange={handleCardInputChange}
+            labels={{
+              number: "Número de la tarjeta",
+              expiry: "Vence",
+              cvc: "CVC/CCV",
+            }}
+            placeholders={{
+              number: "1234 5678 1234 5678",
+              expiry: "MM/AA",
+              cvc: "CVC",
+            }}
+            labelStyle={{ color: themeColor }}
+            inputStyle={{ color: themeColor }}
+            inputContainerStyle={{
+              borderBottomWidth: 1,
+              borderBottomColor: themeColor,
+            }}
+          />
         </View>
-      </DismissKeyboard>
-    </>
+        <View>
+          <Headline style={styles.headline}>Pago único de $150</Headline>
+          <Button
+            mode="contained"
+            contentStyle={styles.button}
+            disabled={!creditCardData?.valid || loading}
+            loading={loading}
+            onPress={confirmPurchase}
+          >
+            {loading ? "Confirmando Compra…" : "Confirmar Compra"}
+          </Button>
+        </View>
+      </View>
+    </DismissKeyboard>
   )
 }
 

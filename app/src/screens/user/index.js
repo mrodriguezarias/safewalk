@@ -1,5 +1,5 @@
 import React from "react"
-import { StyleSheet } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { Title, useTheme } from "react-native-paper"
 import { createStackNavigator } from "@react-navigation/stack"
 import { useSelector } from "react-redux"
@@ -40,19 +40,17 @@ const UserScreen = () => {
               />
             ),
           headerTitle: () => (
-            <>
-              <Title style={styles.title}>{user?.name ?? "Usuario"}</Title>
+            <View style={styles.headerTitleContent}>
+              <Title>{user?.name ?? "Usuario"}</Title>
               {user?.premium && (
-                <>
-                  {" "}
-                  <MaterialCommunityIcons
-                    name="star-circle"
-                    size={16}
-                    color={theme.colors.text}
-                  />
-                </>
+                <MaterialCommunityIcons
+                  name="star-circle"
+                  size={20}
+                  color={theme.colors.safe}
+                  style={styles.starIcon}
+                />
               )}
-            </>
+            </View>
           ),
         }}
       />
@@ -86,8 +84,13 @@ const UserScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    margin: 50,
+  headerTitleContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  starIcon: {
+    marginLeft: 2,
   },
 })
 
