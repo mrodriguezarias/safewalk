@@ -12,6 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import RequestsScreen from "./requests"
 import PremiumScreen from "../settings/premium"
 import PaymentScreen from "../settings/payment"
+import WalkListScreen from "./walkList"
 
 const Stack = createStackNavigator()
 
@@ -78,6 +79,11 @@ const UserScreen = () => {
         name="Payment"
         component={PaymentScreen}
         options={{ headerTitle: "Información de Pago" }}
+      />
+      <Stack.Screen
+        name="WalkList"
+        component={WalkListScreen}
+        options={{ headerTitle: "Recorridos" }}
       />
     </Stack.Navigator>
   )

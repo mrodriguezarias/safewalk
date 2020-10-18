@@ -9,7 +9,7 @@ import ListItem from "../../components/listItem"
 import SearchResults from "../../components/searchResults"
 import contactUtils from "../../utils/contact"
 
-const ContactScreen = ({ route }) => {
+const ContactScreen = ({ route, navigation }) => {
   const userId = useSelector((state) => state.auth.user?.id)
   const [loading, setLoading] = useState(false)
   const [contacts, setContacts] = useState([])
@@ -51,6 +51,10 @@ const ContactScreen = ({ route }) => {
     await contactController.removeContact(userId, target, relation)
   }
 
+  const goToWalkList = (contact) => {
+    navigation.navigate("WalkList", { contact })
+  }
+
   const RemoveContactDialog = () => (
     <Dialog
       ref={removeContactDialog}
@@ -67,13 +71,16 @@ const ContactScreen = ({ route }) => {
     />
   )
 
-  const renderItem = (contact) => (
+  const renderItem = ({ item: contact }) => (
     <ListItem
       title={contact.name}
       right={() => (
         <>
           {relation === "cared" && (
-            <IconButton icon="map-marker" onPress={() => {}} disabled />
+            <IconButton
+              icon="map-marker"
+              onPress={() => goToWalkList(contact)}
+            />
           )}
           <IconButton
             icon="phone"

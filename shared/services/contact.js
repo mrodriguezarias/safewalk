@@ -22,6 +22,14 @@ const contactService = {
     const url = urlUtils.join(contactService.path, "remove")
     return requestUtils.delete(url, { source, target, relation })
   },
+  alertContacts: async () => {
+    const url = urlUtils.join(contactService.path, "alert")
+    return requestUtils.post(url)
+  },
+  getCaredWalks: async (userId, page) => {
+    const url = urlUtils.join(contactService.path, "caredWalks")
+    return requestUtils.get(url, { userId, page })
+  },
 }
 
 export default contactService

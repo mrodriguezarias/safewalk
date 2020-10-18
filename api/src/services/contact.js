@@ -3,8 +3,9 @@ import contactModel from "../models/contact"
 import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
-import pushUtils from "../utils/push"
+import pushUtils, { pushTypes } from "../utils/push"
 import userService from "./user"
+import walkService from "./walk"
 import contactUtils from "../../../app/src/utils/contact"
 
 const contactService = {
@@ -48,14 +49,15 @@ const contactService = {
     if (!data.confirmed) {
       const sourceUser = await userService.getUserById(data.source)
       const targetUser = await userService.getUserById(data.target)
-      pushUtils.sendNotification(
-        targetUser.pushToken,
-        `${
+      pushUtils.sendNotification({
+        type: pushTypes.invite,
+        to: targetUser.pushToken,
+        message: `${
           sourceUser.name
         } te envió una solicitud para ser su contacto ${contactUtils.translateRelation(
           data.relation,
         )}`,
-      )
+      })
     }
     return newContact
   },
@@ -148,6 +150,24 @@ const contactService = {
       ],
     })
     return contact
+  },
+  alertContacts: async (userId) => {
+    const user = await userService.getUserById(userId)
+    const contacts = await contactService.getContactsForUser(userId, "carer")
+    const pushTokens = contacts.map(({ pushToken }) => pushToken)
+    pushUtils.sendNotification({
+      type: pushTypes.alert,
+      to: pushTokens,
+      message: `${user.name} acaba de reportar un incidente de seguridad`,
+    })
+  },
+  getCaredWalks: async (loggedId, caredId, page) => {
+    const carers = await contactService.getContactsForUser(loggedId, "cared")
+    if (!caredId || !carers.map(({ id }) => id).includes(caredId)) {
+      throw new HttpError(HttpStatus.FORBIDDEN, "Unauthorized")
+    }
+    const walks = await walkService.getWalksForUser(caredId, { page })
+    return walks
   },
 }
 

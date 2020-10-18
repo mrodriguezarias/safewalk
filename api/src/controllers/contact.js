@@ -1,5 +1,6 @@
 import HttpStatus from "http-status-codes"
 import contactService from "../services/contact"
+import reqUtils from "../utils/req"
 
 const contactController = {
   getContacts: async (req, res, next) => {
@@ -90,6 +91,29 @@ const contactController = {
         source,
         target,
         relation,
+      )
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  alertContacts: async (req, res, next) => {
+    const userId = reqUtils.getLoggedUserId(req)
+    try {
+      await contactService.alertContacts(userId)
+      res.status(HttpStatus.OK).json()
+    } catch (error) {
+      next(error)
+    }
+  },
+  getCaredWalks: async (req, res, next) => {
+    const { userId: caredId, page } = req.query
+    const loggedId = reqUtils.getLoggedUserId(req)
+    try {
+      const response = await contactService.getCaredWalks(
+        loggedId,
+        caredId,
+        page,
       )
       res.status(HttpStatus.OK).json(response)
     } catch (error) {

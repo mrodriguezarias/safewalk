@@ -11,6 +11,7 @@ const appActions = {
   SET_MAP_TYPE: "APP/SET_MAP_TYPE",
   SET_HEIGHT: "APP/SET_HEIGHT",
   SET_MOCK_LOCATION: "APP/SET_MOCK_LOCATION",
+  SET_MAP_SNACKBAR: "APP/SET_MAP_SNACKBAR",
   load: () => async (dispatch) => {
     const token = await storageUtils.get("auth")
     const user = await storageUtils.get("user")
@@ -61,6 +62,10 @@ const appActions = {
       payload: { mockLocation },
     })
   },
+  setMapSnackbar: (mapSnackbar) => ({
+    type: appActions.SET_MAP_SNACKBAR,
+    payload: { mapSnackbar },
+  }),
 }
 
 export default appActions

@@ -31,7 +31,7 @@ const LocationList = ({
   onItemPress,
   onItemLongPress,
 }) => {
-  const renderItem = (location) => (
+  const renderItem = ({ item: location }) => (
     <LocationItem
       location={location}
       onPress={() => onItemPress && onItemPress(location)}

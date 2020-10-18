@@ -23,6 +23,7 @@ const contactRoute = {
       authMiddleware(true, "req.query.userId"),
       contactController.getContactsForUser,
     )
+    router.get("/caredWalks", authMiddleware(), contactController.getCaredWalks)
     router.get(
       "/:id",
       authMiddleware(true),
@@ -41,6 +42,7 @@ const contactRoute = {
       validate(contactValidation.updateContact),
       contactController.updateContact,
     )
+    router.post("/alert", authMiddleware(), contactController.alertContacts)
     router.delete(
       "/remove",
       authMiddleware(true, "req.query.source"),

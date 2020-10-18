@@ -21,6 +21,12 @@ const contactController = {
   removeContact: async (source, target, relation) => {
     return await contactService.removeContact(source, target, relation)
   },
+  alertContacts: async () => {
+    return await contactService.alertContacts()
+  },
+  getCaredWalks: async (userId, page) => {
+    return await contactService.getCaredWalks(userId, page)
+  },
 }
 
 export default contactController

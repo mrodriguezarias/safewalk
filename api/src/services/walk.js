@@ -30,6 +30,15 @@ const walkService = {
     }
     return walk.toJSON()
   },
+  getWalksForUser: async (userId, { page = 1, limit = 15 } = {}) => {
+    const filter = { user: userId }
+    const query = walkModel.find(filter).sort({ start: -1 })
+    const count = await walkModel.countDocuments(filter)
+    const offset = (page - 1) * limit
+    let walks = await query.skip(offset).limit(limit)
+    walks = _.map(walks, (walk) => walk.toJSON())
+    return { data: walks, total: count }
+  },
   createWalk: async (data) => {
     if (_.isEmpty(data) || !data?.path?.[0]) {
       throw new HttpError(HttpStatus.BAD_REQUEST, "Walk not provided")

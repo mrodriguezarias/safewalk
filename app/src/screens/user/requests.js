@@ -38,7 +38,7 @@ const RequestsScreen = ({ navigation }) => {
     fetchRequests()
   }
 
-  const renderItem = (request) => (
+  const renderItem = ({ item: request }) => (
     <ListItem
       title={request.user.name}
       description={contactUtils.translateRelation(request.relation)}

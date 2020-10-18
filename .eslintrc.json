@@ -15,7 +15,8 @@
     "space-before-function-paren": "off",
     "react/prop-types": "off",
     "react/jsx-handler-names": "off",
-    "no-unused-expressions": "off"
+    "no-unused-expressions": "off",
+    "react/jsx-pascal-case": "off"
   },
   "parserOptions": {
     "sourceType": "module"

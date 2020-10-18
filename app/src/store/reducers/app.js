@@ -9,8 +9,10 @@ const initialState = {
     window: Dimensions.get("window").height,
     header: 0,
     keyboard: 0,
+    map: 0,
   },
   mockLocation: null,
+  mapSnackbar: "",
 }
 
 const load = (state, { theme, mapProvider, mapType, mockLocation }) => ({
@@ -50,6 +52,11 @@ const setMockLocation = (state, { mockLocation }) => ({
   mockLocation,
 })
 
+const setMapSnackbar = (state, { mapSnackbar }) => ({
+  ...state,
+  mapSnackbar,
+})
+
 const appReducer = (state = initialState, action) => {
   const { type, payload = {} } = action
   switch (type) {
@@ -65,6 +72,8 @@ const appReducer = (state = initialState, action) => {
       return setHeight(state, payload)
     case appActions.SET_MOCK_LOCATION:
       return setMockLocation(state, payload)
+    case appActions.SET_MAP_SNACKBAR:
+      return setMapSnackbar(state, payload)
     default:
       return state
   }

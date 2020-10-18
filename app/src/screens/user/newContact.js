@@ -31,7 +31,7 @@ const NewContactScreen = ({ navigation }) => {
     dialogRef.current.show(user)
   }
 
-  const renderItem = (user) => (
+  const renderItem = ({ item: user }) => (
     <ListItem title={user.name} onPress={() => handleItemPress(user)} />
   )
 

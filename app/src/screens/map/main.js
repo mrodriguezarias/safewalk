@@ -10,9 +10,11 @@ import LocationTracker from "../../components/map/locationTracker"
 import PathMarker from "../../components/map/pathMarker"
 import generalUtils from "../../../../shared/utils/general"
 import MainMenu from "../../components/map/mainMenu"
+import ReportFab from "../../components/map/reportFab"
 import LocationDialog from "../../components/map/locationDialog"
 import appActions from "../../store/actions/app"
 import NotificationTracker from "../../components/notificationTracker"
+import Snackbar from "../../components/map/snackbar"
 
 const MainScreen = ({ navigation }) => {
   const theme = useTheme()
@@ -55,6 +57,12 @@ const MainScreen = ({ navigation }) => {
     }
   }
 
+  const handleLayout = (event) => {
+    fitMap()
+    const { height } = event.nativeEvent.layout
+    dispatch(appActions.setHeight("map", height))
+  }
+
   const posMarkerColor =
     safeWalk === false ? theme.colors.rogue : theme.colors.accent
 
@@ -64,9 +72,10 @@ const MainScreen = ({ navigation }) => {
       <NotificationTracker navigation={navigation} />
       <LocationDialog ref={locationDialog} navigation={navigation} />
       <ActionBar navigation={navigation} />
+      <ReportFab />
       <MapView
         ref={mapRef}
-        onLayout={fitMap}
+        onLayout={handleLayout}
         showsUserLocation
         tintColor={posMarkerColor}
         onLongPress={handleMapLongPress}
@@ -92,6 +101,7 @@ const MainScreen = ({ navigation }) => {
           />
         ))}
       </MapView>
+      <Snackbar />
     </View>
   )
 }

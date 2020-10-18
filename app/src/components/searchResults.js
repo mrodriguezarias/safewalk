@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from "react"
-import { View, ScrollView, StyleSheet, RefreshControl } from "react-native"
+import React, { useState } from "react"
+import { View, StyleSheet, FlatList } from "react-native"
 import { Paragraph } from "react-native-paper"
 import _ from "lodash"
 
@@ -11,6 +11,7 @@ const SearchResults = ({
   noResults,
   renderItem,
   onRefresh,
+  fetchMore,
 }) => {
   const [refreshing, setRefreshing] = useState(false)
 
@@ -34,33 +35,47 @@ const SearchResults = ({
   }
 
   const handleRefresh = async () => {
+    if (!onRefresh) {
+      return
+    }
     setRefreshing(true)
     await onRefresh()
     setRefreshing(false)
   }
 
+  const handleFetchMore = async () => {
+    if (fetchMore) {
+      fetchMore()
+    }
+  }
+
+  const Footer = () => {
+    return (
+      <View>
+        {loading && !refreshing && <Spinner style={styles.spinner} />}
+        {renderNoResults()}
+      </View>
+    )
+  }
+
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      refreshControl={
-        onRefresh && (
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        )
-      }
-    >
-      {loading && !refreshing ? (
-        <Spinner style={styles.spinner} />
-      ) : (
-        results.map((result, index) => (
-          <Fragment key={index}>{renderItem && renderItem(result)}</Fragment>
-        ))
-      )}
-      {renderNoResults()}
-    </ScrollView>
+    <FlatList
+      data={results}
+      renderItem={renderItem}
+      onEndReachedThreshold={0.9}
+      onEndReached={handleFetchMore}
+      style={styles.list}
+      ListFooterComponent={Footer}
+      onRefresh={handleRefresh}
+      refreshing={refreshing}
+    />
   )
 }
 
 const styles = StyleSheet.create({
+  list: {
+    flex: 1,
+  },
   spinner: {
     flex: 1,
     justifyContent: "flex-end",

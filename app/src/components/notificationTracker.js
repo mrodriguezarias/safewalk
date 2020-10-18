@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Platform, AppState } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import authController from "../../../shared/controllers/auth"
+import { pushTypes } from "../../../shared/utils/push"
 import authActions from "../store/actions/auth"
 
 const registerForPushNotifications = async () => {
@@ -60,12 +61,7 @@ const NotificationTracker = ({ navigation }) => {
     registerForPushNotifications().then((token) => setExpoPushToken(token))
 
     const responseListener = Notifications.addNotificationResponseReceivedListener(
-      () => {
-        navigation.navigate("User", {
-          screen: "Requests",
-          initial: false,
-        })
-      },
+      ({ notification }) => handleNotificationPressed(notification),
     )
 
     AppState.addEventListener("change", handleAppStateChange)
@@ -90,6 +86,28 @@ const NotificationTracker = ({ navigation }) => {
       shouldPlaySound: false,
       shouldSetBadge: false,
     }
+  }
+
+  const handleNotificationPressed = (notification) => {
+    const { type } = notification.request.content.data
+    const handlers = {
+      [pushTypes.invite]: handleInvite,
+      [pushTypes.alert]: handleAlert,
+    }
+    if (type in handlers) {
+      handlers[type](notification)
+    }
+  }
+
+  const handleInvite = () => {
+    navigation.navigate("User", {
+      screen: "Requests",
+      initial: false,
+    })
+  }
+
+  const handleAlert = () => {
+    console.info("TODO: handle alert")
   }
 
   return null

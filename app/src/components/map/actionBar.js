@@ -75,7 +75,7 @@ const LocationsCard = ({ navigation, scrollTo }) => {
   const [loading, setLoading] = useState(false)
   const source = useSelector((state) => state.walk.source)
   const target = useSelector((state) => state.walk.target)
-  const logged = useSelector((state) => state.auth.logged)
+  const premium = useSelector((state) => state.auth.user?.premium)
   const mockLocation = useSelector((state) => state.app.mockLocation)
   const dispatch = useDispatch()
 
@@ -92,7 +92,7 @@ const LocationsCard = ({ navigation, scrollTo }) => {
     const path = await geoService.getSafestPath(source.coords, target.coords)
     dispatch(walkActions.setPath(path))
     setLoading(false)
-    if (logged) {
+    if (premium) {
       const loc = await getCurrentLocation()
       if (geoUtils.pointsAreNear(loc, source.coords)) {
         scrollTo("Walk")
