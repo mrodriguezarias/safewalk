@@ -23,6 +23,7 @@ const MainScreen = ({ navigation }) => {
   const source = useSelector((state) => state.walk.source?.coords)
   const target = useSelector((state) => state.walk.target?.coords)
   const safeWalk = useSelector((state) => state.walk.walk?.safe)
+  const walked = useSelector((state) => state.walk.walk?.walked)
   const places = useSelector((state) => state.walk.places)
   const path = useSelector((state) => state.walk.path)
   const isAdmin = useSelector((state) => state.auth?.user?.admin)
@@ -90,7 +91,8 @@ const MainScreen = ({ navigation }) => {
           color={theme.colors.tabBar}
           zIndex={3}
         />
-        <PathMarker coords={path} />
+        <PathMarker coords={path} zIndex={1} />
+        <PathMarker coords={walked} zIndex={2} color={theme.colors.path} />
         {places.map((location, index) => (
           <LocationMarker
             key={index}

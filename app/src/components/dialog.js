@@ -104,13 +104,13 @@ const Dialog = forwardRef(
       if (_.isFunction(accept)) {
         accept = accept(params)
       }
-      const action = accept?.action
-      const text = accept?.text ?? "Aceptar"
+      const { action, text = "Aceptar", ...restProps } = accept
       return (
         <Button
           loading={loading}
           disabled={loading}
           onPress={() => handleAccept(action)}
+          {...restProps}
         >
           {text}
         </Button>

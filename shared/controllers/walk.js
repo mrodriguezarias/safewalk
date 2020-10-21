@@ -22,7 +22,7 @@ const walkController = {
       updated: Date.now(),
     }
     if (!geoUtils.pointsAreNear(position, lastPosition)) {
-      const safe = geoUtils.isNearPath(position, path)
+      const safe = geoUtils.isNearPath(position, path, 150)
       walked = [...walked, position]
       data = {
         ...data,
@@ -32,6 +32,9 @@ const walkController = {
       }
     }
     return await walkService.update(id, data)
+  },
+  get: async (id) => {
+    return await walkService.get(id)
   },
 }
 

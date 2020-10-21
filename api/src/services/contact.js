@@ -7,6 +7,7 @@ import pushUtils, { pushTypes } from "../utils/push"
 import userService from "./user"
 import walkService from "./walk"
 import contactUtils from "../../../app/src/utils/contact"
+import userModel from "../models/user"
 
 const contactService = {
   model: "contact",
@@ -154,20 +155,43 @@ const contactService = {
   alertContacts: async (userId) => {
     const user = await userService.getUserById(userId)
     const contacts = await contactService.getContactsForUser(userId, "carer")
+    const walk = await walkService.getWalkInProgress(userId)
     const pushTokens = contacts.map(({ pushToken }) => pushToken)
     pushUtils.sendNotification({
       type: pushTypes.alert,
       to: pushTokens,
       message: `${user.name} acaba de reportar un incidente de seguridad`,
+      payload: { walkId: walk.id, contactId: userId },
     })
   },
   getCaredWalks: async (loggedId, caredId, page) => {
-    const carers = await contactService.getContactsForUser(loggedId, "cared")
-    if (!caredId || !carers.map(({ id }) => id).includes(caredId)) {
+    const cared = await contactService.getContactsForUser(loggedId, "cared")
+    if (!caredId || !cared.map(({ id }) => id).includes(caredId)) {
       throw new HttpError(HttpStatus.FORBIDDEN, "Unauthorized")
     }
     const walks = await walkService.getWalksForUser(caredId, { page })
     return walks
+  },
+  getOwnWalks: async (loggedId, page) => {
+    const walks = await walkService.getWalksForUser(loggedId, {
+      page,
+      filters: { end: { $ne: null } },
+    })
+    return walks
+  },
+  getContactUser: async (userId, loggedId) => {
+    const logged = await userModel.findById(loggedId)
+    const isAdmin = logged?.admin
+    const isSelf = userId === loggedId
+    let isCared = false
+    if (!isAdmin || !isSelf) {
+      const cared = await contactService.getContactsForUser(loggedId, "cared")
+      isCared = cared.map(({ id }) => id).includes(userId)
+    }
+    if (!isAdmin && !isSelf && !isCared) {
+      throw new HttpError(HttpStatus.FORBIDDEN, "Unauthorized")
+    }
+    return await userService.getUserById(userId)
   },
 }
 

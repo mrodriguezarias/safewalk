@@ -3,6 +3,8 @@ import walkModel from "../models/walk"
 import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
+import userModel from "../models/user"
+import contactService from "./contact"
 
 const geoKeys = {
   path: "line",
@@ -23,15 +25,26 @@ const walkService = {
     const walks = _.map(sorted, (walk) => walk.toJSON())
     return { walks, contentRangeHeader }
   },
-  getWalkById: async (id) => {
+  getWalkById: async (id, loggedId) => {
+    const logged = await userModel.findById(loggedId)
+    const isAdmin = logged?.admin
     const walk = await walkModel.findById(id)
+    const isOwnWalk = walk && walk.user === loggedId
+    let isCaredWalk = false
+    if (!isAdmin && !isOwnWalk && walk) {
+      const cared = await contactService.getContactsForUser(loggedId, "cared")
+      isCaredWalk = cared.map(({ id }) => id).includes(String(walk.user))
+    }
+    if (!isAdmin && !isOwnWalk && !isCaredWalk) {
+      throw new HttpError(HttpStatus.FORBIDDEN, "Unauthorized")
+    }
     if (!walk) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Walk not found")
     }
     return walk.toJSON()
   },
-  getWalksForUser: async (userId, { page = 1, limit = 15 } = {}) => {
-    const filter = { user: userId }
+  getWalksForUser: async (userId, { page = 1, limit = 10, filters } = {}) => {
+    const filter = { user: userId, ...filters }
     const query = walkModel.find(filter).sort({ start: -1 })
     const count = await walkModel.countDocuments(filter)
     const offset = (page - 1) * limit
@@ -39,12 +52,16 @@ const walkService = {
     walks = _.map(walks, (walk) => walk.toJSON())
     return { data: walks, total: count }
   },
+  getWalkInProgress: async (userId) => {
+    const walk = await walkModel.findOne({ user: userId, end: null })
+    return walk ? walk.toJSON() : null
+  },
   createWalk: async (data) => {
     if (_.isEmpty(data) || !data?.path?.[0]) {
       throw new HttpError(HttpStatus.BAD_REQUEST, "Walk not provided")
     }
     if (!data.position) {
-      data.position = data.path[0]
+      data.position = data.source.coords
     }
     if (!data.walked) {
       data.walked = [data.position]

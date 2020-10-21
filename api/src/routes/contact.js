@@ -23,7 +23,9 @@ const contactRoute = {
       authMiddleware(true, "req.query.userId"),
       contactController.getContactsForUser,
     )
+    router.get("/user", authMiddleware(), contactController.getContactUser)
     router.get("/caredWalks", authMiddleware(), contactController.getCaredWalks)
+    router.get("/ownWalks", authMiddleware(), contactController.getOwnWalks)
     router.get(
       "/:id",
       authMiddleware(true),

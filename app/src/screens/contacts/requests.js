@@ -4,7 +4,7 @@ import ListItem from "../../components/listItem"
 import SearchResults from "../../components/searchResults"
 import contactController from "../../../../shared/controllers/contact"
 import { useSelector } from "react-redux"
-import CarerPremiumDialog from "../../components/user/carerPremiumDialog"
+import CarerPremiumDialog from "../../components/contacts/carerPremiumDialog"
 import { useIsFocused } from "@react-navigation/native"
 import contactUtils from "../../utils/contact"
 

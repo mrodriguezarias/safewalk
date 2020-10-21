@@ -44,7 +44,7 @@ const geoUtils = {
   },
   isNearPath: (point, path, distance = 100) => {
     const closest = geoUtils.closestToPoint(point, path)
-    return geoUtils.pointsAreNear(point, closest)
+    return geoUtils.pointsAreNear(point, closest, distance)
   },
 }
 

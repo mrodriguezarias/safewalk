@@ -24,14 +24,16 @@ const LocationTracker = () => {
   }, [walkId, mockLocation])
 
   const updateLocation = async () => {
-    const position = await getCurrentLocation()
-    const walk = await walkController.updatePosition(
-      walkId,
-      path,
-      walked,
-      position,
-    )
-    dispatch(walkActions.setWalk(walk))
+    try {
+      const position = await getCurrentLocation()
+      const walk = await walkController.updatePosition(
+        walkId,
+        path,
+        walked,
+        position,
+      )
+      dispatch(walkActions.setWalk(walk))
+    } catch {}
   }
 
   const getCurrentLocation = async () => {

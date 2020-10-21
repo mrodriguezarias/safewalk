@@ -3,12 +3,12 @@ import _ from "lodash"
 import { pushTypes } from "../../../shared/utils/push"
 
 const pushUtils = {
-  sendNotification: async ({ to, message, type }) => {
+  sendNotification: async ({ to, message, type, payload }) => {
     if (!Array.isArray(to)) {
       to = [to]
     }
     to = _.uniq(to)
-    const payload = to
+    const messages = to
       .filter((token) => {
         const valid = token && Expo.isExpoPushToken(token)
         if (!valid) {
@@ -22,10 +22,11 @@ const pushUtils = {
         body: message,
         data: {
           type,
+          payload,
         },
       }))
     const expo = new Expo()
-    await expo.sendPushNotificationsAsync(payload)
+    await expo.sendPushNotificationsAsync(messages)
   },
 }
 

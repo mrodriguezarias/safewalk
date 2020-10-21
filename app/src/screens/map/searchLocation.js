@@ -46,7 +46,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
     if (key) {
       return `Cambiar ${keyLabels.get(key)}`
     }
-    return "Buscar Lugares"
+    return "Buscar Lugar o Dirección"
   }, [key])
 
   useLayoutEffect(() => {

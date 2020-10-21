@@ -1,21 +1,22 @@
 import React, { useState, useCallback, useEffect, useRef } from "react"
 import { Linking } from "react-native"
-import { IconButton } from "react-native-paper"
+import { IconButton, useTheme } from "react-native-paper"
 import { useSelector } from "react-redux"
 import contactController from "../../../../shared/controllers/contact"
 import { useIsFocused } from "@react-navigation/native"
-import Dialog from "../../components/dialog"
-import ListItem from "../../components/listItem"
-import SearchResults from "../../components/searchResults"
+import Dialog from "../dialog"
+import ListItem from "../listItem"
+import SearchResults from "../searchResults"
 import contactUtils from "../../utils/contact"
 
-const ContactScreen = ({ route, navigation }) => {
+const ContactList = ({ route, navigation }) => {
   const userId = useSelector((state) => state.auth.user?.id)
   const [loading, setLoading] = useState(false)
   const [contacts, setContacts] = useState([])
   const { relation } = route.params ?? {}
   const removeContactDialog = useRef()
   const isFocused = useIsFocused()
+  const theme = useTheme()
 
   const fetchContacts = useCallback(async () => {
     if (!userId) {
@@ -66,6 +67,7 @@ const ContactScreen = ({ route, navigation }) => {
       accept={({ contact }) => ({
         text: "Eliminar",
         action: () => confirmRemoval(contact),
+        color: theme.colors.rogue,
       })}
       onDismiss={(accepted) => accepted && fetchContacts()}
     />
@@ -110,4 +112,4 @@ const ContactScreen = ({ route, navigation }) => {
   )
 }
 
-export default ContactScreen
+export default ContactList

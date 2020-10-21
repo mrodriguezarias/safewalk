@@ -1,5 +1,6 @@
 import HttpStatus from "http-status-codes"
 import walkService from "../services/walk"
+import reqUtils from "../utils/req"
 
 const walkController = {
   getWalks: async (req, res, next) => {
@@ -18,8 +19,9 @@ const walkController = {
   },
   getWalkById: async (req, res, next) => {
     const id = req.params.id
+    const loggedId = reqUtils.getLoggedUserId(req)
     try {
-      const walk = await walkService.getWalkById(id)
+      const walk = await walkService.getWalkById(id, loggedId)
       res.status(HttpStatus.OK).json(walk)
     } catch (error) {
       next(error)

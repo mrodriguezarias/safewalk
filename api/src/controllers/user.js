@@ -19,8 +19,9 @@ const userController = {
   },
   getUserById: async (req, res, next) => {
     const userId = req.params.id
+    const loggedId = reqUtils.getLoggedUserId(req)
     try {
-      const user = await userService.getUserById(userId)
+      const user = await userService.getUserById(userId, loggedId)
       res.status(HttpStatus.OK).json(user)
     } catch (error) {
       next(error)

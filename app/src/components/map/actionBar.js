@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { StyleSheet, View, ScrollView, Dimensions } from "react-native"
 import {
-  TextInput,
-  TouchableRipple,
-  Text,
   IconButton as PaperIconButton,
   useTheme,
   Button,
@@ -14,56 +11,15 @@ import walkActions from "../../store/actions/walk"
 import Spinner from "../spinner"
 import geoService from "../../../../shared/services/geo"
 import walkController from "../../../../shared/controllers/walk"
-import TextScaler from "../textScaler"
 import Dialog from "../dialog"
 import ListItem from "../listItem"
 import geoUtils from "../../../../shared/utils/geo"
 import appGeoUtils from "../../utils/geo"
 import generalUtils from "../../../../shared/utils/general"
+import Input from "../input"
 
 const BAR_WIDTH = Dimensions.get("window").width
 const BAR_HEIGHT = 60
-
-const Input = ({ label, value = "", onPress, disabled = false }) => {
-  const [fontSize, setFontSize] = useState()
-  const [text, setText] = useState()
-  const [inputWidth, setInputWidth] = useState()
-
-  return (
-    <View style={styles.inputContainer}>
-      <TextScaler
-        width={inputWidth}
-        offset={18}
-        hidden
-        fontSize={16}
-        minFontSize={10}
-        setFontSize={setFontSize}
-        setText={setText}
-      >
-        {value}
-      </TextScaler>
-      <TextInput
-        label={label}
-        editable={false}
-        onLayout={({ nativeEvent: { layout } }) => {
-          setInputWidth(layout.width)
-        }}
-        value={text}
-        theme={{ roundness: 0 }}
-        multiline={false}
-        numberOfLines={1}
-        style={[styles.input, { fontSize }]}
-        underlineColor="transparent"
-      />
-      <TouchableRipple
-        onPress={disabled ? undefined : onPress}
-        style={styles.touchable}
-      >
-        <Text />
-      </TouchableRipple>
-    </View>
-  )
-}
 
 const IconButton = (props) => (
   <View style={styles.buttonContainer}>

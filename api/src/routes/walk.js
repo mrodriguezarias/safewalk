@@ -9,7 +9,7 @@ const walkRoute = {
     router.get("/", authMiddleware(true), walkController.getWalks)
     router.get(
       "/:id",
-      authMiddleware(true),
+      authMiddleware(),
       validate(walkValidation.getWalk),
       walkController.getWalkById,
     )

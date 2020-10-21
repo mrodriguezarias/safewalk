@@ -120,6 +120,26 @@ const contactController = {
       next(error)
     }
   },
+  getOwnWalks: async (req, res, next) => {
+    const { page } = req.query
+    const loggedId = reqUtils.getLoggedUserId(req)
+    try {
+      const response = await contactService.getOwnWalks(loggedId, page)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
+  getContactUser: async (req, res, next) => {
+    const { userId } = req.query
+    const loggedId = reqUtils.getLoggedUserId(req)
+    try {
+      const response = await contactService.getContactUser(userId, loggedId)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
 }
 
 export default contactController

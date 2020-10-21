@@ -30,6 +30,14 @@ const contactService = {
     const url = urlUtils.join(contactService.path, "caredWalks")
     return requestUtils.get(url, { userId, page })
   },
+  getOwnWalks: async (page) => {
+    const url = urlUtils.join(contactService.path, "ownWalks")
+    return requestUtils.get(url, { page })
+  },
+  get: async (userId) => {
+    const url = urlUtils.join(contactService.path, "user")
+    return requestUtils.get(url, { userId })
+  },
 }
 
 export default contactService

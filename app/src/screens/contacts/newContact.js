@@ -5,7 +5,7 @@ import DismissKeyboard from "../../components/dismissKeyboard"
 import ListItem from "../../components/listItem"
 import SearchResults from "../../components/searchResults"
 import SearchBar from "../../components/searchBar"
-import NewContactDialog from "../../components/user/newContactDialog"
+import NewContactDialog from "../../components/contacts/newContactDialog"
 
 const NewContactScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("")

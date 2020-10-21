@@ -27,6 +27,12 @@ const contactController = {
   getCaredWalks: async (userId, page) => {
     return await contactService.getCaredWalks(userId, page)
   },
+  getOwnWalks: async (page) => {
+    return await contactService.getOwnWalks(page)
+  },
+  get: async (userId) => {
+    return await contactService.get(userId)
+  },
 }
 
 export default contactController

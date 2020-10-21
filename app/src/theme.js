@@ -23,6 +23,10 @@ const colors = {
     light: "#ff5c5c",
     dark: "#b42a2a",
   },
+  lightBlue: {
+    light: "#89CDFF",
+    dark: "#3BA6F3",
+  },
 }
 
 const theme = {
@@ -35,6 +39,7 @@ const theme = {
   rogue: colors.red,
   back: colors.grey,
   zone: colors.red,
+  path: colors.lightBlue,
 }
 
 const getTheme = (appearance) => {

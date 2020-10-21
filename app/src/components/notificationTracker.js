@@ -78,9 +78,9 @@ const NotificationTracker = ({ navigation }) => {
   }
 
   const handleNotification = (notification) => {
-    if (appState.current === "active" && notification.origin === "received") {
-      Notifications.dismissNotificationAsync(notification.notificationId)
-    }
+    // if (appState.current === "active" && notification.origin === "received") {
+    //   Notifications.dismissNotificationAsync(notification.notificationId)
+    // }
     return {
       shouldShowAlert: true,
       shouldPlaySound: false,
@@ -89,25 +89,29 @@ const NotificationTracker = ({ navigation }) => {
   }
 
   const handleNotificationPressed = (notification) => {
-    const { type } = notification.request.content.data
+    const { type, payload } = notification.request.content.data
     const handlers = {
       [pushTypes.invite]: handleInvite,
       [pushTypes.alert]: handleAlert,
     }
     if (type in handlers) {
-      handlers[type](notification)
+      handlers[type](payload)
     }
   }
 
   const handleInvite = () => {
-    navigation.navigate("User", {
+    navigation.navigate("Contacts", {
       screen: "Requests",
       initial: false,
     })
   }
 
-  const handleAlert = () => {
-    console.info("TODO: handle alert")
+  const handleAlert = async ({ walkId, contactId }) => {
+    navigation.navigate("Contacts", {
+      screen: "WalkDetail",
+      initial: false,
+      params: { walkId, contactId },
+    })
   }
 
   return null

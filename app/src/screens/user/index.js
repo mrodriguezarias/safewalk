@@ -1,18 +1,19 @@
 import React from "react"
-import { StyleSheet, View } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { Title, useTheme } from "react-native-paper"
 import { createStackNavigator } from "@react-navigation/stack"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useSelector } from "react-redux"
 import Header from "../../components/header"
-import MainScreen from "./main"
 import AuthScreen from "./auth"
-import AppbarAction from "../../components/appbarAction"
-import NewContactScreen from "./newContact"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-import RequestsScreen from "./requests"
-import PremiumScreen from "../settings/premium"
-import PaymentScreen from "../settings/payment"
-import WalkListScreen from "./walkList"
+import MainScreen from "./main"
+import EditUserScreen from "./editUser"
+import AdminScreen from "./admin"
+import PremiumScreen from "./premium"
+import PaymentScreen from "./payment"
+import SearchLocationScreen from "../map/searchLocation"
+import WalkListScreen from "../contacts/walkList"
+import WalkDetailScreen from "../contacts/walkDetail"
 
 const Stack = createStackNavigator()
 
@@ -21,7 +22,7 @@ const UserScreen = () => {
   const theme = useTheme()
   return (
     <Stack.Navigator
-      initialRouteName="MainUser"
+      initialRouteName="Main"
       headerMode="screen"
       screenOptions={{
         header: ({ scene, previous, navigation }) => (
@@ -30,16 +31,9 @@ const UserScreen = () => {
       }}
     >
       <Stack.Screen
-        name="MainUser"
+        name="Main"
         component={MainScreen}
         options={{
-          headerLeft: ({ navigation }) =>
-            user && (
-              <AppbarAction
-                icon="account-plus"
-                onPress={() => navigation.navigate("NewContact")}
-              />
-            ),
           headerTitle: () => (
             <View style={styles.headerTitleContent}>
               <Title>{user?.name ?? "Usuario"}</Title>
@@ -56,19 +50,14 @@ const UserScreen = () => {
         }}
       />
       <Stack.Screen
-        name="Auth"
-        component={AuthScreen}
-        options={{ headerTitle: "Iniciar Sesión o Registrarse" }}
+        name="EditUser"
+        component={EditUserScreen}
+        options={{ headerTitle: "Editar Datos" }}
       />
       <Stack.Screen
-        name="NewContact"
-        component={NewContactScreen}
-        options={{ headerTitle: "Nuevo Contacto" }}
-      />
-      <Stack.Screen
-        name="Requests"
-        component={RequestsScreen}
-        options={{ headerTitle: "Solicitudes" }}
+        name="Admin"
+        component={AdminScreen}
+        options={{ headerTitle: "Panel de Control" }}
       />
       <Stack.Screen
         name="Premium"
@@ -80,10 +69,21 @@ const UserScreen = () => {
         component={PaymentScreen}
         options={{ headerTitle: "Información de Pago" }}
       />
+      <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
       <Stack.Screen
         name="WalkList"
         component={WalkListScreen}
-        options={{ headerTitle: "Recorridos" }}
+        options={{ headerTitle: "Mis Recorridos" }}
+      />
+      <Stack.Screen
+        name="WalkDetail"
+        component={WalkDetailScreen}
+        options={{ headerTitle: "Recorrido" }}
+      />
+      <Stack.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={{ headerTitle: "Iniciar Sesión o Registrarse" }}
       />
     </Stack.Navigator>
   )

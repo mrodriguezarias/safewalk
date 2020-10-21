@@ -26,7 +26,10 @@ const CarerPremiumDialog = forwardRef(({ navigation }, ref) => {
       ref={dialogRef}
       title="Beneficio Premium"
       content="Los contactos cuidadores son un beneficio exclusivo para usuarios premium."
-      accept={{ text: "Obtener premium", action: getPremium }}
+      accept={{
+        text: "Obtener premium",
+        action: getPremium,
+      }}
       cancel
     />
   )

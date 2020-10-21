@@ -9,6 +9,7 @@ import Header from "../../components/header"
 import SearchLocationScreen from "./searchLocation"
 import RelatedPlacesScreen from "./relatedPlaces"
 import ReportZoneScreen from "./reportZone"
+import ChangeAppearanceScreen from "./changeAppearance"
 
 const Stack = createStackNavigator()
 
@@ -51,6 +52,13 @@ const MapScreen = () => {
         component={ReportZoneScreen}
         options={{
           headerTitle: "Reportar Zona Peligrosa",
+        }}
+      />
+      <Stack.Screen
+        name="ChangeAppearance"
+        component={ChangeAppearanceScreen}
+        options={{
+          headerTitle: "Configurar Apariencia",
         }}
       />
     </Stack.Navigator>

@@ -10,6 +10,10 @@ const walkService = {
     const url = urlUtils.join(walkService.path, id)
     return requestUtils.put(url, data)
   },
+  get: async (id) => {
+    const url = urlUtils.join(walkService.path, id)
+    return requestUtils.get(url)
+  },
 }
 
 export default walkService
