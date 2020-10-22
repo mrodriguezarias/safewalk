@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View } from "react-native"
+import { View, StyleSheet, Platform } from "react-native"
 import { Appbar, Title, useTheme } from "react-native-paper"
 import _ from "lodash"
 import { useDispatch } from "react-redux"
@@ -19,11 +19,17 @@ const Header = ({
   const { options } = scene.descriptor
 
   const title = (() => {
+    let title
     if (_.isFunction(options.headerTitle)) {
-      return options.headerTitle()
+      title = options.headerTitle()
+    } else {
+      title = options.headerTitle || options.title || scene.route.name
     }
-    const title = options.headerTitle || options.title || scene.route.name
-    return <Title>{title}</Title>
+    return (
+      <View style={styles.titleContainer}>
+        {_.isString(title) ? <Title>{title}</Title> : title}
+      </View>
+    )
   })()
 
   const handleLayout = () => {
@@ -72,5 +78,14 @@ const Header = ({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: Platform.OS === "ios" ? 5 : 0,
+  },
+})
 
 export default Header

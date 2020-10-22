@@ -64,20 +64,19 @@ const LoggedInScreen = ({ navigation }) => {
 
   const renderUserSettings = () => (
     <>
-      {!user?.premium && (
-        <ListSection>
+      <ListSection>
+        {user?.premium ? (
+          <ListItem
+            label="Mis Recorridos"
+            onPress={() => navigation.navigate("WalkList")}
+          />
+        ) : (
           <ListItem
             label="Adquirir Premium"
             onPress={() => navigation.navigate("Premium")}
             style={{ backgroundColor: theme.colors.safe }}
           />
-        </ListSection>
-      )}
-      <ListSection>
-        <ListItem
-          label="Mis Recorridos"
-          onPress={() => navigation.navigate("WalkList")}
-        />
+        )}
       </ListSection>
       <ListSection>
         <ListItem

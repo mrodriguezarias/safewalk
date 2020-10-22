@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet } from "react-native"
+import { StyleSheet } from "react-native"
 import { Title, useTheme } from "react-native-paper"
 import { createStackNavigator } from "@react-navigation/stack"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
@@ -35,7 +35,7 @@ const UserScreen = () => {
         component={MainScreen}
         options={{
           headerTitle: () => (
-            <View style={styles.headerTitleContent}>
+            <>
               <Title>{user?.name ?? "Usuario"}</Title>
               {user?.premium && (
                 <MaterialCommunityIcons
@@ -45,7 +45,7 @@ const UserScreen = () => {
                   style={styles.starIcon}
                 />
               )}
-            </View>
+            </>
           ),
         }}
       />
@@ -90,11 +90,6 @@ const UserScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  headerTitleContent: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   starIcon: {
     marginLeft: 2,
   },

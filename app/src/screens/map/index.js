@@ -31,10 +31,13 @@ const MapScreen = () => {
         options={{
           headerTitle: () => (
             <>
-              <>
-                <Entypo name="shield" size={20} color={theme.colors.text} />{" "}
-              </>
-              <Title style={styles.title}>SafeWalk</Title>
+              <Entypo
+                name="shield"
+                size={20}
+                color={theme.colors.text}
+                style={styles.shieldIcon}
+              />
+              <Title>SafeWalk</Title>
             </>
           ),
         }}
@@ -66,8 +69,8 @@ const MapScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    margin: 50,
+  shieldIcon: {
+    marginRight: 2,
   },
 })
 
