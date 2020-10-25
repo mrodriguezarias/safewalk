@@ -1,5 +1,11 @@
 import { Joi } from "express-validation"
+import { pushTypes } from "../../../shared/utils/push"
 import validationUtils from "../utils/validation"
+
+const notificationsSchema = Object.keys(pushTypes).reduce(
+  (obj, key) => ({ ...obj, [key]: Joi.boolean().default(false) }),
+  {},
+)
 
 const userSchema = {
   id: Joi.string().custom(validationUtils.objectId),
@@ -14,6 +20,7 @@ const userSchema = {
   premium: Joi.boolean().default(false),
   blocked: Joi.boolean().default(false),
   pushToken: Joi.string().allow(null),
+  notifications: notificationsSchema,
 }
 
 const userValidation = {
@@ -31,6 +38,7 @@ const userValidation = {
       premium: userSchema.premium,
       blocked: userSchema.blocked,
       pushToken: userSchema.pushToken,
+      notifications: userSchema.notifications,
     }),
   },
   updateUser: {
@@ -46,6 +54,7 @@ const userValidation = {
       premium: userSchema.premium,
       blocked: userSchema.blocked,
       pushToken: userSchema.pushToken,
+      notifications: userSchema.notifications,
     }),
   },
   deleteUser: {

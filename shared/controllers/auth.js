@@ -14,8 +14,11 @@ const authController = {
     await storageUtils.set("auth", response.token)
     return response.user
   },
-  logOut: async () => {
+  logOut: async (userId) => {
     await generalUtils.sleep(100)
+    if (userId) {
+      await authService.logOut(userId)
+    }
     await storageUtils.set("auth")
   },
   isLoggedIn: async () => {
@@ -24,8 +27,7 @@ const authController = {
   },
   edit: async (data) => {
     const user = await storageUtils.get("user")
-    const newUser = { ...user, ...data }
-    await userService.update(user.id, data)
+    const newUser = await userService.update(user.id, data)
     await storageUtils.set("user", newUser)
     return newUser
   },

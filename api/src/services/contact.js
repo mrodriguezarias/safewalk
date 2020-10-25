@@ -49,10 +49,9 @@ const contactService = {
     const newContact = await contactModel.create(data)
     if (!data.confirmed) {
       const sourceUser = await userService.getUserById(data.source)
-      const targetUser = await userService.getUserById(data.target)
       pushUtils.sendNotification({
         type: pushTypes.invite,
-        to: targetUser.pushToken,
+        to: data.target,
         message: `${
           sourceUser.name
         } te envió una solicitud para ser su contacto ${contactUtils.translateRelation(
@@ -154,12 +153,10 @@ const contactService = {
   },
   alertContacts: async (userId) => {
     const user = await userService.getUserById(userId)
-    const contacts = await contactService.getContactsForUser(userId, "carer")
     const walk = await walkService.getWalkInProgress(userId)
-    const pushTokens = contacts.map(({ pushToken }) => pushToken)
-    pushUtils.sendNotification({
+    pushUtils.sendNotificationToCarers({
       type: pushTypes.alert,
-      to: pushTokens,
+      userId,
       message: `${user.name} acaba de reportar un incidente de seguridad`,
       payload: { walkId: walk.id, contactId: userId },
     })

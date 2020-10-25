@@ -6,6 +6,7 @@ import {
   Paragraph,
   List,
   Divider,
+  Switch,
 } from "react-native-paper"
 import Dialog from "./dialog"
 
@@ -18,6 +19,8 @@ const ListItem = ({
   onChange,
   right,
   noDivider,
+  icon,
+  switch: isSwitch = false,
   ...restProps
 }) => {
   const theme = useTheme()
@@ -43,7 +46,9 @@ const ListItem = ({
     if (onChange) {
       onChange(value)
     }
-    optionsDialog.current.hide()
+    if (options) {
+      optionsDialog.current.hide()
+    }
   }
 
   const renderDialog = () => (
@@ -73,11 +78,22 @@ const ListItem = ({
         >
           {options.find((o) => o.value === value).label}
         </Paragraph>
+      ) : isSwitch ? (
+        <Switch value={value} onValueChange={handleValueChange} />
       ) : (
         right && right()
       )}
     </View>
   )
+
+  const renderLeft = (props) =>
+    icon ? (
+      <List.Icon
+        {...props}
+        icon={icon}
+        style={{ ...props.style, ...styles.icon }}
+      />
+    ) : null
 
   return (
     <>
@@ -86,6 +102,7 @@ const ListItem = ({
         title={label}
         onPress={handlePress}
         onLongPress={handleLongPress}
+        left={renderLeft}
         right={renderRight}
         disabled={!onPress && !options}
         style={styles.container}
@@ -115,6 +132,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+  },
+  icon: {
+    marginLeft: 5,
+    marginRight: 0,
+    width: 30,
   },
 })
 

@@ -1,13 +1,15 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import _ from "lodash"
 
 import HttpError from "../../../shared/errors/http"
 import HttpStatus from "http-status-codes"
 import userModel from "../models/user"
 import envUtils, { env } from "../../../shared/utils/env"
+import userService from "./user"
 
 const getUserAndToken = (dbUser) => {
-  const user = dbUser.toJSON()
+  const user = _.isPlainObject(dbUser) ? dbUser : dbUser.toJSON()
   const payload = { _id: user.id }
   const secret = envUtils.get(env.JwtSecret)
   const token = jwt.sign(payload, secret)
@@ -16,19 +18,7 @@ const getUserAndToken = (dbUser) => {
 
 const authService = {
   signUp: async (userData) => {
-    const preexistingUser = await userModel.findOne({ name: userData.name })
-    if (preexistingUser) {
-      throw new HttpError(
-        HttpStatus.CONFLICT,
-        "Por favor ingrese otro nombre de usuario",
-      )
-    }
-
-    const hashedPassword = await bcrypt.hash(userData.password, 10)
-    const user = await userModel.create({
-      ...userData,
-      password: hashedPassword,
-    })
+    const user = await userService.createUser(userData)
     return getUserAndToken(user)
   },
   logIn: async ({ name, password, shouldBeAdmin }) => {
@@ -62,6 +52,11 @@ const authService = {
     user.loginAttempts = 0
     await user.save()
     return getUserAndToken(user)
+  },
+  logOut: async (userId) => {
+    await userService.updateUser(userId, {
+      pushToken: null,
+    })
   },
 }
 

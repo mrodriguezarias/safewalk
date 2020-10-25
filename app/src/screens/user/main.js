@@ -45,18 +45,21 @@ const LoggedInScreen = ({ navigation }) => {
       dispatch(walkActions.setWalk(null))
     }
     let action = "logOut"
+    let userId = user.id
     if (deleteAccount) {
       action = "deleteAccount"
+      userId = null
       await authController.deleteAccount()
     }
-    dispatch(authActions.logOut())
+    dispatch(authActions.logOut(userId))
     navigation.navigate("Main", { action })
   }
 
   const renderAdminSettings = () => (
     <ListSection>
       <ListItem
-        label="Ir al Panel de Control"
+        label="Panel de Control"
+        icon="cogs"
         onPress={() => navigation.navigate("Admin")}
       />
     </ListSection>
@@ -68,11 +71,13 @@ const LoggedInScreen = ({ navigation }) => {
         {user?.premium ? (
           <ListItem
             label="Mis Recorridos"
+            icon="map-marker"
             onPress={() => navigation.navigate("WalkList")}
           />
         ) : (
           <ListItem
             label="Adquirir Premium"
+            icon="star-circle"
             onPress={() => navigation.navigate("Premium")}
             style={{ backgroundColor: theme.colors.safe }}
           />
@@ -80,14 +85,25 @@ const LoggedInScreen = ({ navigation }) => {
       </ListSection>
       <ListSection>
         <ListItem
+          label="Notificaciones"
+          icon="bell-circle"
+          onPress={() => navigation.navigate("Notifications")}
+        />
+        <ListItem
           label="Editar Datos"
+          icon="account-edit"
           onPress={() => navigation.navigate("EditUser")}
         />
         <ListItem
           label="Eliminar Cuenta"
+          icon="account-remove"
           onPress={() => deleteAccountDialog.current.show()}
         />
-        <ListItem label="Cerrar Sesión" onPress={handleLogOut} />
+        <ListItem
+          label="Cerrar Sesión"
+          icon="logout-variant"
+          onPress={handleLogOut}
+        />
       </ListSection>
     </>
   )

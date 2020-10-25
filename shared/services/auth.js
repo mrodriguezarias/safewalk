@@ -18,6 +18,12 @@ const authService = {
       shouldBeAdmin,
     })
   },
+  logOut: async (userId) => {
+    const url = urlUtils.join(authService.path, "logout")
+    return requestUtils.post(url, {
+      userId,
+    })
+  },
 }
 
 export default authService

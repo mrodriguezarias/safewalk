@@ -36,7 +36,7 @@ const MainScreen = () => {
           component={ContactsScreen}
           options={{
             title: "Contactos",
-            tabBarIcon: "account-group",
+            tabBarIcon: "account-supervisor",
           }}
         />
       )}

@@ -1,4 +1,5 @@
 import { Joi } from "express-validation"
+import validationUtils from "../utils/validation"
 
 const authValidation = {
   signUp: {
@@ -12,6 +13,11 @@ const authValidation = {
       name: Joi.string().required(),
       password: Joi.string().required(),
       shouldBeAdmin: Joi.boolean().default(false),
+    }),
+  },
+  logOut: {
+    body: Joi.object({
+      userId: Joi.string().custom(validationUtils.objectId).required(),
     }),
   },
 }

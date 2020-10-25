@@ -20,6 +20,15 @@ const authController = {
       next(error)
     }
   },
+  logOut: async (req, res, next) => {
+    const { userId } = req.body
+    try {
+      const response = await authService.logOut(userId)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
 }
 
 export default authController

@@ -93,6 +93,9 @@ const NotificationTracker = ({ navigation }) => {
     const handlers = {
       [pushTypes.invite]: handleInvite,
       [pushTypes.alert]: handleAlert,
+      [pushTypes.startWalk]: handleAlert,
+      [pushTypes.safeArrival]: handleAlert,
+      [pushTypes.rogueWalk]: handleAlert,
     }
     if (type in handlers) {
       handlers[type](payload)

@@ -1,6 +1,5 @@
 import React from "react"
 import { View, ScrollView, StyleSheet } from "react-native"
-import { Switch } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
 
 import ListSection from "../../components/listSection"
@@ -56,9 +55,9 @@ const AdminScreen = ({ navigation }) => {
         <ListSection title="Premium">
           <ListItem
             label="Activo"
-            right={() => (
-              <Switch value={isPremium} onValueChange={handleTogglePremium} />
-            )}
+            switch
+            value={isPremium}
+            onChange={handleTogglePremium}
           />
         </ListSection>
         <ListSection title="Mapa">

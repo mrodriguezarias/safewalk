@@ -1,6 +1,9 @@
 const pushTypes = {
-  invite: "pushType/invite",
-  alert: "pushType/alert",
+  invite: "invite",
+  alert: "alert",
+  startWalk: "startWalk",
+  safeArrival: "safeArrival",
+  rogueWalk: "rogueWalk",
 }
 
 export { pushTypes }

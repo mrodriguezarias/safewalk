@@ -5,6 +5,7 @@ import dbUtils from "../utils/db"
 import _ from "lodash"
 import userModel from "../models/user"
 import contactService from "./contact"
+import pushUtils, { pushTypes } from "../utils/push"
 
 const geoKeys = {
   path: "line",
@@ -70,6 +71,13 @@ const walkService = {
     const walk = await walkModel.create({
       ...data,
     })
+    const user = await userModel.findById(walk.user)
+    pushUtils.sendNotificationToCarers({
+      type: pushTypes.startWalk,
+      userId: walk.user,
+      message: `${user.name} inició un recorrido desde ${walk.source.name}`,
+      payload: { walkId: walk.id, contactId: walk.user },
+    })
     return walk.toJSON()
   },
   updateWalk: async (id, data) => {
@@ -93,6 +101,27 @@ const walkService = {
     if (!updatedWalk) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Walk not found")
     }
+
+    if (!walk.arrived && updatedWalk.arrived) {
+      const user = await userModel.findById(walk.user)
+      pushUtils.sendNotificationToCarers({
+        type: pushTypes.safeArrival,
+        userId: walk.user,
+        message: `${user.name} llegó seguro a ${walk.target.name}`,
+        payload: { walkId: walk.id, contactId: walk.user },
+      })
+    }
+
+    if (walk.safe && !updatedWalk.safe) {
+      const user = await userModel.findById(walk.user)
+      pushUtils.sendNotificationToCarers({
+        type: pushTypes.rogueWalk,
+        userId: walk.user,
+        message: `${user.name} se desvió del camino seguro`,
+        payload: { walkId: walk.id, contactId: walk.user },
+      })
+    }
+
     return updatedWalk.toJSON()
   },
   deleteWalk: async (id) => {

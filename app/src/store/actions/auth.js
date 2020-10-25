@@ -16,9 +16,9 @@ const authActions = {
     await storageUtils.set("user", user)
     dispatch({ type: authActions.LOGIN, payload: { user } })
   },
-  logOut: () => async (dispatch) => {
+  logOut: (userId) => async (dispatch) => {
     await storageUtils.set("user")
-    authController.logOut()
+    authController.logOut(userId)
     dispatch({ type: authActions.LOGOUT })
   },
   edit: (user) => ({ type: authActions.EDIT, payload: { user } }),

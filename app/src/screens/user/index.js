@@ -14,6 +14,7 @@ import PaymentScreen from "./payment"
 import SearchLocationScreen from "../map/searchLocation"
 import WalkListScreen from "../contacts/walkList"
 import WalkDetailScreen from "../contacts/walkDetail"
+import NotificationsScreen from "./notifications"
 
 const Stack = createStackNavigator()
 
@@ -84,6 +85,11 @@ const UserScreen = () => {
         name="Auth"
         component={AuthScreen}
         options={{ headerTitle: "Iniciar Sesión o Registrarse" }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerTitle: "Notificaciones" }}
       />
     </Stack.Navigator>
   )

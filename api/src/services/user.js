@@ -4,6 +4,7 @@ import userModel from "../models/user"
 import HttpError from "../../../shared/errors/http"
 import dbUtils from "../utils/db"
 import _ from "lodash"
+import { pushTypes } from "../../../shared/utils/push"
 
 const userService = {
   getUsers: async (filter = {}, range, sort) => {
@@ -40,10 +41,19 @@ const userService = {
       )
     }
 
+    const notifications = Object.keys(pushTypes).reduce(
+      (obj, key) => ({ ...obj, [key]: true }),
+      {},
+    )
+
     const hashedPassword = await bcrypt.hash(userData.password, 10)
     const newUser = await userModel.create({
       ...userData,
       password: hashedPassword,
+      notifications: {
+        ...notifications,
+        ...userData.notifications,
+      },
     })
     return newUser.toJSON()
   },
@@ -59,6 +69,13 @@ const userService = {
 
     if (userData.password) {
       userData.password = await bcrypt.hash(userData.password, 10)
+    }
+
+    if (userData.notifications) {
+      userData.notifications = {
+        ...(user.notifications ? user.notifications.toJSON() : {}),
+        ...userData.notifications,
+      }
     }
 
     if (userData.name && userData.name !== user.name) {

@@ -1,5 +1,13 @@
 import { Schema, model } from "mongoose"
+import { pushTypes } from "../../../shared/utils/push"
 import dbUtils from "../utils/db"
+
+const notificationsSchema = new Schema({
+  ...Object.keys(pushTypes).reduce(
+    (obj, key) => ({ ...obj, [key]: { type: Boolean, default: true } }),
+    {},
+  ),
+})
 
 const userSchema = new Schema(
   {
@@ -11,6 +19,7 @@ const userSchema = new Schema(
     blocked: { type: Boolean, default: false },
     loginAttempts: { type: Number, default: 0 },
     pushToken: { type: String, default: null },
+    notifications: notificationsSchema,
   },
   {
     toJSON: dbUtils.toJSON({
