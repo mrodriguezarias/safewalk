@@ -90,6 +90,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
         const places = await geoService.searchPlaces(query)
         results = [...places]
       }
+      console.log("results", results)
       setResults(results)
       setNoResults(results.length === 0)
     } catch (error) {

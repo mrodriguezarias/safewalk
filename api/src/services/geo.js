@@ -110,10 +110,9 @@ const geoService = {
     return nearest
   },
   searchPlaces: async (query, limit) => {
+    query = new RegExp(query, "i")
     let places = await placeModel.find({
-      $text: {
-        $search: query,
-      },
+      name: query,
     })
     places = _.map(places, (place) => place.toJSON())
     if (limit) {
