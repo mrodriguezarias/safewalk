@@ -134,9 +134,12 @@ const getRawValue = (name) => {
   return repo[name]
 }
 
-const getValue = (name, type) => {
-  const rawValue = getRawValue(name)
-  return rawValue ? typesMap.get(type)?.cast(rawValue) : undefined
+const getValue = (name, option) => {
+  const value = getRawValue(name) ?? option?.default
+  if (option?.required && value === undefined) {
+    throw new EnvironmentError(`Environment variable '${name}' does not exist`)
+  }
+  return value ? typesMap.get(option.type)?.cast(value) : undefined
 }
 
 const validate = (name, value) => {
@@ -199,13 +202,10 @@ const getAll = () => {
   return _.reduce(
     options,
     (accum, cur) => {
-      if (valueInEnv(cur.name)) {
-        return {
-          ...accum,
-          [getEnvKey(cur.name)]: getValue(cur.name, cur.type),
-        }
+      return {
+        ...accum,
+        [getEnvKey(cur.name)]: getValue(cur.name, cur),
       }
-      return accum
     },
     {},
   )
@@ -213,10 +213,7 @@ const getAll = () => {
 
 const get = (name) => {
   const option = getOption(name)
-  const value = option ? getValue(name, option.type) : undefined
-  if (value === undefined) {
-    throw new EnvironmentError(`Environment variable '${name}' does not exist`)
-  }
+  const value = option ? getValue(name, option) : undefined
   return value
 }
 

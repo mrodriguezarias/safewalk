@@ -23,7 +23,6 @@ const dbUtils = {
         MongoPassword,
       } = envUtils.getAll()
       const url = `mongodb://${MongoUser}:${MongoPassword}@${MongoHost}:${MongoPort}/${MongoDatabase}`
-      console.log("url", url)
       mongoose.Promise = global.Promise
       mongoose.connect(url, options)
       mongoose.connection.on("error", function (error) {
