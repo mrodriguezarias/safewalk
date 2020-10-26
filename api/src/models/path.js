@@ -1,14 +1,14 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 
-const pathSchema = new Schema(
+const pathSchema = new mongoose.Schema(
   {
     from: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Node",
     },
     to: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Node",
     },
   },
@@ -17,6 +17,6 @@ const pathSchema = new Schema(
   },
 )
 
-const pathModel = model("Path", pathSchema)
+const pathModel = mongoose.model("Path", pathSchema)
 
 export default pathModel

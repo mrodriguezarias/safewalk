@@ -1,8 +1,8 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 import pointSchema from "./schemas/point"
 
-const placeSchema = new Schema(
+const placeSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -10,7 +10,7 @@ const placeSchema = new Schema(
       required: true,
     },
     category: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
@@ -26,6 +26,6 @@ const placeSchema = new Schema(
   },
 )
 
-const placeModel = model("Place", placeSchema)
+const placeModel = mongoose.model("Place", placeSchema)
 
 export default placeModel

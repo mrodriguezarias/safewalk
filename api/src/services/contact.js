@@ -14,7 +14,7 @@ const contactService = {
   getContacts: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = contactModel.find(filter)
-    const count = await contactModel.estimatedDocumentCount()
+    const count = await contactModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,

@@ -8,7 +8,7 @@ const zoneService = {
   getZones: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = zoneModel.find(filter)
-    const count = await zoneModel.estimatedDocumentCount()
+    const count = await zoneModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
@@ -66,7 +66,7 @@ const zoneService = {
     return zone.toJSON()
   },
   deleteAllZones: async () => {
-    const count = await zoneModel.estimatedDocumentCount()
+    const count = await zoneModel.count({})
     if (count > 0) {
       await zoneModel.collection.drop()
     }

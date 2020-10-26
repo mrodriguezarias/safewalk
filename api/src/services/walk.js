@@ -16,7 +16,7 @@ const walkService = {
   getWalks: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = walkModel.find(filter)
-    const count = await walkModel.estimatedDocumentCount()
+    const count = await walkModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
@@ -132,7 +132,7 @@ const walkService = {
     return walk.toJSON()
   },
   deleteAllWalks: async () => {
-    const count = await walkModel.estimatedDocumentCount()
+    const count = await walkModel.count({})
     if (count > 0) {
       await walkModel.collection.drop()
     }

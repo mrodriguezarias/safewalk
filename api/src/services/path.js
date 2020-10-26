@@ -9,7 +9,7 @@ const pathService = {
   getPaths: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = pathModel.find(filter)
-    const count = await pathModel.estimatedDocumentCount()
+    const count = await pathModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
@@ -68,7 +68,7 @@ const pathService = {
     return path
   },
   deleteAllPaths: async () => {
-    const count = await pathModel.estimatedDocumentCount()
+    const count = await pathModel.count({})
     if (count > 0) {
       await pathModel.collection.drop()
     }

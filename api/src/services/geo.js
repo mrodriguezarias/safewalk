@@ -45,7 +45,7 @@ const geoService = {
     return newBoundary
   },
   deleteAllBoundaries: async () => {
-    const count = await boundaryModel.estimatedDocumentCount()
+    const count = await boundaryModel.count({})
     if (count > 0) {
       await boundaryModel.collection.drop()
     }

@@ -1,14 +1,14 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 
-const contactSchema = new Schema(
+const contactSchema = new mongoose.Schema(
   {
     source: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     target: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     relation: {
@@ -26,6 +26,6 @@ const contactSchema = new Schema(
   },
 )
 
-const contactModel = model("Contact", contactSchema)
+const contactModel = mongoose.model("Contact", contactSchema)
 
 export default contactModel

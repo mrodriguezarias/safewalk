@@ -8,7 +8,7 @@ const categoryService = {
   getCategories: async (filter = {}, range, sort) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = categoryModel.find(filter)
-    const count = await categoryModel.estimatedDocumentCount()
+    const count = await categoryModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
@@ -92,7 +92,7 @@ const categoryService = {
     return category.toJSON()
   },
   deleteAllCategories: async () => {
-    const count = await categoryModel.estimatedDocumentCount()
+    const count = await categoryModel.count({})
     if (count > 0) {
       await categoryModel.collection.drop()
     }

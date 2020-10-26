@@ -9,7 +9,7 @@ const placeService = {
   getPlaces: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = placeModel.find(filter)
-    const count = await placeModel.estimatedDocumentCount()
+    const count = await placeModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
@@ -67,7 +67,7 @@ const placeService = {
     return place.toJSON()
   },
   deleteAllPlaces: async () => {
-    const count = await placeModel.estimatedDocumentCount()
+    const count = await placeModel.count({})
     if (count > 0) {
       await placeModel.collection.drop()
     }

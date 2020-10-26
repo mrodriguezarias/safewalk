@@ -1,6 +1,6 @@
-import { Schema } from "mongoose"
+import mongoose from "mongoose"
 
-const polygonSchema = new Schema({
+const polygonSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ["Polygon"],

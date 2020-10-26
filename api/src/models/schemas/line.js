@@ -1,6 +1,6 @@
-import { Schema } from "mongoose"
+import mongoose from "mongoose"
 
-const lineSchema = new Schema({
+const lineSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ["LineString"],

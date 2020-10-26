@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 import geoPointSchema from "./schemas/point"
 import lineSchema from "./schemas/line"
 
-const pointSchema = new Schema(
+const pointSchema = new mongoose.Schema(
   {
     latitude: { type: Number, required: true },
     longitude: { type: Number, required: true },
@@ -13,7 +13,7 @@ const pointSchema = new Schema(
   },
 )
 
-const locationSchema = new Schema(
+const locationSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     coords: { type: pointSchema, required: true },
@@ -23,10 +23,10 @@ const locationSchema = new Schema(
   },
 )
 
-const walkSchema = new Schema(
+const walkSchema = new mongoose.Schema(
   {
     user: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -57,6 +57,6 @@ const walkSchema = new Schema(
   },
 )
 
-const walkModel = model("Walk", walkSchema)
+const walkModel = mongoose.model("Walk", walkSchema)
 
 export default walkModel

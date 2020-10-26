@@ -9,7 +9,7 @@ const nodeService = {
   getNodes: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = nodeModel.find(filter)
-    const count = await nodeModel.estimatedDocumentCount()
+    const count = await nodeModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
@@ -67,7 +67,7 @@ const nodeService = {
     return node.toJSON()
   },
   deleteAllNodes: async () => {
-    const count = await nodeModel.estimatedDocumentCount()
+    const count = await nodeModel.count({})
     if (count > 0) {
       await nodeModel.collection.drop()
     }

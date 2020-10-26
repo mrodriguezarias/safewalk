@@ -1,8 +1,8 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 import pointSchema from "./schemas/point"
 
-const ZoneSchema = new Schema(
+const ZoneSchema = new mongoose.Schema(
   {
     location: {
       type: pointSchema,
@@ -20,6 +20,6 @@ const ZoneSchema = new Schema(
   },
 )
 
-const zoneModel = model("zone", ZoneSchema)
+const zoneModel = mongoose.model("zone", ZoneSchema)
 
 export default zoneModel

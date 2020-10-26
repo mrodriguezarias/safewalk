@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 import pointSchema from "./schemas/point"
 
@@ -7,13 +7,13 @@ const weightType = {
   default: 0,
 }
 
-const weightsSchema = new Schema({
+const weightsSchema = new mongoose.Schema({
   crime: weightType,
   places: weightType,
   zones: weightType,
 })
 
-const nodeSchema = new Schema(
+const nodeSchema = new mongoose.Schema(
   {
     weights: weightsSchema,
     location: {
@@ -27,6 +27,8 @@ const nodeSchema = new Schema(
   },
 )
 
-const nodeModel = model("Node", nodeSchema)
+nodeSchema.index({ location: "2dsphere" })
+
+const nodeModel = mongoose.model("Node", nodeSchema)
 
 export default nodeModel

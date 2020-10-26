@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 import polygonSchema from "./schemas/polygon"
 
-const boundarySchema = new Schema({
+const boundarySchema = new mongoose.Schema({
   location: {
     type: polygonSchema,
     required: true,
@@ -9,6 +9,6 @@ const boundarySchema = new Schema({
   },
 })
 
-const boundaryModel = model("Boundary", boundarySchema)
+const boundaryModel = mongoose.model("Boundary", boundarySchema)
 
 export default boundaryModel

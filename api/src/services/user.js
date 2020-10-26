@@ -10,7 +10,7 @@ const userService = {
   getUsers: async (filter = {}, range, sort) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = userModel.find(filter)
-    const count = await userModel.estimatedDocumentCount()
+    const count = await userModel.count({})
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
