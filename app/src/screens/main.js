@@ -6,16 +6,12 @@ import { useSelector } from "react-redux"
 import MapScreen from "./map"
 import ContactsScreen from "./contacts"
 import UserScreen from "./user"
-import keyboardUtils from "../utils/keyboard"
 
 const Tab = createMaterialBottomTabNavigator()
 
 const MainScreen = () => {
   const theme = useTheme()
   const logged = useSelector((state) => state.auth.logged)
-
-  keyboardUtils.init()
-
   return (
     <Tab.Navigator
       barStyle={{ backgroundColor: theme.colors.tabBar }}

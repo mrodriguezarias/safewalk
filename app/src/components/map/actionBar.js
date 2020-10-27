@@ -194,7 +194,7 @@ const ActionBar = ({ navigation, hasCarers }) => {
       return
     }
     generalUtils.debounce(() => {
-      scrollViewRef.current.scrollTo({
+      scrollViewRef.current?.scrollTo({
         x: BAR_WIDTH * index,
         y: 0,
         animated,

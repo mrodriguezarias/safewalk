@@ -12,10 +12,14 @@ import {
   DarkTheme,
 } from "@react-navigation/native"
 import { AppearanceProvider, useColorScheme } from "react-native-appearance"
-import getTheme from "./theme"
+import _ from "lodash"
 
+import getTheme from "./theme"
 import LoadingScreen from "./screens/loading"
+import NoConnectionScreen from "./screens/noConnection"
 import MainScreen from "./screens/main"
+import useInternetReachable from "./hooks/useInternetReachable"
+import keyboardUtils from "./utils/keyboard"
 
 const App = () => {
   const systemTheme = useColorScheme()
@@ -23,6 +27,7 @@ const App = () => {
   const userTheme = useSelector((state) => state.app.theme)
   const [preferredTheme, setPreferredTheme] = useState("light")
   const [theme, setTheme] = useState(LightTheme)
+  const internetReachable = useInternetReachable()
 
   useEffect(() => {
     if (userTheme === "system") {
@@ -35,6 +40,8 @@ const App = () => {
   useEffect(() => {
     setTheme(preferredTheme === "dark" ? DarkTheme : LightTheme)
   }, [preferredTheme])
+
+  keyboardUtils.init()
 
   const paperTheme = useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme
@@ -51,18 +58,22 @@ const App = () => {
     }
   }, [theme])
 
-  if (loading) {
+  if (loading || !_.isBoolean(internetReachable)) {
     return <LoadingScreen />
   }
+
+  const NavContainer = () => (
+    <NavigationContainer theme={theme}>
+      <MainScreen />
+    </NavigationContainer>
+  )
 
   return (
     <PaperProvider theme={paperTheme}>
       <StatusBar
         barStyle={preferredTheme === "dark" ? "light-content" : "dark-content"}
       />
-      <NavigationContainer theme={theme}>
-        <MainScreen />
-      </NavigationContainer>
+      {internetReachable === false ? <NoConnectionScreen /> : <NavContainer />}
     </PaperProvider>
   )
 }
