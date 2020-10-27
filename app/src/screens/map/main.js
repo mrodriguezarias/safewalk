@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useEffect, useLayoutEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { useTheme } from "react-native-paper"
 import { useSelector, useDispatch } from "react-redux"
+import { useIsFocused } from "@react-navigation/native"
 
 import ActionBar from "../../components/map/actionBar"
 import MapView from "../../components/map/mapView"
@@ -15,6 +16,7 @@ import LocationDialog from "../../components/map/locationDialog"
 import appActions from "../../store/actions/app"
 import NotificationTracker from "../../components/notificationTracker"
 import Snackbar from "../../components/map/snackbar"
+import useContacts from "../../hooks/user/useContacts"
 
 const MainScreen = ({ navigation }) => {
   const theme = useTheme()
@@ -22,12 +24,14 @@ const MainScreen = ({ navigation }) => {
   const locationDialog = useRef()
   const source = useSelector((state) => state.walk.source?.coords)
   const target = useSelector((state) => state.walk.target?.coords)
-  const safeWalk = useSelector((state) => state.walk.walk?.safe)
-  const walked = useSelector((state) => state.walk.walk?.walked)
+  const walk = useSelector((state) => state.walk.walk)
   const places = useSelector((state) => state.walk.places)
   const path = useSelector((state) => state.walk.path)
   const isAdmin = useSelector((state) => state.auth?.user?.admin)
   const dispatch = useDispatch()
+  const isFocused = useIsFocused()
+  const carers = useContacts("carer", isFocused && walk)
+  const hasCarers = carers.length > 0
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,15 +69,15 @@ const MainScreen = ({ navigation }) => {
   }
 
   const posMarkerColor =
-    safeWalk === false ? theme.colors.rogue : theme.colors.accent
+    walk?.safe === false ? theme.colors.rogue : theme.colors.accent
 
   return (
     <View style={styles.container}>
       <LocationTracker />
       <NotificationTracker navigation={navigation} />
       <LocationDialog ref={locationDialog} navigation={navigation} />
-      <ActionBar navigation={navigation} />
-      <ReportFab />
+      <ActionBar navigation={navigation} hasCarers={hasCarers} />
+      <ReportFab hasCarers={hasCarers} />
       <MapView
         ref={mapRef}
         onLayout={handleLayout}
@@ -92,7 +96,11 @@ const MainScreen = ({ navigation }) => {
           zIndex={3}
         />
         <PathMarker coords={path} zIndex={1} />
-        <PathMarker coords={walked} zIndex={2} color={theme.colors.path} />
+        <PathMarker
+          coords={walk?.walked}
+          zIndex={2}
+          color={theme.colors.path}
+        />
         {places.map((location, index) => (
           <LocationMarker
             key={index}

@@ -134,7 +134,7 @@ const contactService = {
     return contacts
   },
   removeContact: async (source, target, relation) => {
-    const contact = await contactModel.findOneAndDelete({
+    const contact = await contactModel.findOneAndRemove({
       confirmed: true,
       $or: [
         {

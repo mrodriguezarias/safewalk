@@ -125,6 +125,7 @@ const NewContactDialog = forwardRef(({ navigation }, ref) => {
             noDivider
             style={styles.optionItem}
             right={() =>
+              !loggedUser.premium &&
               premium && (
                 <Chip
                   icon="star-circle"

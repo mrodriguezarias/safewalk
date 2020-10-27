@@ -98,7 +98,7 @@ const LocationsCard = ({ navigation, scrollTo }) => {
   )
 }
 
-const SafePathCard = ({ scrollTo }) => {
+const SafePathCard = ({ scrollTo, hasCarers }) => {
   const [loading, setLoading] = useState(false)
   const [arrived, setArrived] = useState(false)
   const user = useSelector((state) => state.auth.user)
@@ -143,25 +143,25 @@ const SafePathCard = ({ scrollTo }) => {
     <View style={styles.card}>
       <Dialog
         ref={dialogRef}
-        title="¿Llegaste bien?"
+        title={hasCarers ? "¿Llegaste bien?" : "Terminar Recorrido"}
         content={
-          <ListItem
-            noDivider
-            label="Anunciar Llegada Segura"
-            right={() => (
-              <Switch
-                value={arrived}
-                onValueChange={() => setArrived((arrived) => !arrived)}
-                color={theme.colors.safe}
-              />
-            )}
-          />
+          hasCarers ? (
+            <ListItem
+              noDivider
+              label="Anunciar Llegada Segura"
+              style={styles.safeArrival}
+              right={() => (
+                <Switch
+                  value={arrived}
+                  onValueChange={() => setArrived((arrived) => !arrived)}
+                  color={theme.colors.safe}
+                />
+              )}
+            />
+          ) : (
+            "¿Seguro que quieres terminar el recorrido?"
+          )
         }
-        contentStyle={{
-          marginTop: -10,
-          marginBottom: -20,
-          marginHorizontal: -15,
-        }}
         cancel={{ text: "Volver" }}
         accept={{ text: "Terminar", action: confirmStopWalk }}
       />
@@ -182,7 +182,7 @@ const SafePathCard = ({ scrollTo }) => {
   )
 }
 
-const ActionBar = ({ navigation }) => {
+const ActionBar = ({ navigation, hasCarers }) => {
   const theme = useTheme()
   const scrollViewRef = useRef()
   const walkId = useSelector((state) => state.walk.walk?.id)
@@ -219,7 +219,11 @@ const ActionBar = ({ navigation }) => {
         ref={scrollViewRef}
       >
         <LocationsCard navigation={navigation} scrollTo={handleScroll} />
-        <SafePathCard navigation={navigation} scrollTo={handleScroll} />
+        <SafePathCard
+          navigation={navigation}
+          scrollTo={handleScroll}
+          hasCarers={hasCarers}
+        />
       </ScrollView>
     </View>
   )
@@ -271,6 +275,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+  },
+  safeArrival: {
+    marginTop: -10,
+    marginHorizontal: 10,
   },
 })
 

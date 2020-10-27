@@ -77,7 +77,7 @@ const Dialog = forwardRef(
         cont = cont(params)
       }
       if (_.isString(cont)) {
-        cont = <Paragraph>{cont}</Paragraph>
+        cont = <Paragraph style={styles.paragraph}>{cont}</Paragraph>
       }
       return cont
     }
@@ -149,6 +149,10 @@ const styles = StyleSheet.create({
   },
   content: {
     marginBottom: -15,
+    paddingHorizontal: 0,
+  },
+  paragraph: {
+    marginHorizontal: 20,
   },
 })
 

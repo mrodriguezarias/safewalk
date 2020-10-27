@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux"
 import appActions from "../../store/actions/app"
 import contactController from "../../../../shared/controllers/contact"
 
-const ReportFab = () => {
+const ReportFab = ({ hasCarers }) => {
   const [open, setOpen] = useState(false)
   const walk = useSelector((state) => state.walk.walk)
   const theme = useTheme()
@@ -24,23 +24,33 @@ const ReportFab = () => {
     dispatch(appActions.setMapSnackbar("Cuidadores alertados"))
   }
 
-  return (
-    <FAB.Group
-      open={open}
-      visible={!!walk}
-      icon="alarm-light"
-      actions={[
-        {
-          icon: "phone",
-          label: "Llamar a la policía",
-          onPress: callThePolice,
-        },
+  const getActions = () => {
+    let actions = [
+      {
+        icon: "phone",
+        label: "Llamar a la policía",
+        onPress: callThePolice,
+      },
+    ]
+    if (hasCarers) {
+      actions = [
+        ...actions,
         {
           icon: "bell",
           label: "Alertar cuidadores",
           onPress: alertCarers,
         },
-      ]}
+      ]
+    }
+    return actions
+  }
+
+  return (
+    <FAB.Group
+      open={open}
+      visible={!!walk}
+      icon="alarm-light"
+      actions={getActions()}
       onStateChange={handleStateChange}
       style={styles.fabGroup}
       fabStyle={{ backgroundColor: theme.colors.rogue }}
