@@ -32,6 +32,12 @@ const routeConfig = {
       apiRouter.use(path, router)
     }
     app.use("/api", apiRouter)
+    const downloadRouter = new Router()
+    downloadRouter.get("/", (req, res) => {
+      const file = path.join(__dirname, "../../../app/build/safewalk.apk")
+      res.download(file)
+    })
+    app.use("/download", downloadRouter)
     const staticRouter = new Router()
     const htmlFile = path.join(__dirname, "../../../backend/build/index.html")
     staticRouter.all("*", (req, res) => {
