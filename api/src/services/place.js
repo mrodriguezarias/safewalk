@@ -60,7 +60,7 @@ const placeService = {
     return updatedPlace.toJSON()
   },
   deletePlace: async (id) => {
-    const place = await placeModel.findByIdAndDelete(id)
+    const place = await placeModel.findByIdAndRemove(id)
     if (!place) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Place not found")
     }

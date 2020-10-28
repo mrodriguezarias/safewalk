@@ -17,8 +17,10 @@ import _ from "lodash"
 import getTheme from "./theme"
 import LoadingScreen from "./screens/loading"
 import NoConnectionScreen from "./screens/noConnection"
+import NoPermissionScreen from "./screens/noPermission"
 import MainScreen from "./screens/main"
-import useInternetReachable from "./hooks/useInternetReachable"
+import useConnection from "./hooks/useConnection"
+import usePermission from "./hooks/usePermission"
 import keyboardUtils from "./utils/keyboard"
 
 const App = () => {
@@ -27,7 +29,8 @@ const App = () => {
   const userTheme = useSelector((state) => state.app.theme)
   const [preferredTheme, setPreferredTheme] = useState("light")
   const [theme, setTheme] = useState(LightTheme)
-  const internetReachable = useInternetReachable()
+  const isConnected = useConnection()
+  const hasPermission = usePermission()
 
   useEffect(() => {
     if (userTheme === "system") {
@@ -58,7 +61,7 @@ const App = () => {
     }
   }, [theme])
 
-  if (loading || !_.isBoolean(internetReachable)) {
+  if (loading || !_.isBoolean(isConnected) || !_.isBoolean(hasPermission)) {
     return <LoadingScreen />
   }
 
@@ -73,7 +76,13 @@ const App = () => {
       <StatusBar
         barStyle={preferredTheme === "dark" ? "light-content" : "dark-content"}
       />
-      {internetReachable === false ? <NoConnectionScreen /> : <NavContainer />}
+      {!isConnected ? (
+        <NoConnectionScreen />
+      ) : !hasPermission ? (
+        <NoPermissionScreen />
+      ) : (
+        <NavContainer />
+      )}
     </PaperProvider>
   )
 }

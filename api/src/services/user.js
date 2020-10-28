@@ -102,7 +102,7 @@ const userService = {
     return updatedUser
   },
   deleteUser: async (userId) => {
-    const user = await userModel.findByIdAndDelete(userId)
+    const user = await userModel.findByIdAndRemove(userId)
     if (!user) {
       throw new HttpError(HttpStatus.NOT_FOUND, "User not found")
     }

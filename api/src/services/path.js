@@ -61,7 +61,7 @@ const pathService = {
     return updatedpath
   },
   deletePath: async (pathId) => {
-    const path = await pathModel.findByIdAndDelete(pathId)
+    const path = await pathModel.findByIdAndRemove(pathId)
     if (!path) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Path not found")
     }

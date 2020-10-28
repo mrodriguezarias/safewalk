@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, forwardRef } from "react"
+import React, { useState, useEffect, memo, forwardRef, useRef } from "react"
 import RNMapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import { StyleSheet } from "react-native"
 import { useTheme } from "react-native-paper"
@@ -15,8 +15,10 @@ const MapView = memo(
     const mapType = useSelector((state) => state.app.mapType)
     const mockLocation = useSelector((state) => state.app.mockLocation)
     const theme = useTheme()
+    const mounted = useRef()
 
     useEffect(() => {
+      mounted.current = true
       ;(async () => {
         if (mapRegion) {
           return
@@ -27,16 +29,21 @@ const MapView = memo(
         } else {
           location = await geoUtils.getCurrentLocation()
         }
-        setMapRegion({
-          longitude: location?.longitude,
-          latitude: location?.latitude,
-          longitudeDelta: 0.0421,
-          latitudeDelta: 0.0922,
-        })
+        if (mounted.current) {
+          setMapRegion({
+            longitude: location?.longitude,
+            latitude: location?.latitude,
+            longitudeDelta: 0.0421,
+            latitudeDelta: 0.0922,
+          })
+        }
       })()
+      return () => {
+        mounted.current = false
+      }
     }, [])
 
-    if (!mapRegion) {
+    if (!mapRegion?.latitude) {
       return null
     }
     return (

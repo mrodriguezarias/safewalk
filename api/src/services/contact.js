@@ -77,7 +77,7 @@ const contactService = {
     return updatedContact
   },
   deleteContact: async (id) => {
-    const contact = await contactModel.findByIdAndDelete(id)
+    const contact = await contactModel.findByIdAndRemove(id)
     if (!contact) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Contact not found")
     }

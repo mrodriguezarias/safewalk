@@ -45,6 +45,7 @@ const NotificationTracker = ({ navigation }) => {
   const user = useSelector((state) => state.auth.user)
   const appState = useRef()
   const dispatch = useDispatch()
+  const mounted = useRef()
 
   const updateUser = useCallback(async (pushToken) => {
     const user = await authController.edit({ pushToken })
@@ -58,7 +59,18 @@ const NotificationTracker = ({ navigation }) => {
   }, [user, expoPushToken, updateUser])
 
   useEffect(() => {
-    registerForPushNotifications().then((token) => setExpoPushToken(token))
+    mounted.current = true
+    return () => {
+      mounted.current = false
+    }
+  }, [])
+
+  useEffect(() => {
+    registerForPushNotifications().then((token) => {
+      if (mounted.current) {
+        setExpoPushToken(token)
+      }
+    })
 
     const responseListener = Notifications.addNotificationResponseReceivedListener(
       ({ notification }) => handleNotificationPressed(notification),

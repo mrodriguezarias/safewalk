@@ -60,11 +60,19 @@ const generateExpoConfig = {
           package: APP_ID,
           versionCode: +APP_VERSION.replace(/\./g, ""),
           softwareKeyboardLayoutMode: "pan",
+          config: {
+            googleMaps: {
+              apiKey: "AIzaSyBGK8S5A8RxqEDqb_nAJXGQKrqQ4nEDS0c",
+            },
+          },
         },
         ios: {
           bundleIdentifier: APP_ID,
           buildNumber: APP_VERSION,
           supportsTablet: false,
+          config: {
+            googleMapsApiKey: "AIzaSyBAyfYLI-abN-zEv8BPSAau3wRMrC6uykw",
+          },
         },
         extra: {
           env,

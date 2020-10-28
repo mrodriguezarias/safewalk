@@ -85,7 +85,7 @@ const categoryService = {
     return updatedCategory.toJSON()
   },
   deleteCategory: async (id) => {
-    const category = await categoryModel.findByIdAndDelete(id)
+    const category = await categoryModel.findByIdAndRemove(id)
     if (!category) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Category not found")
     }

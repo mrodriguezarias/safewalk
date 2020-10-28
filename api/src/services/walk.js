@@ -47,7 +47,7 @@ const walkService = {
   getWalksForUser: async (userId, { page = 1, limit = 10, filters } = {}) => {
     const filter = { user: userId, ...filters }
     const query = walkModel.find(filter).sort({ start: -1 })
-    const count = await walkModel.countDocuments(filter)
+    const count = await walkModel.count(filter)
     const offset = (page - 1) * limit
     let walks = await query.skip(offset).limit(limit)
     walks = _.map(walks, (walk) => walk.toJSON())
@@ -125,7 +125,7 @@ const walkService = {
     return updatedWalk.toJSON()
   },
   deleteWalk: async (id) => {
-    const walk = await walkModel.findByIdAndDelete(id)
+    const walk = await walkModel.findByIdAndRemove(id)
     if (!walk) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Walk not found")
     }

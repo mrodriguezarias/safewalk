@@ -60,7 +60,7 @@ const nodeService = {
     return updatedNode.toJSON()
   },
   deleteNode: async (nodeId) => {
-    const node = await nodeModel.findByIdAndDelete(nodeId)
+    const node = await nodeModel.findByIdAndRemove(nodeId)
     if (!node) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Node not found")
     }

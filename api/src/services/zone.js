@@ -59,7 +59,7 @@ const zoneService = {
     return updatedZone.toJSON()
   },
   deleteZone: async (id) => {
-    const zone = await zoneModel.findByIdAndDelete(id)
+    const zone = await zoneModel.findByIdAndRemove(id)
     if (!zone) {
       throw new HttpError(HttpStatus.NOT_FOUND, "Zone not found")
     }

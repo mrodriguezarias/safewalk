@@ -7,23 +7,25 @@ const geoUtils = {
     shouldThrow = false,
     checkBoundary = false,
   } = {}) => {
-    const { status } = await Location.requestPermissionsAsync()
-    if (status !== "granted") {
-      return null
-    }
     let location
-    if (!highAccuracy) {
-      try {
-        location = await Location.getLastKnownPositionAsync()
-      } catch {}
-    }
-    if (!location) {
-      location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Highest,
-        maximumAge: 1000,
-        timeout: 20000,
-      })
-    }
+    try {
+      const { status } = await Location.requestPermissionsAsync()
+      if (status !== "granted") {
+        return null
+      }
+      if (!highAccuracy) {
+        try {
+          location = await Location.getLastKnownPositionAsync()
+        } catch {}
+      }
+      if (!location) {
+        location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Highest,
+          maximumAge: 1000,
+          timeout: 20000,
+        })
+      }
+    } catch {}
     const { longitude, latitude } = location?.coords ?? {}
     if (!longitude) {
       return null
