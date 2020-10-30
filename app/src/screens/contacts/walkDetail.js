@@ -14,7 +14,7 @@ import contactController from "../../../../shared/controllers/contact"
 import generalUtils from "../../../../shared/utils/general"
 
 const WalkDetailScreen = ({ route }) => {
-  const { walk: parentWalk, parentContact, walkId, contactId } =
+  const { walk: parentWalk, contact: parentContact, walkId, contactId } =
     route.params ?? {}
   const [walk, setWalk] = useState()
   const [contact, setContact] = useState()
