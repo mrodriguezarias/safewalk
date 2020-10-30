@@ -17,14 +17,32 @@ const getValidator = (validate) => {
   return validate
 }
 
-const Field = ({ name, label, validate, onBlur, ...inputProps }) => {
+const Field = ({ name, label, validate, onBlur, password, ...inputProps }) => {
   const [touched, setTouched] = useState(false)
+  const [secureTextEntry, setSecureTextEntry] = useState(password)
 
   const handleOnBlur = (name, value, valid) => {
     setTouched(true)
     if (onBlur) {
       onBlur({ name, value, valid })
     }
+  }
+
+  const renderRight = () => {
+    if (inputProps?.right) {
+      return inputProps.right
+    }
+    if (!password) {
+      return undefined
+    }
+    return (
+      <TextInput.Icon
+        name={`eye${secureTextEntry ? "" : "-off"}`}
+        onPress={() => {
+          setSecureTextEntry((secureTextEntry) => !secureTextEntry)
+        }}
+      />
+    )
   }
 
   return (
@@ -47,9 +65,11 @@ const Field = ({ name, label, validate, onBlur, ...inputProps }) => {
               label={label}
               onChangeText={onChange}
               value={value}
+              secureTextEntry={secureTextEntry}
               {...restInput}
               {...inputProps}
               onBlur={() => handleOnBlur(name, value, valid)}
+              right={renderRight()}
             />
             {touched && !!error && (
               <HelperText type="error">{error}</HelperText>

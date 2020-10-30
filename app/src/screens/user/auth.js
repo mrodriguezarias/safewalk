@@ -49,7 +49,7 @@ const AuthScreen = ({ navigation }) => {
               <Field
                 name="password"
                 label="Contraseña"
-                secureTextEntry
+                password
                 validate={[
                   validationUtils.required(),
                   validationUtils.minLength(8),
