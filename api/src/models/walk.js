@@ -57,6 +57,9 @@ const walkSchema = new mongoose.Schema(
   },
 )
 
+walkSchema.index({ path: "2dsphere" })
+walkSchema.index({ position: "2dsphere" })
+
 const walkModel = mongoose.model("Walk", walkSchema)
 
 export default walkModel

@@ -11,6 +11,7 @@ import ContactFab from "../../components/contacts/contactFab"
 import Spinner from "../../components/spinner"
 import walkController from "../../../../shared/controllers/walk"
 import contactController from "../../../../shared/controllers/contact"
+import generalUtils from "../../../../shared/utils/general"
 
 const WalkDetailScreen = ({ route }) => {
   const { walk: parentWalk, parentContact, walkId, contactId } =
@@ -39,6 +40,7 @@ const WalkDetailScreen = ({ route }) => {
   }, [walkId, contactId])
 
   const fitMap = useCallback(async () => {
+    await generalUtils.sleep(100)
     mapRef.current.fitToCoordinates(
       [walk.source.coords, ...walk.path, walk.target.coords, walk.position],
       {

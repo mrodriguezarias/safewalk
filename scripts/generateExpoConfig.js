@@ -60,6 +60,7 @@ const generateExpoConfig = {
           package: APP_ID,
           versionCode: +APP_VERSION.replace(/\./g, ""),
           softwareKeyboardLayoutMode: "pan",
+          useNextNotificationsApi: true,
           config: {
             googleMaps: {
               apiKey: "AIzaSyBGK8S5A8RxqEDqb_nAJXGQKrqQ4nEDS0c",

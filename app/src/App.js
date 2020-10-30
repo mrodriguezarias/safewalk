@@ -65,12 +65,6 @@ const App = () => {
     return <LoadingScreen />
   }
 
-  const NavContainer = () => (
-    <NavigationContainer theme={theme}>
-      <MainScreen />
-    </NavigationContainer>
-  )
-
   return (
     <PaperProvider theme={paperTheme}>
       <StatusBar
@@ -81,7 +75,9 @@ const App = () => {
       ) : !hasPermission ? (
         <NoPermissionScreen />
       ) : (
-        <NavContainer />
+        <NavigationContainer theme={theme}>
+          <MainScreen />
+        </NavigationContainer>
       )}
     </PaperProvider>
   )

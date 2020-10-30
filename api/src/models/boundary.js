@@ -9,6 +9,8 @@ const boundarySchema = new mongoose.Schema({
   },
 })
 
+boundarySchema.index({ location: "2dsphere" })
+
 const boundaryModel = mongoose.model("Boundary", boundarySchema)
 
 export default boundaryModel

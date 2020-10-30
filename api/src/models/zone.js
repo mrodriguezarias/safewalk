@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import dbUtils from "../utils/db"
 import pointSchema from "./schemas/point"
 
-const ZoneSchema = new mongoose.Schema(
+const zoneSchema = new mongoose.Schema(
   {
     location: {
       type: pointSchema,
@@ -20,6 +20,8 @@ const ZoneSchema = new mongoose.Schema(
   },
 )
 
-const zoneModel = mongoose.model("zone", ZoneSchema)
+zoneSchema.index({ location: "2dsphere" })
+
+const zoneModel = mongoose.model("zone", zoneSchema)
 
 export default zoneModel
