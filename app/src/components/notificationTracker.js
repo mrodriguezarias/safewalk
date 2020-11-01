@@ -60,12 +60,6 @@ const NotificationTracker = ({ navigation }) => {
 
   useEffect(() => {
     mounted.current = true
-    return () => {
-      mounted.current = false
-    }
-  }, [])
-
-  useEffect(() => {
     registerForPushNotifications().then((token) => {
       if (mounted.current) {
         setExpoPushToken(token)
@@ -80,6 +74,7 @@ const NotificationTracker = ({ navigation }) => {
     Notifications.setNotificationHandler(handleNotification)
 
     return () => {
+      mounted.current = false
       responseListener.remove()
       AppState.removeEventListener("change", handleAppStateChange)
     }

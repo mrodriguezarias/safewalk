@@ -88,7 +88,11 @@ const ReportZoneScreen = ({ navigation }) => {
       title="Confirmar Reporte"
       content="¿Seguro que quieres reportar esta zona como peligrosa?"
       cancel
-      accept={{ text: "Reportar", action: confirmReport }}
+      accept={{
+        text: "Reportar",
+        action: confirmReport,
+        color: theme.colors.rogue,
+      }}
     />
   )
 
