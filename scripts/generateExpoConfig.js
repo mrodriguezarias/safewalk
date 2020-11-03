@@ -56,6 +56,9 @@ const generateExpoConfig = {
         },
         assetBundlePatterns: ["**/*"],
         userInterfaceStyle: "automatic",
+        notification: {
+          icon: "./app/assets/push.png",
+        },
         android: {
           package: APP_ID,
           versionCode: +APP_VERSION.replace(/\./g, ""),

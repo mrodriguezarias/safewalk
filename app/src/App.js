@@ -1,6 +1,6 @@
-import React, { useMemo, useEffect, useState } from "react"
+import React, { useMemo, useEffect, useState, useCallback } from "react"
 import { StatusBar } from "react-native"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
@@ -22,15 +22,22 @@ import MainScreen from "./screens/main"
 import useConnection from "./hooks/useConnection"
 import usePermission from "./hooks/usePermission"
 import keyboardUtils from "./utils/keyboard"
+import navigationUtils from "./utils/navigation"
+import notificationUtils from "./utils/notification"
+import authActions from "./store/actions/auth"
+import authController from "../../shared/controllers/auth"
 
 const App = () => {
   const systemTheme = useColorScheme()
   const loading = useSelector((state) => state.app.loading)
   const userTheme = useSelector((state) => state.app.theme)
+  const user = useSelector((state) => state.auth.user)
   const [preferredTheme, setPreferredTheme] = useState("light")
   const [theme, setTheme] = useState(LightTheme)
   const isConnected = useConnection()
   const hasPermission = usePermission()
+  const navigationRef = navigationUtils.getRef()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (userTheme === "system") {
@@ -44,7 +51,23 @@ const App = () => {
     setTheme(preferredTheme === "dark" ? DarkTheme : LightTheme)
   }, [preferredTheme])
 
+  useEffect(() => {
+    notificationUtils.register()
+  }, [])
+
   keyboardUtils.init()
+
+  const updateUser = useCallback(async (pushToken) => {
+    const user = await authController.edit({ pushToken })
+    dispatch(authActions.edit(user))
+  }, [])
+
+  useEffect(() => {
+    const token = notificationUtils.getToken()
+    if (user && token && user.pushToken !== token) {
+      updateUser(token)
+    }
+  }, [user, updateUser])
 
   const paperTheme = useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme
@@ -75,7 +98,7 @@ const App = () => {
       ) : !hasPermission ? (
         <NoPermissionScreen />
       ) : (
-        <NavigationContainer theme={theme}>
+        <NavigationContainer theme={theme} ref={navigationRef}>
           <MainScreen />
         </NavigationContainer>
       )}

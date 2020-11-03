@@ -14,7 +14,6 @@ import MainMenu from "../../components/map/mainMenu"
 import ReportFab from "../../components/map/reportFab"
 import LocationDialog from "../../components/map/locationDialog"
 import appActions from "../../store/actions/app"
-import NotificationTracker from "../../components/notificationTracker"
 import Snackbar from "../../components/map/snackbar"
 import useContacts from "../../hooks/user/useContacts"
 
@@ -74,7 +73,6 @@ const MainScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LocationTracker />
-      <NotificationTracker navigation={navigation} />
       <LocationDialog ref={locationDialog} navigation={navigation} />
       <ActionBar navigation={navigation} hasCarers={hasCarers} />
       <ReportFab hasCarers={hasCarers} />
