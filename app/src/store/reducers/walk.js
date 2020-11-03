@@ -59,6 +59,11 @@ const setWalk = (state, { walk }) => ({
   walk,
 })
 
+const reset = (state, payload) => ({
+  ...initialState,
+  ...payload,
+})
+
 const walkReducer = (state = initialState, action) => {
   const { type, payload = {} } = action
   switch (type) {
@@ -76,6 +81,8 @@ const walkReducer = (state = initialState, action) => {
       return unmarkPlace(state, payload)
     case walkActions.SET_WALK:
       return setWalk(state, payload)
+    case walkActions.RESET:
+      return reset(state, payload)
     default:
       return state
   }

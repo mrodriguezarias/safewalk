@@ -110,6 +110,12 @@ const SafePathCard = ({ scrollTo, hasCarers }) => {
   const dialogRef = useRef()
   const theme = useTheme()
 
+  useEffect(() => {
+    if (!user || path.length === 0) {
+      goBack()
+    }
+  }, [path, user])
+
   const goBack = () => {
     scrollTo("Location")
   }

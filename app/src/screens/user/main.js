@@ -52,6 +52,7 @@ const LoggedInScreen = ({ navigation }) => {
       await authController.deleteAccount()
     }
     dispatch(authActions.logOut(userId))
+    dispatch(walkActions.reset())
     navigation.navigate("Main", { action })
   }
 
