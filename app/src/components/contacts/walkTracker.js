@@ -12,6 +12,7 @@ const WalkTracker = ({ walk, setWalk, focused }) => {
     if (!focused || ended) {
       return
     }
+    updateWalk()
     interval.current = setInterval(updateWalk, UPDATE_INTERVAL * 1000)
     return () => {
       resetInterval()

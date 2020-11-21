@@ -8,6 +8,7 @@ import nodeService from "./node"
 import npath from "ngraph.path"
 import cacheUtils from "../../../shared/utils/cache"
 import geoUtils from "../../../shared/utils/geo"
+import generalUtils from "../../../shared/utils/general"
 
 const getDistance = (nodeA, nodeB) => {
   const distance =
@@ -90,7 +91,12 @@ const geoService = {
     })
     return [target, ...coords, source].reverse()
   },
-  getNearbyPlaces: async ({ longitude, latitude }, limit, distance = 200) => {
+  getNearbyPlaces: async (
+    { longitude, latitude },
+    query,
+    limit,
+    distance = 2000,
+  ) => {
     let nearest = await placeModel.find({
       location: {
         $near: {
@@ -102,24 +108,18 @@ const geoService = {
         },
       },
     })
+    if (query) {
+      query = generalUtils.normalize(query)
+      nearest = _.filter(nearest, (place) =>
+        generalUtils.normalize(place.name).includes(query),
+      )
+    }
     nearest = _.map(nearest, (place) => place.toJSON())
     if (limit) {
       nearest = _.take(nearest, limit)
     }
     nearest = getCategories(nearest)
     return nearest
-  },
-  searchPlaces: async (query, limit) => {
-    query = new RegExp(query, "i")
-    let places = await placeModel.find({
-      name: query,
-    })
-    places = _.map(places, (place) => place.toJSON())
-    if (limit) {
-      places = _.take(places, limit)
-    }
-    places = getCategories(places)
-    return places
   },
 }
 

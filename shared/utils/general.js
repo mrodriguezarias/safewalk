@@ -52,6 +52,12 @@ const generalUtils = {
   capitalize: (string) => {
     return string.replace(/^\w/, (c) => c.toUpperCase())
   },
+  normalize: (string) => {
+    string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    string = string.replace(/[^a-zA-Z\d\s]/g, "")
+    string = string.toLowerCase()
+    return string
+  },
 }
 
 export default generalUtils

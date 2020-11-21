@@ -10,9 +10,12 @@ import envUtils, { env } from "./env"
 const abortControllers = new Map()
 
 const doRequest = async ({ method, uri, params, data }) => {
-  const acKey = Date.now()
-  const acVal = new AbortController()
-  abortControllers.set(acKey, acVal)
+  let acKey, acVal
+  try {
+    acKey = Date.now()
+    acVal = new AbortController()
+    abortControllers.set(acKey, acVal)
+  } catch {}
   const outside = urlUtils.isAbsolute(uri)
   let url = outside ? uri : urlUtils.join(envUtils.get(env.Url), "api", uri)
   if (params !== undefined) {
@@ -32,7 +35,7 @@ const doRequest = async ({ method, uri, params, data }) => {
     redirect: "follow",
     referrerPolicy: "no-referrer",
     ...(data && { body: JSON.stringify(data) }),
-    signal: acVal.signal,
+    signal: acVal?.signal,
   }
   const response = await fetch(url, options)
   let json = null
@@ -44,7 +47,9 @@ const doRequest = async ({ method, uri, params, data }) => {
       json = JSON.parse(text.replace(/^\(|\)$/g, ""))
     }
   }
-  abortControllers.delete(acKey)
+  if (acKey) {
+    abortControllers.delete(acKey)
+  }
   if (json === undefined) {
     throw new HttpError(
       HttpStatus.INTERNAL_SERVER_ERROR,

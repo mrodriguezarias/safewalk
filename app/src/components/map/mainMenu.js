@@ -13,15 +13,6 @@ const items = [
     screen: "SearchLocation",
   },
   {
-    title: "Cambiar Ubicación",
-    icon: "edit-location",
-    screen: "SearchLocation",
-    params: {
-      key: "current",
-    },
-    admin: true,
-  },
-  {
     title: "Reportar Zona Peligrosa",
     icon: "report",
     screen: "ReportZone",
@@ -30,6 +21,15 @@ const items = [
     title: "Configurar Apariencia",
     icon: "brush",
     screen: "ChangeAppearance",
+  },
+  {
+    title: "Cambiar Ubicación",
+    icon: "edit-location",
+    screen: "SearchLocation",
+    params: {
+      key: "current",
+    },
+    // admin: true,
   },
 ]
 

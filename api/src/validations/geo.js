@@ -18,14 +18,9 @@ const geoValidation = {
   getNearbyPlaces: {
     body: Joi.object({
       location: geoPoint.required(),
+      query: Joi.string(),
       limit: Joi.number(),
       distance: Joi.number(),
-    }),
-  },
-  searchPlaces: {
-    body: Joi.object({
-      query: Joi.string().required(),
-      limit: Joi.number(),
     }),
   },
 }

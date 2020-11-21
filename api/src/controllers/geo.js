@@ -21,22 +21,14 @@ const geoController = {
     }
   },
   getNearbyPlaces: async (req, res, next) => {
-    const { location, limit, distance } = req.body
+    const { location, query, limit, distance } = req.body
     try {
       const response = await geoService.getNearbyPlaces(
         location,
+        query,
         limit,
         distance,
       )
-      res.status(HttpStatus.OK).json(response)
-    } catch (error) {
-      next(error)
-    }
-  },
-  searchPlaces: async (req, res, next) => {
-    const { query, limit } = req.body
-    try {
-      const response = await geoService.searchPlaces(query, limit)
       res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(error)

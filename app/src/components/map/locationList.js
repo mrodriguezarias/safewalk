@@ -5,13 +5,14 @@ import ListItem from "../listItem"
 import SearchResults from "../searchResults"
 
 const LocationItem = ({ location, ...itemProps }) => {
-  const { name, category, safe } = location
+  const { name, category, safe, address } = location
   const theme = useTheme()
+  const addressLine = address ? `\n${address}` : ""
   return (
     <ListItem
       title={name}
       label={name}
-      description={category}
+      description={`${category}${addressLine}`}
       right={() =>
         safe && (
           <Chip icon="shield" style={{ backgroundColor: theme.colors.safe }}>

@@ -14,6 +14,9 @@ const placeSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+    address: {
+      type: String,
+    },
     location: {
       type: pointSchema,
       index: "2dsphere",

@@ -14,6 +14,7 @@ import {
   minLength,
   maxLength,
   regex,
+  Filter,
 } from "react-admin"
 import UserIcon from "@material-ui/icons/Group"
 
@@ -27,11 +28,18 @@ const validations = {
   password: [minLength(8), maxLength(32)],
 }
 
+const UserFilter = (props) => (
+  <Filter {...props}>
+    <TextInput label="Buscar" source="q" alwaysOn />
+  </Filter>
+)
+
 const UserList = (props) => (
   <List
     perPage={25}
     sort={{ field: "name", order: "ASC" }}
     title="Lista de Usuarios"
+    filters={<UserFilter />}
     {...props}
   >
     <Datagrid rowClick="edit">

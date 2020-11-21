@@ -32,7 +32,12 @@ const dbUtils = {
     return [paginated, contentRangeHeader]
   },
   sort: (query, sort) => {
-    return query.sort(sort ? { [sort[0]]: sort[1] } : {})
+    if (!sort) {
+      return query
+    }
+    let [attribute, order] = sort
+    order = order === "DESC" ? -1 : 1
+    return query.sort({ [attribute]: order })
   },
   toJSON: ({ hideId = false, next } = {}) => {
     const toJSON = {

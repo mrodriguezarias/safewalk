@@ -7,6 +7,8 @@ import uploadWeights from "./uploadWeights"
 import uploadBoundary from "./uploadBoundary"
 import uploadCategories from "./uploadCategories"
 import uploadPlaces from "./uploadPlaces"
+import addAddresses from "./addAddresses"
+import addUsers from "./addUsers"
 
 const scripts = [
   createAdminUser,
@@ -16,6 +18,8 @@ const scripts = [
   uploadBoundary,
   uploadCategories,
   uploadPlaces,
+  addAddresses,
+  addUsers,
 ]
 
 const handler = async (script, args) => {

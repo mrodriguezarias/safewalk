@@ -108,14 +108,17 @@ const userService = {
     }
     return user
   },
-  searchUsers: async (query) => {
+  searchUsers: async (query, limit = 20) => {
     if (_.isEmpty(query)) {
       return []
     }
     query = new RegExp(`^${query}`, "i")
     let users = await userModel.find({ name: query })
-    users = _.filter(users, (user) => user.name !== "admin")
-    users = _.map(users, (user) => _.pick(user.toJSON(), ["id", "name"]))
+    users = _(users)
+      .filter((user) => user.name !== "admin")
+      .take(limit)
+      .map((user) => _.pick(user.toJSON(), ["id", "name"]))
+      .value()
     return users
   },
 }

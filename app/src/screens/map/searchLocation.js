@@ -87,7 +87,8 @@ const SearchLocationScreen = ({ navigation, route }) => {
         const nearby = await geoService.searchNearby(address.coords)
         results = [address, ...nearby]
       } else {
-        const places = await geoService.searchPlaces(query)
+        const coords = await getCurrentLocation()
+        const places = await geoService.searchNearby(coords, query)
         results = [...places]
       }
       setResults(results)

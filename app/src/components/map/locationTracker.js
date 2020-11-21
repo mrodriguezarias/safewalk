@@ -19,6 +19,7 @@ const LocationTracker = () => {
     if (!walkId) {
       return
     }
+    updateLocation()
     interval.current = setInterval(updateLocation, UPDATE_INTERVAL * 1000)
     return () => clearInterval(interval.current)
   }, [walkId, mockLocation])

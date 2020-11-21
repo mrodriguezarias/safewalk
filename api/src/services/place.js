@@ -9,7 +9,7 @@ const placeService = {
   getPlaces: async ({ filter = {}, range, sort } = {}) => {
     filter = dbUtils.transformQueryFilter(filter)
     const query = placeModel.find(filter)
-    const count = await placeModel.count({})
+    const count = await placeModel.count(filter)
     const [paginated, contentRangeHeader] = dbUtils.paginate(
       query,
       range,
