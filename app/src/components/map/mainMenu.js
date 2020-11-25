@@ -29,13 +29,13 @@ const items = [
     params: {
       key: "current",
     },
-    // admin: true,
+    visible: (user) => user.canChangeLocation,
   },
 ]
 
 const MainMenu = ({ navigation }) => {
   const [visible, setVisible] = useState(false)
-  const isAdmin = useSelector((state) => state.auth?.user?.admin)
+  const user = useSelector((state) => state.auth?.user ?? {})
 
   const toggleVisible = () => {
     setVisible((visible) => !visible)
@@ -52,8 +52,8 @@ const MainMenu = ({ navigation }) => {
       onDismiss={toggleVisible}
       anchor={<AppbarAction icon="dots-vertical" onPress={toggleVisible} />}
     >
-      {items.map(({ title, icon, screen, params, admin }, index) => {
-        if (admin && !isAdmin) {
+      {items.map(({ title, icon, screen, params, visible }, index) => {
+        if (visible && !visible(user)) {
           return null
         }
         return (

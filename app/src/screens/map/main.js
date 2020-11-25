@@ -26,7 +26,9 @@ const MainScreen = ({ navigation }) => {
   const walk = useSelector((state) => state.walk.walk)
   const places = useSelector((state) => state.walk.places)
   const path = useSelector((state) => state.walk.path)
-  // const isAdmin = useSelector((state) => state.auth?.user?.admin)
+  const canChangeLocation = useSelector(
+    (state) => state.auth?.user?.canChangeLocation,
+  )
   const dispatch = useDispatch()
   const isFocused = useIsFocused()
   const carers = useContacts("carer", isFocused && walk)
@@ -56,9 +58,9 @@ const MainScreen = ({ navigation }) => {
     const {
       nativeEvent: { coordinate: coords },
     } = event
-    // if (isAdmin) {
-    dispatch(appActions.setMockLocation(coords))
-    // }
+    if (canChangeLocation) {
+      dispatch(appActions.setMockLocation(coords))
+    }
   }
 
   const handleLayout = (event) => {

@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
     password: String,
     phone: { type: String, default: null },
     admin: { type: Boolean, default: false },
+    canChangeLocation: { type: Boolean, default: false },
     premium: { type: Boolean, default: false },
     blocked: { type: Boolean, default: false },
     loginAttempts: { type: Number, default: 0 },

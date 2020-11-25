@@ -9,6 +9,7 @@ import uploadCategories from "./uploadCategories"
 import uploadPlaces from "./uploadPlaces"
 import addAddresses from "./addAddresses"
 import addUsers from "./addUsers"
+import addProfessors from "./addProfessors"
 
 const scripts = [
   createAdminUser,
@@ -20,6 +21,7 @@ const scripts = [
   uploadPlaces,
   addAddresses,
   addUsers,
+  addProfessors,
 ]
 
 const handler = async (script, args) => {
