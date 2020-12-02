@@ -4,6 +4,7 @@ import HttpError from "../../../shared/errors/http"
 import boundaryModel from "../models/boundary"
 import placeModel from "../models/place"
 import categoryModel from "../models/category"
+import placeService from "../services/place"
 import nodeService from "./node"
 import npath from "ngraph.path"
 import cacheUtils from "../../../shared/utils/cache"
@@ -91,16 +92,12 @@ const geoService = {
     })
     return [target, ...coords, source].reverse()
   },
-  getNearbyPlaces: async (
-    { longitude, latitude },
-    query,
-    limit,
-    distance = 2000,
-  ) => {
+  getNearbyPlaces: async (coords, query, limit = 20, distance = 2000) => {
+    const { longitude, latitude } = coords
     let nearest = await placeModel.find({
       location: {
         $near: {
-          $maxDistance: distance,
+          ...(distance && { $maxDistance: distance }),
           $geometry: {
             type: "Point",
             coordinates: [longitude, latitude],
@@ -118,7 +115,37 @@ const geoService = {
     if (limit) {
       nearest = _.take(nearest, limit)
     }
-    nearest = getCategories(nearest)
+    nearest = await getCategories(nearest)
+    if (distance && nearest.length === 0) {
+      nearest = await geoService.getNearbyPlaces(coords, query, limit, null)
+    }
+    return nearest
+  },
+  getRelatedPlaces: async (placeId, limit = 20, distance = 2000) => {
+    const {
+      id,
+      category,
+      longitude,
+      latitude,
+    } = await placeService.getPlaceById(placeId)
+    let nearest = await placeModel.find({
+      category,
+      location: {
+        $near: {
+          $maxDistance: distance,
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+          },
+        },
+      },
+    })
+    nearest = _.map(nearest, (place) => place.toJSON())
+    nearest = _.filter(nearest, (place) => place.id !== id)
+    if (limit) {
+      nearest = _.take(nearest, limit)
+    }
+    nearest = await getCategories(nearest)
     return nearest
   },
 }

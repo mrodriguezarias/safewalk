@@ -11,8 +11,6 @@ const APIS = {
   COORDS: "https://ws.usig.buenosaires.gob.ar/rest/convertir_coordenadas",
 }
 
-const LIMIT = 10
-
 const normalize = (location, address = true) => {
   if (address) {
     location = location.replace(/^(.+) AV\.?$/, "AV. $1")
@@ -110,7 +108,6 @@ const geoService = {
     const result = await requestUtils.post("/geo/nearbyPlaces", {
       location,
       query,
-      limit: LIMIT,
     })
     return getPlacesWithCoords(result)
   },
@@ -147,14 +144,9 @@ const geoService = {
     })
   },
   getRelatedPlaces: async (place) => {
-    let places = await requestUtils.post("/geo/nearbyPlaces", {
-      location: place.coords,
-      distance: 1500,
+    const places = await requestUtils.post("/geo/relatedPlaces", {
+      place: place.id,
     })
-    places = places.filter(
-      ({ category, id }) => category === place.category && id !== place.id,
-    )
-    places = _.take(places, LIMIT)
     return getPlacesWithCoords(places)
   },
 }

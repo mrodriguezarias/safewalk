@@ -34,6 +34,15 @@ const geoController = {
       next(error)
     }
   },
+  getRelatedPlaces: async (req, res, next) => {
+    const { place, limit, distance } = req.body
+    try {
+      const response = await geoService.getRelatedPlaces(place, limit, distance)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
 }
 
 export default geoController

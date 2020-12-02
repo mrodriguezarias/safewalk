@@ -21,6 +21,11 @@ const geoRoute = {
       validate(geoValidation.getNearbyPlaces),
       geoController.getNearbyPlaces,
     )
+    router.post(
+      "/relatedPlaces",
+      validate(geoValidation.getRelatedPlaces),
+      geoController.getRelatedPlaces,
+    )
   },
 }
 
