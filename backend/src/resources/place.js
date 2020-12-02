@@ -16,13 +16,12 @@ import {
   required,
   number,
   minLength,
-  maxLength,
   Filter,
 } from "react-admin"
 import PlaceIcon from "@material-ui/icons/Place"
 
 const validations = {
-  name: [required(), minLength(4), maxLength(16)],
+  name: [required(), minLength(4)],
   category: [required()],
   address: [required()],
   longitude: [required(), number()],
