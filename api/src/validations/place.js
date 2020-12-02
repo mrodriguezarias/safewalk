@@ -3,8 +3,9 @@ import validationUtils from "../utils/validation"
 
 const placeSchema = {
   id: Joi.string().custom(validationUtils.objectId),
-  name: Joi.string().min(4).max(16),
+  name: Joi.string().min(4),
   category: Joi.string().custom(validationUtils.objectId),
+  address: Joi.string(),
   longitude: Joi.number(),
   latitude: Joi.number(),
   safe: Joi.boolean().default(false),
@@ -20,6 +21,7 @@ const placeValidation = {
     body: Joi.object({
       name: placeSchema.name.required(),
       category: placeSchema.category.required(),
+      address: placeSchema.address.required(),
       longitude: placeSchema.longitude.required(),
       latitude: placeSchema.latitude.required(),
       safe: placeSchema.safe,
@@ -33,6 +35,7 @@ const placeValidation = {
       id: placeSchema.id,
       name: placeSchema.name,
       category: placeSchema.category,
+      address: placeSchema.address,
       longitude: placeSchema.longitude,
       latitude: placeSchema.latitude,
       safe: placeSchema.safe,

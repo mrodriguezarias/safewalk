@@ -106,6 +106,11 @@ const PlaceCreate = (props) => (
       >
         <AutocompleteInput source="name" />
       </ReferenceInput>
+      <TextInput
+        source="address"
+        label="Dirección"
+        validate={validations.address}
+      />
       <NumberInput
         source="longitude"
         label="Longitud"
