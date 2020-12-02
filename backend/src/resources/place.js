@@ -17,21 +17,30 @@ import {
   number,
   minLength,
   maxLength,
+  Filter,
 } from "react-admin"
 import PlaceIcon from "@material-ui/icons/Place"
 
 const validations = {
   name: [required(), minLength(4), maxLength(16)],
   category: [required()],
+  address: [required()],
   longitude: [required(), number()],
   latitude: [required(), number()],
 }
+
+const PlaceFilter = (props) => (
+  <Filter {...props}>
+    <TextInput label="Buscar" source="q" alwaysOn />
+  </Filter>
+)
 
 const PlaceList = (props) => (
   <List
     perPage={25}
     sort={{ field: "name", order: "ASC" }}
     title="Lista de Lugares"
+    filters={<PlaceFilter />}
     {...props}
   >
     <Datagrid rowClick="edit">
@@ -43,6 +52,7 @@ const PlaceList = (props) => (
       >
         <TextField source="name" />
       </ReferenceField>
+      <TextField source="address" label="Dirección" />
       <BooleanField source="safe" label="Seguro" />
     </Datagrid>
   </List>
@@ -65,6 +75,11 @@ const PlaceEdit = (props) => (
       >
         <AutocompleteInput source="name" />
       </ReferenceInput>
+      <TextInput
+        source="address"
+        label="Dirección"
+        validate={validations.address}
+      />
       <NumberInput
         source="longitude"
         label="Longitud"

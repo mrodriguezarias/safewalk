@@ -34,14 +34,6 @@ const App = () => {
         create={userResource.create}
       />
       <Resource
-        name="contacts"
-        options={{ label: "Contactos" }}
-        icon={contactResource.icon}
-        list={contactResource.list}
-        edit={contactResource.edit}
-        create={contactResource.create}
-      />
-      <Resource
         name="places"
         options={{ label: "Lugares" }}
         icon={placeResource.icon}
@@ -56,6 +48,14 @@ const App = () => {
         list={categoryResource.list}
         edit={categoryResource.edit}
         create={categoryResource.create}
+      />
+      <Resource
+        name="contacts"
+        options={{ label: "Contactos" }}
+        icon={contactResource.icon}
+        list={contactResource.list}
+        edit={contactResource.edit}
+        create={contactResource.create}
       />
       <Resource
         name="walks"
