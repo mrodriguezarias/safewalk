@@ -95,7 +95,7 @@ const geoService = {
     { longitude, latitude },
     query,
     limit,
-    distance = 2000,
+    distance = 5000,
   ) => {
     let nearest = await placeModel.find({
       location: {
