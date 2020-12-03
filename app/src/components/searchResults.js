@@ -66,7 +66,7 @@ const SearchResults = ({
       onEndReached={handleFetchMore}
       style={styles.list}
       ListFooterComponent={Footer}
-      onRefresh={handleRefresh}
+      onRefresh={onRefresh ? handleRefresh : undefined}
       refreshing={refreshing}
     />
   )

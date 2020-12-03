@@ -1,8 +1,6 @@
 import storageUtils from "../../../../shared/utils/storage"
 import authActions from "./auth"
 import walkActions from "./walk"
-import geoUtils from "../../utils/geo"
-import geoService from "../../../../shared/services/geo"
 
 const appActions = {
   LOAD: "APP/LOAD",
@@ -30,14 +28,14 @@ const appActions = {
       type: appActions.LOAD,
       payload: { theme, mapProvider, mapType, mockLocation },
     })
-    let coords = mockLocation
-    if (!coords) {
-      coords = await geoUtils.getCurrentLocation({ checkBoundary: true })
-    }
-    if (coords && !walk) {
-      const address = await geoService.getAddressOfLocation(coords)
-      dispatch(walkActions.setLocation("source", { name: address, coords }))
-    }
+    // let coords = mockLocation
+    // if (!coords) {
+    //   coords = await geoUtils.getCurrentLocation({ checkBoundary: true })
+    // }
+    // if (coords && !walk) {
+    //   const address = await geoService.getAddressOfLocation(coords)
+    //   dispatch(walkActions.setLocation("source", { name: address, coords }))
+    // }
   },
   setTheme: (theme) => async (dispatch) => {
     await storageUtils.set("theme", theme)

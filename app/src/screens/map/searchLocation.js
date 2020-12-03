@@ -71,11 +71,17 @@ const SearchLocationScreen = ({ navigation, route }) => {
     }
   }
 
-  const doSearch = async (query) => {
-    if (!query || query === previousQuery) {
+  const doRefresh = async () => {
+    await doSearch(previousQuery, true)
+  }
+
+  const doSearch = async (query, refresh = false) => {
+    if (!query || (query === previousQuery && !refresh)) {
       return
     }
-    setResults([])
+    if (!refresh) {
+      setResults([])
+    }
     setNoResults(false)
     setLoading(true)
     setPreviousQuery(query)
@@ -236,6 +242,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
           noResults={noResults}
           onItemPress={handleItemPress}
           onItemLongPress={handleItemLongPress}
+          onRefresh={doRefresh}
         />
       ) : (
         <MapView onPress={handleMapPress} showsUserLocation>

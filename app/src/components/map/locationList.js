@@ -31,6 +31,7 @@ const LocationList = ({
   noResults,
   onItemPress,
   onItemLongPress,
+  onRefresh,
 }) => {
   const renderItem = ({ item: location }) => (
     <LocationItem
@@ -46,6 +47,7 @@ const LocationList = ({
       renderItem={renderItem}
       loading={loading}
       noResults={noResults}
+      onRefresh={onRefresh}
     />
   )
 }
