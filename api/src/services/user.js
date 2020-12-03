@@ -78,6 +78,10 @@ const userService = {
       }
     }
 
+    if (userData.blocked === false) {
+      userData.loginAttempts = 0
+    }
+
     if (userData.name && userData.name !== user.name) {
       const existing = await userModel.findOne({ name: userData.name })
       if (existing) {
