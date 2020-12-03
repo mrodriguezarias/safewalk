@@ -21,7 +21,7 @@ const walkController = {
     let data = {
       updated: Date.now(),
     }
-    if (!geoUtils.pointsAreNear(position, lastPosition, 40)) {
+    if (!geoUtils.pointsAreNear(position, lastPosition, 10)) {
       const safe = geoUtils.isNearPath(position, path, 120)
       walked = [...walked, position]
       data = {
