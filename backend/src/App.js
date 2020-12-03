@@ -12,9 +12,7 @@ import walkResource from "./resources/walk"
 import zoneResource from "./resources/zone"
 import contactResource from "./resources/contact"
 
-const LoginPage = () => (
-  <Login backgroundImage="https://source.unsplash.com/1600x900/?kitten" />
-)
+const LoginPage = () => <Login />
 
 const App = () => {
   return (
