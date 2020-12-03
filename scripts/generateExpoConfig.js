@@ -70,6 +70,11 @@ const generateExpoConfig = {
               apiKey: "AIzaSyBGK8S5A8RxqEDqb_nAJXGQKrqQ4nEDS0c",
             },
           },
+          permissions: [
+            "ACCESS_COARSE_LOCATION",
+            "ACCESS_FINE_LOCATION",
+            "ACCESS_BACKGROUND_LOCATION",
+          ],
         },
         ios: {
           bundleIdentifier: APP_ID,

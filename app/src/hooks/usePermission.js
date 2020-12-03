@@ -20,7 +20,7 @@ const usePermission = () => {
   }, [])
 
   const fetchPermission = async () => {
-    const { status } = await Permissions.getAsync(Permissions.LOCATION)
+    const { status } = await Permissions.askAsync(Permissions.LOCATION)
     const newHasPermission = status === "granted"
     if (hasPermission !== newHasPermission && mounted.current) {
       setHasPermission(newHasPermission)
