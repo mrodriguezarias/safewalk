@@ -71,6 +71,14 @@ const walkValidation = {
       id: walkSchema.id.required(),
     }),
   },
+  addPosition: {
+    params: Joi.object({
+      id: walkSchema.id.required(),
+    }),
+    body: Joi.object({
+      position: walkSchema.position.required(),
+    }),
+  },
 }
 
 export default walkValidation

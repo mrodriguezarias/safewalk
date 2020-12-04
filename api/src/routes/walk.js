@@ -31,6 +31,12 @@ const walkRoute = {
       validate(walkValidation.deleteWalk),
       walkController.deleteWalk,
     )
+    router.post(
+      "/:id/addPosition",
+      authMiddleware(),
+      validate(walkValidation.addPosition),
+      walkController.addPosition,
+    )
   },
 }
 

@@ -6,6 +6,7 @@ import _ from "lodash"
 import userModel from "../models/user"
 import contactService from "./contact"
 import pushUtils, { pushTypes } from "../utils/push"
+import geoUtils from "../../../shared/utils/geo"
 
 const geoKeys = {
   path: "line",
@@ -30,7 +31,7 @@ const walkService = {
     const logged = await userModel.findById(loggedId)
     const isAdmin = logged?.admin
     const walk = await walkModel.findById(id)
-    const isOwnWalk = walk && walk.user === loggedId
+    const isOwnWalk = walk && String(walk.user) === loggedId
     let isCaredWalk = false
     if (!isAdmin && !isOwnWalk && walk) {
       const cared = await contactService.getContactsForUser(loggedId, "cared")
@@ -136,6 +137,27 @@ const walkService = {
     if (count > 0) {
       await walkModel.collection.drop()
     }
+  },
+  addPosition: async (id, position, loggedId) => {
+    const walk = await walkService.getWalkById(id, loggedId)
+    let { path, walked } = walk
+    const lastPosition = _.last(walked)
+
+    let data = {
+      updated: Date.now(),
+    }
+
+    if (!geoUtils.pointsAreNear(position, lastPosition, 10)) {
+      const safe = geoUtils.isNearPath(position, path, 80)
+      walked = [...walked, position]
+      data = {
+        ...data,
+        position,
+        walked,
+        safe,
+      }
+    }
+    return await walkService.updateWalk(id, data)
   },
 }
 

@@ -14,6 +14,10 @@ const walkService = {
     const url = urlUtils.join(walkService.path, id)
     return requestUtils.get(url)
   },
+  addPosition: async (id, position) => {
+    const url = urlUtils.join(walkService.path, id, "addPosition")
+    return requestUtils.post(url, { position })
+  },
 }
 
 export default walkService

@@ -1,5 +1,4 @@
 import walkService from "../services/walk"
-import geoUtils from "../../shared/utils/geo"
 import _ from "lodash"
 
 const walkController = {
@@ -16,22 +15,8 @@ const walkController = {
       updated: now,
     })
   },
-  updatePosition: async (id, path, walked, position) => {
-    const lastPosition = _.last(walked)
-    let data = {
-      updated: Date.now(),
-    }
-    if (!geoUtils.pointsAreNear(position, lastPosition, 10)) {
-      const safe = geoUtils.isNearPath(position, path, 120)
-      walked = [...walked, position]
-      data = {
-        ...data,
-        position,
-        walked,
-        safe,
-      }
-    }
-    return await walkService.update(id, data)
+  updatePosition: async (id, position) => {
+    return await walkService.addPosition(id, position)
   },
   get: async (id) => {
     return await walkService.get(id)

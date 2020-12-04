@@ -8,8 +8,6 @@ const UPDATE_INTERVAL = 5 // seconds
 
 const LocationTracker = () => {
   const walkId = useSelector((state) => state.walk.walk?.id)
-  const walked = useSelector((state) => state.walk.walk?.walked)
-  const path = useSelector((state) => state.walk.walk?.path)
   const mockLocation = useSelector((state) => state.app.mockLocation)
   const dispatch = useDispatch()
   const interval = useRef()
@@ -27,12 +25,7 @@ const LocationTracker = () => {
   const updateLocation = async () => {
     try {
       const position = await getCurrentLocation()
-      const walk = await walkController.updatePosition(
-        walkId,
-        path,
-        walked,
-        position,
-      )
+      const walk = await walkController.updatePosition(walkId, position)
       dispatch(walkActions.setWalk(walk))
     } catch {}
   }

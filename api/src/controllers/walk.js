@@ -55,6 +55,17 @@ const walkController = {
       next(error)
     }
   },
+  addPosition: async (req, res, next) => {
+    const id = req.params.id
+    const { position } = req.body
+    const loggedId = reqUtils.getLoggedUserId(req)
+    try {
+      const response = await walkService.addPosition(id, position, loggedId)
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  },
 }
 
 export default walkController
